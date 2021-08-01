@@ -1,13 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
+type Account = string;
+
 // Trust 
 export default class Trust {
     key: string;
     name: string;
-    beneficiary: string;
-    trustee: string;
+    beneficiary: Account;
+    trustee: Account;
     etherAmount: BigNumber;
-    creator: string;
+    creator: Account;
     createdDate: BigNumber;
     maturityDate: BigNumber;
 

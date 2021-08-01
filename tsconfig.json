@@ -20,5 +20,5 @@
         "hardhat.config.ts",
         "./deploy",
         "./test"
-, "utils"    ]
+, "test/utils"    ]
 }

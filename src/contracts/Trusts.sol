@@ -60,7 +60,7 @@ contract Trusts {
         uint n = uint(nextKey);
         n++;
         nextKey = bytes32(n);
-
+        console.log("createTrust Event Emitting NOW....");
         emit LogCreateTrust(msg.sender, t.key, t.name);
         
         return (t.key);

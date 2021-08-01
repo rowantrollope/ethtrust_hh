@@ -2,7 +2,7 @@
 import {expect} from "./chai-setup";
 
 // we import our utilities
-import {setupUsers, setupUser} from '../utils';
+import {setupUsers, setupUser} from './utils';
 
 // We import the hardhat environment field we are planning to use
 import {ethers, deployments, getNamedAccounts, getUnnamedAccounts} from 'hardhat';

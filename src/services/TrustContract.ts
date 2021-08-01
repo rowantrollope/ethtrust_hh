@@ -5,22 +5,84 @@ import ContractWrapper from "./ContractWrapper"
 
 import Trust  from "./Trust";
 import Trusts from '../../deployments/localhost/Trusts.json';
-import { assert } from 'chai';
 
-export default class TrustContract extends ContractWrapper {
+export const enum ChangeType {
+    TRUST_CREATED,
+    TRUST_DELETED,
+    TRUST_UPDATED,
+};
+
+export interface ChangeCallback { (key: string, change: ChangeType): void }
+export interface FilterCallback { (trust: Trust): boolean }
+
+export class TrustContract extends ContractWrapper {
+    private onChange: ChangeCallback|null;
 
     constructor(signer: Signer) {
         super(signer, Trusts.address, Trusts.abi);
-        
-        assert(this.contract !== null);
 
+        this.onChange = null;
+        
+        if(!this.contract) {
+            console.error("Trustcontract::TrustContract Error - this.contract failed");
+            return;
+        }
+        var filter = this.contract!.filters.LogCreateTrust();
+        
+        this.contract!.removeAllListeners();
         this.contract!.on("LogCreateTrust", this.onCreate)
+        this.contract!.on("LogRemoveTrust", this.onRemove)
+        this.contract!.on("LogUpdateTrust", this.onUpdate)
+
+    }
+    /**
+     * Sets the callback to be used when there are changes
+     * @param _onChange changeCallback
+     */
+     setOnChange(_onChange: ChangeCallback) {
+        this.onChange = _onChange;
+    }    
+    
+    onCreate: Listener = (...args: Array<any>): void => {
+        console.log("TrustContract::onCreate Key: ", args[1]);
+        if(this.onChange) {
+            this.onChange(args[1], ChangeType.TRUST_CREATED);
+        }
+        return;
+    }
+    onRemove: Listener = (...args: Array<any>): void => {
+        console.log("TrustContract::onRemove Key: ", args[1]);
+        if(this.onChange) {
+            this.onChange(args[1], ChangeType.TRUST_DELETED);
+        }
+    }
+    onUpdate: Listener = (...args: Array<any>): void => {
+        console.log("TrustContract::onUpdate Key: ", args[1]);
+        if(this.onChange) {
+            this.onChange(args[1], ChangeType.TRUST_UPDATED);
+        }
     }
 
-    onCreate: Listener = (...args: Array<any>): void => {
-        console.log("TrustContract::onCreate Sender: ", args[0]);
-        console.log("TrustContract::onCreate Key: ", args[1]);
-        console.log("TrustContract::onCreate Name: ", args[2]);
+    /**
+     * 
+     * @param callback Filter which trusts to include
+     * @returns array of trusts
+     */
+    async getTrusts (callback: FilterCallback): Promise<Array<Trust>> {
+
+        let newtrusts: Array<Trust> = [];
+    
+        const count = await this.getTrustCount();
+
+        // Load trusts       
+        for (var i = 0; i <= count - 1; i++) {
+            const key = await this.getTrustAtIndex(i);
+            const trust = await this.getTrust(key);
+            if(!callback || callback(trust))
+                newtrusts = [...newtrusts, trust];
+        }
+    
+        return newtrusts;
     }
     /**
      * getTrustCount
@@ -30,10 +92,7 @@ export default class TrustContract extends ContractWrapper {
      */
     async getTrustCount (): Promise <number> {
 
-        if(this.contract === null)
-            return -1;
-
-        const count: BigNumber = await this.contract.getTrustCount();
+        const count: BigNumber = await this.contract!.getTrustCount();
 
         console.log(`TrustContract::getTrustCount() - ${count} trusts`);
 
@@ -51,31 +110,23 @@ export default class TrustContract extends ContractWrapper {
      * @returns 
      */
     async createTrust(address: string, trustee: string, name: string, date: number, amount: BigNumber, account: string) {
-        
-        if(this.contract === null)
-            return -1;    
  
         console.log(`CreateTrust: Beneficiary: ${address} Amount: ${amount}, Account: ${account}, Date: ${date}`);
         
-        const overflow = {
-            value: amount.toString(),
-        }
+        const overflow = { value: amount.toString(), }
         
-        await this.contract.createTrust(address, trustee, name, date, overflow);
+        await this.contract!.createTrust(address, trustee, name, date, overflow);
     
     }
 
     /**
      * getTrustAtIndex 
-     * 
      * @param index the Trust to read
      * @returns the KEY of the trust at index
      */
     async getTrustAtIndex(index: Number): Promise <string> {
-        if(this.contract === null)
-            return '';
 
-        const key = await this.contract.getTrustAtIndex(index);
+        const key = await this.contract!.getTrustAtIndex(index);
         return key;
     }
     /**
@@ -84,13 +135,8 @@ export default class TrustContract extends ContractWrapper {
      * @returns Promise to a Trust Object
      */
     async getTrust(key: string): Promise<Trust> {
-        
-        if(this.contract === null)
-            return null;
-    
-        const trust: Trust = await this.contract.getTrust(key);
-    
-        return trust;
+   
+        return await this.contract!.getTrust(key);
     }
     /**
      * deleteTrust
@@ -99,11 +145,9 @@ export default class TrustContract extends ContractWrapper {
      * @returns 
      */
     async deleteTrust(key: string) {
-        if(this.contract === null)
-            return;
 
-        await this.contract.withdrawAll(key);
-        await this.contract.deleteTrust(key);
+        await this.contract!.withdrawAll(key);
+        await this.contract!.deleteTrust(key);
     }
     
     /**
@@ -118,12 +162,10 @@ export default class TrustContract extends ContractWrapper {
      * @returns nada
      */
     async updateTrust(key: string, beneficiary: string, trustee: string, name: string, date: number, account: string) {
-        if(this.contract === null)
-            return;
-    
+
         console.log(`UpdateTrust ${key}: Name: ${name}, Date: ${date}, Beneficiary: ${beneficiary}, Account: ${account}`);
         
-        await this.contract.updateTrust(key, beneficiary, trustee, name, date);
+        await this.contract!.updateTrust(key, beneficiary, trustee, name, date);
         
         //await _updateTrust(key);
     }
@@ -138,42 +180,25 @@ export default class TrustContract extends ContractWrapper {
     }
     */
     async withdraw(key: string, amount: number, account: string) {
-        if(this.contract === null)
-            return;
-            
+
         console.log(`withdraw() ${key}: ${amount}, Account: ${account}`);
        
-        await this.contract.withdraw(key, amount);
+        await this.contract!.withdraw(key, amount);
 
         //await _updateTrust(key);
     }
     
     async deposit(key: string, amount: number, account: string) {
-        if(this.contract === null)
-            return;
-    
+
         console.log(`deposit() ${key}: ${amount}, Account: ${account}`);
     
         const overflow = {
             value: amount.toString(),
         }
-        await this.contract.depositTrust(key, overflow);
+        await this.contract!.depositTrust(key, overflow);
         
         //await _updateTrust(key);
     }
     
 }
 
-
-/*
-
-    state.trustCount = await trustContract.methods.getTrustCount().call();
-    console.log(`TrustContract.load() - SUCCESS Loading. getTrustCount: ${state.trustCount}`);
-    // Load trusts
-    for (var i = 0; i <= state.trustCount - 1; i++) {
-        const key = await trustContract.methods.getTrustAtIndex(i).call();
-        const trust = await trustContract.methods.getTrust(key).call(); 
-        if(!callback || callback(trust))
-            newtrusts = [...newtrusts, trust];
-    }
-    */
