@@ -10,8 +10,8 @@
 
     <button class="text-lg mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
     <button class="text-lg mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="readTrusts">READ</button>
+    <button class="text-lg mx-2 font-normal bg-blue-500 rounded-lg text-white hover:bg-blue-300 p-2" :onClick="updateTrust">UPDATE</button>    
     <button class="text-lg mx-2 font-normal bg-red-500 rounded-lg text-white hover:bg-red-300 p-2" :onClick="deleteTrust">DELETE</button>
-
         <!-- Account list -->
     <div class="text-sm text-black px-7 mt-5">
 
@@ -161,6 +161,11 @@ const onTrustChange = async (key: string, change: ChangeType) => {
             else
                 console.error("Can't Find Trust: ", shortenAddress(key));
             break;
+        case ChangeType.TRUST_UPDATED:
+            let index = trusts.value!.findIndex(trust => trust.key === key);
+            let newTrust: Trust = await tc.getTrust(key);
+            trusts.value![index] = newTrust;
+            break;
     }
     console.log("onTrustChange - Finished")
 }
@@ -175,6 +180,17 @@ const readTrusts = async () => {
     
     trusts.value = await tc.getTrusts((trust: Trust) => { return true; });
 }
+const updateTrust = async() => {
+    const trust: Trust = selectedTrust.value;
+
+    await tc.updateTrust(trust.key,
+                         trust.beneficiary,
+                         trust.trustee,
+                         "Updated!",
+                         trust.maturityDate);
+
+}
+
 const onSelectItem = (trust: Trust) => {
     selectedTrust.value = trust;
     console.log("Item Selected: " + shortenAddress(selectedTrust.value.key));
@@ -182,8 +198,6 @@ const onSelectItem = (trust: Trust) => {
 
 const deleteTrust = async () => {
     await tc.deleteTrust(selectedTrust.value.key);
-    
-    //readTrusts();
 }
 </script>
 

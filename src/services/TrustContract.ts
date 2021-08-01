@@ -58,9 +58,9 @@ export class TrustContract extends ContractWrapper {
     }
     onUpdate: Listener = (...args: Array<any>): void => {
         console.log("TrustContract::onUpdate Key: ", args[1]);
-        if(this.onChange) {
-            this.onChange(args[1], ChangeType.TRUST_UPDATED);
-        }
+        //if(this.onChange) {
+        //    this.onChange(args[1], ChangeType.TRUST_UPDATED);
+        //}
     }
 
     /**
@@ -157,35 +157,30 @@ export class TrustContract extends ContractWrapper {
      * @param beneficiary new beneficiary
      * @param trustee new trustee
      * @param name new name
-     * @param date new maturity Date
-     * @param account creator
+     * @param maturityDate new maturity Date
      * @returns nada
      */
-    async updateTrust(key: string, beneficiary: string, trustee: string, name: string, date: number, account: string) {
+    async updateTrust(key: string, beneficiary: string, trustee: string, name: string, maturityDate: BigNumber) {
 
-        console.log(`UpdateTrust ${key}: Name: ${name}, Date: ${date}, Beneficiary: ${beneficiary}, Account: ${account}`);
+        console.log(`UpdateTrust ${key}: Name: ${name}, maturityDate: ${maturityDate}, Beneficiary: ${beneficiary}`);
         
-        await this.contract!.updateTrust(key, beneficiary, trustee, name, date);
+        await this.contract!.updateTrust(key, beneficiary, trustee, name, maturityDate);
         
-        //await _updateTrust(key);
+        await this._updateTrust(key);
     }
-    /*
-    const _updateTrust = async (key) => {
     
-        let index = state.trusts.findIndex(trust => trust.key === key);
-    
-        let newTrust = await trustContract.methods.getTrust(key).call();
-        
-        state.trusts[index] = newTrust;
+    async _updateTrust(key: string) {
+        if(this.onChange)
+            this.onChange(key, ChangeType.TRUST_UPDATED);
     }
-    */
+    
     async withdraw(key: string, amount: number, account: string) {
 
         console.log(`withdraw() ${key}: ${amount}, Account: ${account}`);
        
         await this.contract!.withdraw(key, amount);
 
-        //await _updateTrust(key);
+        await this._updateTrust(key);
     }
     
     async deposit(key: string, amount: number, account: string) {
@@ -195,9 +190,9 @@ export class TrustContract extends ContractWrapper {
         const overflow = {
             value: amount.toString(),
         }
+
         await this.contract!.depositTrust(key, overflow);
-        
-        //await _updateTrust(key);
+        await this._updateTrust(key);
     }
     
 }
