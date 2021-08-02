@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
 type Account = string;
@@ -22,5 +23,6 @@ export default class Trust {
         this.creator = "";
         this.createdDate = BigNumber.from(0);
         this.maturityDate = BigNumber.from(0);
-    }    
+    }
+
 }

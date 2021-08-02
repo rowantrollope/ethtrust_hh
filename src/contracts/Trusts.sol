@@ -109,15 +109,7 @@ contract Trusts {
         
         emit LogRemoveTrust(msg.sender, key);
     }
- 
- /*         bytes32 key;
-        string name;
-        address beneficiary;
-        uint etherAmount;
-        address creator;
-        uint createdDate;
-        uint maturityDate;
- */
+
     function getTrustName(bytes32 key) public view returns(string memory name)
     {
         require(trustSet.exists(key), "Trust not found");
@@ -162,12 +154,11 @@ contract Trusts {
 
         Trust storage t = trusts[key];
 
-        require(msg.sender == t.creator || 
-                msg.sender == t.beneficiary ||
+        require(msg.sender == t.beneficiary ||
                 msg.sender == t.trustee
-                , "Only Creator and Owner can withdraw");
+                , "Only Creator or Trustee can withdraw");
         
-        if(msg.sender != t.creator)
+        if(msg.sender != t.trustee)
             require(t.maturityDate <= block.timestamp, "Cannot withdraw until Maturity date");
  
         //TODO: Check that date allows
