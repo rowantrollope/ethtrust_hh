@@ -4,14 +4,14 @@ type Account = string;
 
 // Trust 
 export default class Trust {
-    key: string;
-    name: string;
-    beneficiary: Account;
-    trustee: Account;
-    etherAmount: BigNumber;
-    creator: Account;
-    createdDate: BigNumber;
-    maturityDate: BigNumber;
+    public key: string;
+    public name: string;
+    public beneficiary: Account;
+    public trustee: Account;
+    public etherAmount: BigNumber;
+    public creator: Account;
+    public createdDate: BigNumber;
+    public maturityDate: BigNumber;
 
     constructor() {
         this.key = "";

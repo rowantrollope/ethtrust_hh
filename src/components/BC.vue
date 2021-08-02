@@ -10,8 +10,53 @@
 
     <button class="text-lg mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
     <button class="text-lg mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="readTrusts">READ</button>
-    <button class="text-lg mx-2 font-normal bg-blue-500 rounded-lg text-white hover:bg-blue-300 p-2" :onClick="updateTrust">UPDATE</button>    
     <button class="text-lg mx-2 font-normal bg-red-500 rounded-lg text-white hover:bg-red-300 p-2" :onClick="deleteTrust">DELETE</button>
+    <button v-if="selectedTrust.key" class="text-lg mx-2 font-normal bg-blue-500 rounded-lg text-white hover:bg-blue-300 p-2" :onClick="updateTrust">UPDATE</button>    
+    
+    <div v-if="selectedTrust.key">
+        <form action="#" method="POST" class="text-base font-normal mt-10 border border-gray-400 rounded-lg mx-2 p-5">
+        <p class="text-2xl">Edit trust fund details:</p> <br/>
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-4 justify-self-end pt-2 ">
+                <label for="trust_name" class="label-text">Trust name</label>
+            </div>
+
+            <div class="col-span-8">
+                <input type="text" v-model="selectedTrust.name" name="trust_name" id="trust_name" autocomplete="trust-name" class="input-field" />
+            </div>
+
+            <div class="col-span-4 justify-self-end pt-2 ">
+                <label for="beneficiary_account" class="label-text">Beneficiary Account</label>
+            </div>
+            <div class="col-span-8">
+                <input type="text" v-model="selectedTrust.beneficiary" name="beneficiary_account" id="beneficiary_account" autocomplete="beneficiary_account" class="input-field" />
+            </div>
+            <div class="col-span-4 justify-self-end pt-2 ">
+                <label for="trustee_account" class="label-text">Trustee Account</label>
+            </div>
+            <div class="col-span-8">
+                <input type="text" v-model="selectedTrust.trustee" name="trustee_account" id="trustee_account" autocomplete="trustee_account" class="input-field" />
+            </div>
+
+            <div class="col-span-4 justify-self-end pt-2 ">
+                <label for="maturity_date" class="label-text">Maturity Date</label>
+            </div>
+            <div class="col-span-8">
+                <!--<DatePicker v-model="date"/>     
+                <DatePicker v-model="maturityDate" mode="date" class="flex-grow">
+                    <template v-slot="{ inputValue, inputEvents }">
+                        <input class="input-field"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                        />
+                    </template>
+                </DatePicker>-->  
+            </div>
+        </div>
+        </form>
+    </div>
+
+
         <!-- Account list -->
     <div class="text-sm text-black px-7 mt-5">
 
@@ -43,6 +88,9 @@
                         <th scope="col" class="col-header">
                             Created On:
                         </th>
+                        <th scope="col" class="col-header">
+                            Updating?
+                        </th>
 
                     </tr>
                     </thead>
@@ -73,6 +121,9 @@
                         <td class="row-text text-gray-500">
                             {{ toDate(trust.createdOn) }}
                         </td>
+                        <td class="row-text text-gray-500">
+                            {{ updatingMap.get(index) ? 'Updating...' : ''}}
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -87,9 +138,12 @@
 </template>
 
 <script setup="props" lang="ts">
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, unref } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber} from "@ethersproject/bignumber";
+//import { Calendar, DatePicker } from 'v-calendar';
+
+
 import BlockchainConnect from '../services/BlockchainConnect';
 
 import Trust from "../services/Trust"
@@ -102,8 +156,9 @@ let tc: TrustContract;
 
 // refs
 const loaded = ref(false);
-const trusts = ref<Array<Trust>>();
-const selectedTrust = ref<Trust>({});
+let trusts = ref<Array<Trust>>();
+let selectedTrust = ref<Trust>({});
+const updatingMap = new Map();
 
 // props
 const props = defineProps({
@@ -131,7 +186,7 @@ const connect = async () => {
         console.error("BC::connect() - Unable to connect to blockchain");
 
     bc.setOnChange((account: string) => { 
-        console.log("Accounts Changed from: to: ", account.address);
+        console.log("Accounts Changed from: to: ", account);
     });
 
     await readTrusts();
@@ -139,17 +194,20 @@ const connect = async () => {
 }
 const onTrustChange = async (key: string, change: ChangeType) => {
 
-    console.log("onChange: ", key, change);
+    if(trusts.value === undefined) {
+        console.log("onTrustChange() - NOT READY - trusts.value === undefined");
+        return        
+    }
 
     const idx = trusts.value?.findIndex(trust => trust.key === key);
+
+    console.log(`onChange: ${shortenAddress(key)}, Change Code: ${change}, trusts.length = ${trusts.value!.length}, Item to Update: ${idx}`);
 
     switch(change) {
         case ChangeType.TRUST_CREATED: 
             if(idx === -1)
             {
-                console.log("onTrustChange() - Reading new trust", shortenAddress(key));
                 let trust: Trust = await tc.getTrust(key);
-                console.log("onTrustChange() - Loading trust", shortenAddress(key));
                 trusts.value?.push(trust);
             }
             else
@@ -159,15 +217,24 @@ const onTrustChange = async (key: string, change: ChangeType) => {
             if(idx != -1)
                 trusts.value?.splice(idx, 1)
             else
-                console.error("Can't Find Trust: ", shortenAddress(key));
+                console.error("onTrustChange(): Can't Find Trust to delete: ", shortenAddress(key));
             break;
+
         case ChangeType.TRUST_UPDATED:
-            let index = trusts.value!.findIndex(trust => trust.key === key);
-            let newTrust: Trust = await tc.getTrust(key);
-            trusts.value![index] = newTrust;
+            // IF WE FOUND A TRUST TO UPDATe
+            if(idx != -1) {
+                let newTrust: Trust = await tc.getTrust(key);
+                trusts.value![idx] = newTrust;
+                if(updatingMap.get(idx)) {
+                    updatingMap.set(idx, false);
+                    console.log("updatingMap.get(idx)", idx, false);
+                }
+
+            } else
+                console.error("onTrustChange(): Can't Find Trust to update: ", shortenAddress(key));
             break;
     }
-    console.log("onTrustChange - Finished")
+
 }
 const createTrust = async () => {
     const amount: BigNumber = ethers.utils.parseEther("10");
@@ -179,20 +246,32 @@ const createTrust = async () => {
 const readTrusts = async () => {
     
     trusts.value = await tc.getTrusts((trust: Trust) => { return true; });
+    console.log("readTrusts()", trusts.value);
 }
 const updateTrust = async() => {
-    const trust: Trust = selectedTrust.value;
 
-    await tc.updateTrust(trust.key,
-                         trust.beneficiary,
-                         trust.trustee,
-                         "Updated!",
-                         trust.maturityDate);
+    let newTrust: Trust = new Trust();
+    Object.assign(newTrust, selectedTrust.value);
+
+    // Quick-update support
+    let index = trusts.value!.findIndex(found => found.key === newTrust.key)
+    trusts.value![index] = newTrust;
+
+    await tc.updateTrust(newTrust.key,
+                         newTrust.beneficiary,
+                         newTrust.trustee,
+                         newTrust.name,
+                         newTrust.maturityDate);
+    
+    updatingMap.set(index, true);
+    console.log("updatingMap.get()", updatingMap.get(index));
+
+    return;
 
 }
 
 const onSelectItem = (trust: Trust) => {
-    selectedTrust.value = trust;
+    Object.assign(selectedTrust.value, trust);
     console.log("Item Selected: " + shortenAddress(selectedTrust.value.key));
 } 
 
@@ -213,5 +292,11 @@ const deleteTrust = async () => {
     }
     .row-text {
         @apply font-medium px-6 py-4 whitespace-nowrap md:text-sm text-xs;
+    }
+    .input-field {
+        @apply  text-lg p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
+    }
+    .label-text {
+        @apply block text-left text-lg font-medium text-gray-700;
     }
 </style>

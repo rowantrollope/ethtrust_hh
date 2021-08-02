@@ -58,9 +58,9 @@ export class TrustContract extends ContractWrapper {
     }
     onUpdate: Listener = (...args: Array<any>): void => {
         console.log("TrustContract::onUpdate Key: ", args[1]);
-        //if(this.onChange) {
-        //    this.onChange(args[1], ChangeType.TRUST_UPDATED);
-        //}
+        if(this.onChange) {
+            this.onChange(args[1], ChangeType.TRUST_UPDATED);
+        }
     }
 
     /**
@@ -166,7 +166,6 @@ export class TrustContract extends ContractWrapper {
         
         await this.contract!.updateTrust(key, beneficiary, trustee, name, maturityDate);
         
-        await this._updateTrust(key);
     }
     
     async _updateTrust(key: string) {
@@ -180,7 +179,6 @@ export class TrustContract extends ContractWrapper {
        
         await this.contract!.withdraw(key, amount);
 
-        await this._updateTrust(key);
     }
     
     async deposit(key: string, amount: number, account: string) {
@@ -192,7 +190,6 @@ export class TrustContract extends ContractWrapper {
         }
 
         await this.contract!.depositTrust(key, overflow);
-        await this._updateTrust(key);
     }
     
 }
