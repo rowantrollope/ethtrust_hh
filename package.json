@@ -7,17 +7,20 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.4.0",
+    "@heroicons/vue": "^1.0.3",
     "@types/chai": "^4.2.21",
     "@types/mocha": "^8.2.3",
     "@types/node": "^16.4.0",
     "chai": "^4.3.4",
     "chai-ethers": "^0.0.1",
     "dotenv": "^10.0.0",
-    "hardhat": "^2.5.0",
+    "hardhat": "~2.1.1",
     "hardhat-deploy": "^0.8.11",
     "hardhat-deploy-ethers": "*",
     "mocha": "^7.2.0",
     "ts-node": "^10.1.0",
+    "v-calendar": "^3.0.0-alpha.5",
     "vue": "^3.0.5"
   },
   "devDependencies": {

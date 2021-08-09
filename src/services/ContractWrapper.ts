@@ -5,10 +5,12 @@ export default class ContractWrapper {
     contract: Contract | null;
     connectionError: string;
 
-    constructor(signer: Signer, contractAddress: string, abi: ContractInterface) {
+    constructor() {
         this.connectionError = "";
         this.contract = null;
-        
+    }
+
+    async connect (signer: Signer, contractAddress: string, abi: ContractInterface) {
         try {
             this.contract = new Contract(contractAddress, abi, signer);
         } catch (err) {
@@ -17,5 +19,4 @@ export default class ContractWrapper {
         }
         console.log("ContractWrapper::connect() - signer, contract", signer, this.contract);
     }
-
 }

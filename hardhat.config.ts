@@ -1,7 +1,9 @@
 import {HardhatUserConfig} from 'hardhat/types';
 import 'hardhat-deploy';
 import 'hardhat-deploy-ethers';
-import {node_url, accounts} from './test/utils/network';
+
+import 'dotenv/config';
+import {node_url, accounts} from './utils/network';
 import { task } from 'hardhat/config';
 import { hexStripZeros } from '@ethersproject/bytes';
 
@@ -22,8 +24,9 @@ const config: HardhatUserConfig = {
     networks: {
         rinkeby: {
             url: node_url('rinkeby'),
-            accounts: accounts('rinkeby1'),
-        },
+            accounts: accounts('rinkeby'),
+            //accounts: ['0xd560951bb76c8b3e974a10d409ac0debef83743e3eeb220663b1e3f39d428d76'],
+       },
         hardhat: {
             chainId: 1337,
             accounts: {
@@ -35,10 +38,12 @@ const config: HardhatUserConfig = {
         }
     },  
     namedAccounts: {
-        deployer: 0,
-        trustCreator: 0,
+        deployer: {
+            default: 0, 
+            4: 'privatekey://0xd560951bb76c8b3e974a10d409ac0debef83743e3eeb220663b1e3f39d428d76', // rinkeby
+        },
+        trustCreator: 3,
         trustBeneficiary: 1,
-        tokenOwner: 1,
     },
     paths: {
         sources: 'src',

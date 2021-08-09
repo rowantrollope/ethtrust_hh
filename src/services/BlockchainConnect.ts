@@ -26,8 +26,6 @@ export default class BlockchainConnect {
 
         if(this.provider) {
             // Connect Ethers to Metamask instance
-            await window.ethereum!.enable();
-
             this.provider = new ethers.providers.Web3Provider(window.ethereum)
 
             await this.provider.send("eth_requestAccounts", []);

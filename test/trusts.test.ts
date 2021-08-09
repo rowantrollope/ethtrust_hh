@@ -61,7 +61,7 @@ describe("Trusts contract", function() {
                 value: 1,
             };
 
-            await Trusts.createTrust(trustBeneficiary, trustBeneficiary, "Test Trust", 0, overflow);
+            await Trusts.createTrust(trustBeneficiary, trustBeneficiary, "Test Trust", 0, 1, overflow);
 
             let count = await Trusts.getTrustCount();
 
@@ -74,7 +74,7 @@ describe("Trusts contract", function() {
                     beneficiary, 
                     trustee, 
                     etherAmount,
-                    creator,
+                    grantor,
                     createdDate,
                     maturityDate } = await Trusts.getTrust(trustKey);
                     
@@ -82,7 +82,7 @@ describe("Trusts contract", function() {
             expect (beneficiary).to.equal(trustBeneficiary);
             expect (trustee).to.equal(trustBeneficiary);
             expect (etherAmount).to.equal(1);
-            expect (creator).to.equal(trustCreator);
+            expect (grantor).to.equal(trustCreator);
 
             await Trusts.withdrawAll(key);
 

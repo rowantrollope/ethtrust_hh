@@ -2,15 +2,15 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "moduleResolution": "node",
         "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "jsx": "preserve",
-        "sourceMap": true,
-        "resolveJsonModule": true,
         "esModuleInterop": true,
+        "moduleResolution": "node",
+        "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
-        "lib": ["esnext", "dom"]
+        //"jsx": "preserve",
+        //"sourceMap": true,
+        //"resolveJsonModule": true,
+        //"lib": ["esnext", "dom"]
     },
     "include": [
         "src/**/*.ts", 
@@ -19,6 +19,6 @@
         "src/**/*.vue",
         "hardhat.config.ts",
         "./deploy",
-        "./test"
-, "test/utils"    ]
+        "./test",
+        "typechain/**/*",   ]
 }

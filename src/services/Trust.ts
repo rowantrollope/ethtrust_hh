@@ -1,28 +1,47 @@
-import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
 type Account = string;
 
+export const enum TrustType {
+    REVOKABLE, 
+    IRREVOKABLE,
+    QTIP, 
+    GRAT, 
+    SPECIAL_NEEDS,
+    SPENDTHRIFT,
+};
+
+export const TypeStrings: Array<string> = [
+    "Revokable",
+    "Irrevokable",
+    "QTIP",
+    "GRAT",
+    "Special Needs",
+    "Spendthrift",
+];
+
 // Trust 
-export default class Trust {
+export class Trust {
     public key: string;
     public name: string;
-    public beneficiary: Account;
-    public trustee: Account;
+    public grantor: Account;
+    public trustees: Account[];
+    public beneficiaries: Account[];
     public etherAmount: BigNumber;
-    public creator: Account;
     public createdDate: BigNumber;
     public maturityDate: BigNumber;
+    public trustType: TrustType; 
 
     constructor() {
         this.key = "";
         this.name = "";
-        this.beneficiary = "";
-        this.trustee = "";
+        this.grantor = "";
+        this.trustees = [""];
+        this.beneficiaries = [""];
         this.etherAmount = BigNumber.from(0);
-        this.creator = "";
         this.createdDate = BigNumber.from(0);
         this.maturityDate = BigNumber.from(0);
+        this.trustType = TrustType.REVOKABLE;
     }
 
 }
