@@ -12,11 +12,11 @@ export default class currencyExchange {
     public exchange = {};
     public formatter: Intl.NumberFormat;
 
-    name = ref("CurrencyExchange");
+    //name = ref("CurrencyExchange");
 
     constructor() {
 
-        this.name.value = "CurrencyExchange";
+        //this.name.value = "CurrencyExchange";
 
         this.init();
 

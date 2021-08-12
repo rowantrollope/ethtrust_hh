@@ -4,17 +4,19 @@
 
 <script setup lang="ts">
 
-import { onBeforeMount, provide } from 'vue';
+import { provide } from 'vue';
 
-import BlockchainConnect from './services/BlockchainConnect'
-import Trusts from './components/Trusts.vue';
-import CurrencyExchange from './services/CurrencyExchange'
+import BlockchainConnect from './services/BlockchainConnect';
+import CurrencyExchange from './services/CurrencyExchange';
+
+const bc: BlockchainConnect = new BlockchainConnect();
+provide('BlockchainConnect', bc);
 
 const exchange = new CurrencyExchange();
-const bc: BlockchainConnect = new BlockchainConnect();
-
-provide('BlockchainConnect', bc);
 provide('exchange', exchange)
+
+import Trusts from './components/Trusts.vue';
+
 
 </script>
 

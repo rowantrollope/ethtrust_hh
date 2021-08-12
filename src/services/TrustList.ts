@@ -36,7 +36,7 @@ export default class TrustList extends TrustContract {
     async connect(signer: Signer) {
         await super.connect(signer);
 
-        console.log("TrustList::connect()");
+        //console.log("TrustList::connect()");
 
         // Quick-update support
         super.setOnChange(this.changeHandler);
@@ -72,14 +72,10 @@ export default class TrustList extends TrustContract {
      */
     changeHandler = async (key: string, change: ChangeType) => {
 
-        if(this.trusts.value === undefined) {
-            console.log("BC.vue::onTrustChange() - NOT READY - trusts.value === undefined");
-            return        
-        }
+        if(this.trusts.value === undefined) 
+            return ;       
 
         const idx = this.trusts.value?.findIndex(trust => trust.key === key);
-
-        console.log(`TrustList::onTrustChange(${shortenAddress(key)}, Change Code: ${change}, trusts.length = ${this.trusts.value!.length}, Item to Update: ${idx})`);
 
         switch(change) {
             case ChangeType.TRUST_CREATED: 
@@ -117,35 +113,32 @@ export default class TrustList extends TrustContract {
                     }
 
                 } else
-                    console.error("BC.vue::onTrustChange() - Can't Find Trust: ", shortenAddress(key));
+                    //console.error("BC.vue::onTrustChange() - Can't Find Trust: ", shortenAddress(key));
                 break;
         }
 
     }
-    
+
     createTrust = async (newTrust: Trust) => {
         // Quick Update Support 
         newTrust.key = "0x0";
         this.trusts.value?.push(newTrust);
-
         await super.createTrust(newTrust);
     }
     
-    getTrusts = async (filter: FilterCallback): Promise<Array<Trust>> => {
- 
+    getTrusts = async (filter: FilterCallback): Promise<Array<Trust>> =>
         this.trusts.value = await super.getTrusts(filter);        
-       
-        return this.trusts.value;
-    }
     
     updateTrust = async (trust: Trust) => {
-
         // Quick-update support
         let index = this.trusts.value!.findIndex(found => found.key === trust.key)
-        this.trusts.value![index] = trust;        
-
-        this.updateMap.value.set(trust.key, TrustState.Updating);
         
+        if(index !== -1) {
+            //console.log("TrustList::updateTrust() Updating: ", trust.key);
+            //console.log("TrustList::updateTrust() Found: ", index, this.trusts.value![index]);
+            this.trusts.value![index].clone(trust);        
+            this.updateMap.value.set(trust.key, TrustState.Updating);
+        }
         // call base
         await super.updateTrust(trust);
     }

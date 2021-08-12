@@ -34,7 +34,6 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { defineProps } from 'vue';
 import { Dialog, DialogOverlay, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XIcon } from '@heroicons/vue/solid';
 

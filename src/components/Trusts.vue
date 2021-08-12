@@ -3,18 +3,25 @@
 <div class="text-center ">
     <div class="bg-black">
         <div v-if="loaded" class="text-2xl md:text-4xl text-white p-1 font-thin mb-2">
-            TrustContract: Loaded {{ shortenAddress( account ) }} <br/>
+            TrustContract: 
+            <div class="text-lg">
+                Loaded <span class="text-blue-300">{{ shortenAddress( account ) }}</span> 
+                Balance: <span class="text-blue-300">{{ formatEtherString(bc.balance) }}</span>
+            </div>
         </div>
         <div v-else>
             Loading...
         </div>
     </div>
 
-    <button class="text-base mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
-    <Button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</Button>
-    <button class="text-base mx-2 font-normal bg-indigo-500 rounded-lg text-white hover:bg-indigo-300 p-2" :onClick="getTrusts">READ</button>
-    
+    <div class="flex justify-center">
+        <button class="text-base mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
+        <Button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</Button>
+        <button class="text-base mx-2 font-normal bg-indigo-500 rounded-lg text-white hover:bg-indigo-300 p-2" :onClick="getTrusts">READ</button>
+        <InputTrustType v-model="selectedTrust"></InputTrustType>
+    </div>
     <!-- Account list -->
+    
     <div class="text-sm text-black px-7 mt-5">
 
     <div class="flex flex-col">
@@ -33,20 +40,18 @@
                         <th scope="col" class="col-header"> Ether </th>
                         <th scope="col" class="col-header"> Maturity Date </th>
                         <th scope="col" class="col-header"> Created </th>
-
                     </tr>
                     </thead>
                     <tbody>
 
                     <tr v-for="(trust, index) in list.trusts.value" :key="trust.key" 
                         class=" hover:bg-blue-100"
-                        :class="[selected(trust.key) ? 'bg-green-200' : '', 
+                        :class="[selected(trust.key) ? 'bg-blue-100' : '', 
                                 list.creating(trust.key) ? 'animate-pulse text-green-500' : 'text-gray-900',
                                 list.updating(trust.key) ? 'animate-pulse text-blue-500' : 'text-gray-900',
                                 list.deleting(trust.key) ? 'animate-pulse text-red-500' : 'text-gray-900']" 
-                        @click="onSelectItem(trust)">
+                        @click="select(trust.key)">
                         <td class="row-text inline-flex">
-                            <!-- <div v-if="list.updating(index)" class="loader ease-linear mr-2 rounded-full border-2 border-t-2 border-gray-200 h-4 w-4"></div>-->
                             {{ shortenAddress(trust.key) }}
                         </td>
                         <td class="row-text"> {{ trust.name }} </td>
@@ -56,7 +61,7 @@
                             <div v-for="trustee in trust.trustees">{{ shortenAddress(trustee) }}, </div>
                         </td>
                         <td class="row-text"> 
-                            {{ shortenAddress(trust.beneficiaries[0]) }}
+                            {{ shortenAddress(trust.beneficiary) }}
                         </td>
                         <td class="row-text"> {{ ethers.utils.commify(toEther(trust.etherAmount)) }} </td>
                         <td class="row-text"> {{ toDate(trust.maturityDate.toNumber()) }} </td>
@@ -73,7 +78,15 @@
     <!-- 
         Modals
     --> 
-    <EditTrust :show="isEditDialogVisible" :trust="trustToEdit" @save="onSave" @cancel="onCancelEdit" @delete="onDelete" @withdraw="onWithdraw" @deposit="onDeposit">
+    <EditTrust :show="showEditDialog"
+                :reason="reason"
+                :canWithdraw="canWithdraw" 
+                v-model="selectedTrust" 
+                @save="onSave" 
+                @cancel="onCancelEdit" 
+                @delete="onDelete" 
+                @withdraw="onWithdraw" 
+                @deposit="onDeposit">
         <template v-slot:title>Trust Fund: {{ selectedTrust.name }}</template>
     </EditTrust>
 
@@ -93,43 +106,26 @@ import CurrencyExchange from '../services/CurrencyExchange';
 
 import Button from './Button.vue'
 import EditTrust from './EditTrust.vue'
-
-import Account from '../services/Account';
+import InputTrustType from './InputTrustType.vue'
 
 import { Trust, TypeStrings, TrustType } from "../services/Trust";
-import { shortenAddress, toEther, toDate, round} from '../services/Helpers';
+import { shortenAddress, toEther, toDate, formatEtherString } from '../services/Helpers';
 
 // BLOCKCHAIN connection and prep
-let bc: BlockchainConnect | undefined = inject("BlockchainConnect");
 const exchange: CurrencyExchange | undefined = inject('exchange');
 
-let list: TrustList = new TrustList();
-
-// refs
-const loaded = ref(false);
-let selectedTrust = ref<Trust>({});
-const showEdit = ref(false);
-
-const show = () => showEdit.value = !showEdit.value;
-const selected = (key: string) : boolean => key === selectedTrust.value.key;
-const canWithdraw = ref(false);
-
-const account = ref("");
-const namedAccounts: Map<string, Account> = new Map();
-
 /**
- * METHODS
+ * Setup
  */
+let bc: BlockchainConnect | undefined = inject("BlockchainConnect");
+let list: TrustList = new TrustList();
+const loaded = ref(false);
+const account = ref("");
+
 const mounted = onMounted(() => connect());
 
 const connect = async () => {
-    
     loaded.value = false;
-
-    // Setup some default test accounts
-    namedAccounts.set('grantor', new Account('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'));
-    namedAccounts.set('trustees', new Account('0x70997970C51812dc3A010C7d01b50e0d17dc79C8'));
-    namedAccounts.set('beneficiaries', new Account('0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC'));
 
     await bc!.connect();
 
@@ -149,67 +145,94 @@ const connect = async () => {
 
 }
 
+const getTrusts = async () => list.getTrusts((trust: Trust) => { return true; });
+
+/**
+ * List select handlers
+ */
+
+const selected = (key: string) : boolean => key === selectedTrust.value.key;
+
+const select = (key: string) => {
+    
+    const index = list.trusts.value!.findIndex(item => item.key === key);
+    if(index !== -1)
+        selectedTrust.value.clone( list.trusts.value![index] );
+    else 
+        console.error("Can't find trust key: ", key);
+
+    console.log("Selected", selectedTrust.value.key);
+}
 /**
  * Edit Handlers
  */
+const showEditDialog = ref(false);
+const closeEditDialog = () => showEditDialog.value = false;
+const openEditDialog = () => showEditDialog.value = true;
+const canWithdraw = ref(false);
+const reason = ref("");
+let selectedTrust = ref(new Trust());
 
-//
-// Edit handlers
-//
-const isEditDialogVisible = ref(false);
-
-let trustToEdit = ref(new Trust());
-
-const onEdit = () => { 
-    trustToEdit.value = Object.assign({}, selectedTrust.value);
-    isEditDialogVisible.value = true; 
+const onEdit = async () => { 
+    
+    list.canWithdraw(selectedTrust.value.key, bc!.account).then((arg) => {
+        canWithdraw.value = arg.result;
+        reason.value = arg.reason;
+        openEditDialog();
+    })
 }
-const closeEditDialog = () => { isEditDialogVisible.value = false; };
 
 const onSave = async () => { 
-    closeEditDialog(); 
-    await list.updateTrust(trustToEdit.value);
-
+    console.log("onSave");
+    closeEditDialog();
+    await list.updateTrust(selectedTrust.value);
 }
-const onCancelEdit = () => { 
-    closeEditDialog(); 
-};
+
+const onCancelEdit = () => closeEditDialog(); 
 
 const onWithdraw = async (amount: number) => {
     closeEditDialog();
-
-    console.log("onWithdraw", trustToEdit.value);
-    
-    await list.withdraw(trustToEdit.value.key, ethers.utils.parseEther(amount.toString()));
-    
+    await list.withdraw(selectedTrust.value.key, ethers.utils.parseEther(amount.toString()));    
+    await list.updateTrust(selectedTrust.value);
 }
+
 const onDelete = async () => { 
     closeEditDialog();
-
-    console.log("OnDelete", trustToEdit.value.key);
-
-    await list.deleteTrust(trustToEdit.value.key);
+    await list.deleteTrust(selectedTrust.value.key);
 }
 
 const onDeposit = async (amount: number) => {
     closeEditDialog();    
-
-    await list.deposit(trustToEdit.value.key, ethers.utils.parseEther(amount.toString()));
-
+    await list.deposit(selectedTrust.value.key, ethers.utils.parseEther(amount.toString()));
+    await list.updateTrust(selectedTrust.value);
 }  
 
 /*
- OTHER Handlers
+ Create new Trust
 */
+
+const hh_accounts = [
+    "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+    "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+    "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+    "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+    "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+    "f",
+    "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+    "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+    "0xbcd4042de499d14e55001ccbb24a551f3b954096",
+];
+
 const createTrust = async () => {
 
     let newTrust: Trust = new Trust();
     
     newTrust.key = "0x0";
-    newTrust.beneficiaries[0] = namedAccounts.get('beneficiaries')!.address;
-    newTrust.trustees[0] = namedAccounts.get('trustees')!.address;
-    newTrust.trustees[1] = namedAccounts.get('beneficiaries')!.address;
-    newTrust.grantor = namedAccounts.get('grantor')!.address;
+    newTrust.grantor = hh_accounts[0];
+    newTrust.beneficiary = hh_accounts[1];
+    newTrust.addTrustee(hh_accounts[2]);
+    newTrust.addTrustee(hh_accounts[3]);
     newTrust.etherAmount = ethers.utils.parseEther("1");
     newTrust.trustType = TrustType.REVOKABLE;
     let now = new Date("8/16/2022");
@@ -220,29 +243,13 @@ const createTrust = async () => {
     console.log("Creating Trust: ")
     await list.createTrust(newTrust);
 
+    newTrust.key = "0x0";
     newTrust.trustType = TrustType.IRREVOKABLE;
     newTrust.name = "Irrevokable";
 
     await list.createTrust(newTrust);
 
 }
-
-const getTrusts = async () => {
-    list.getTrusts((trust: Trust) => { return true; });
-}
-
-
-const onSelectItem = async (trust: Trust) => {
-    Object.assign(selectedTrust.value, trust);
-    console.log("Item Selected: " + shortenAddress(selectedTrust.value.key));
-    
-    let returnVal = { result: false, reason: ""};
-
-    returnVal = await list.canWithdraw(selectedTrust.value.key, bc.account); 
-    
-    canWithdraw.value = returnVal.result;
-
-} 
 
 </script>
 

@@ -13,13 +13,13 @@ contract Trusts {
     /*
     REVOKABLE: grantor can change or modify trust at will
     IRREVOKABLE: grantor cannot change or modify trust
-    CHARITABLE: IRREVOKABLE - Benefits GRANTOR, BENEFICIARIES AND a qualified CHARITY
-    CHARITABLE LEAD: (CLAT) Provides support to a charity through an annuity for a period of time. Remaining assets eventually go to beneficiaries
-    CHARITABLE REMAINDER: (CRAT) Opposite of CLAT: Benefits accrue to grantor and beneficiaries for a period of time, with remainder going to charity
+    CHARITABLE: IRREVOKABLE - Benefits GRANTOR, beneficiary AND a qualified CHARITY
+    CHARITABLE LEAD: (CLAT) Provides support to a charity through an annuity for a period of time. Remaining assets eventually go to beneficiary
+    CHARITABLE REMAINDER: (CRAT) Opposite of CLAT: Benefits accrue to grantor and beneficiary for a period of time, with remainder going to charity
     QTIP: Qualified Terminable Interest Property Trust: Provide income for surviving spouse. Grantor controls assets after the death of the spouse.
-    GRAT: Grantor Retained Annuity Trust: IRREVOKABLE - setup for certain period of time to minimize taxes on large financial gifts to beneficiaries. 
+    GRAT: Grantor Retained Annuity Trust: IRREVOKABLE - setup for certain period of time to minimize taxes on large financial gifts to beneficiary. 
         Trustor pays taxes on the assets when the trust is establiehd and received an annual annuity payment for the term of the GRAT.
-        When the term ends, the beneficiaries reveive the remaining assets.
+        When the term ends, the beneficiary reveive the remaining assets.
     ILIT: IRREVOKABLE LIFE INSURANCE TRUST -  LIFE INSURNACE ONLY - NOT APPLICABLE
     FUNDERAL: IRREVOKABLE - Set aside money to cover burial and funeral costs. Funeral homes often serve as the trustee
     SPENDTHRIFT: Protects inherited assets from the potential of financial irresponsibility of the beneficiary.
@@ -36,15 +36,15 @@ contract Trusts {
 
     /*
     TODO: Support multiple trustees
-    TODO: Support reporting of trustee and grantor actions to beneficiaries (Withdrawals, Deposits, Returns )
+    TODO: Support reporting of trustee and grantor actions to beneficiary (Withdrawals, Deposits, Returns )
     TODO: Support "Grantor death event" - which switches the trust to irrevokable and activates the trustee
             (Also support DUAL trustors (Spouses) such that one death transfers to the living trustor)
     TODO: How to determine death? 
-    TODO: Rules: Beneficiaries to receive income from trust until a certain age, at which point the property will distrubute to them
+    TODO: Rules: beneficiary to receive income from trust until a certain age, at which point the property will distrubute to them
     TODO: ADD Support for Successor trustee. 1) Grantor = Trustee until death.  ONLY For REVOKABLE TRUST
 
     */
-    // need multiple beneficiaries
+    // need multiple beneficiary
 /*
     (1) revocable trust, 
     (2) irrevocable trust, 
@@ -70,7 +70,7 @@ contract Trusts {
         string name;
         address grantor;
         address[] trustees;
-        address[] beneficiaries;
+        address beneficiary;
         uint etherAmount;
         uint createdDate;
         uint maturityDate;
@@ -95,13 +95,13 @@ contract Trusts {
     }
     /**
      * Create a new trust
-     * @param beneficiaries Who is this for
+     * @param beneficiary Who is this for
      * @param trustees Trustee to manage trust
      * @param name Name of trust
      * @param maturityDate When this trust matures (is accessible)
      * @param trustType Type of trust
      */
-    function createTrust (address[] memory beneficiaries, 
+    function createTrust (address beneficiary, 
                           address[] memory trustees,
                           string memory name,
                           uint maturityDate,
@@ -109,12 +109,12 @@ contract Trusts {
                           
                           public payable returns(bytes32 key) {
         
-        require(beneficiaries[0] != trustees[0] &&
-                beneficiaries[0] != msg.sender &&
+        require(beneficiary != trustees[0] &&
+                beneficiary != msg.sender &&
                 trustees[0] != msg.sender, 
                 "Trustee, Beneficiary and Trustee must be different accounts");
         
-        require(beneficiaries[0] == address(beneficiaries[0]), "Invalid Beneficiary address");
+        require(beneficiary == address(beneficiary), "Invalid Beneficiary address");
         require(trustees[0] == address(trustees[0]), "Invalid Trustee address");
 
         trustSet.insert(nextKey); // Note that this will fail automatically if the key already exists.
@@ -123,7 +123,7 @@ contract Trusts {
     
         t.key = nextKey;
         t.name = name;
-        t.beneficiaries = beneficiaries;
+        t.beneficiary = beneficiary;
         t.trustees = trustees;
         t.etherAmount = msg.value;
         t.grantor = msg.sender;
@@ -142,7 +142,7 @@ contract Trusts {
     }
 
     function updateTrust(bytes32 key, 
-                         address[] memory beneficiaries, 
+                         address beneficiary, 
                          address[] memory trustees,
                          string memory name,  
                          uint maturityDate) public {
@@ -153,7 +153,7 @@ contract Trusts {
         require(msg.sender == t.grantor, "Only the grantor can update this trust.");
 
         t.name = name;
-        t.beneficiaries = beneficiaries;
+        t.beneficiary = beneficiary;
         t.trustees = trustees;
         t.maturityDate = maturityDate;
 
@@ -196,7 +196,7 @@ contract Trusts {
                                                         string memory name, 
                                                         address grantor,
                                                         address[] memory trustees,
-                                                        address[] memory beneficiaries,
+                                                        address beneficiary,
                                                         uint etherAmount,
                                                         uint createdDate,
                                                         uint maturityDate,
@@ -206,7 +206,7 @@ contract Trusts {
         
         Trust storage t = trusts[_key];
 
-        return(t.key, t.name, t.grantor, t.trustees, t.beneficiaries, t.etherAmount, t.createdDate, t.maturityDate, t.trustType);
+        return(t.key, t.name, t.grantor, t.trustees, t.beneficiary, t.etherAmount, t.createdDate, t.maturityDate, t.trustType);
     }
     
     function getTrustCount() public view returns(uint count) {
@@ -230,24 +230,24 @@ contract Trusts {
 
         if(t.trustType == TrustType.REVOKABLE) {
             if(sender == t.grantor || 
-               sender == t.beneficiaries[0] || 
+               sender == t.beneficiary || 
                exists(sender, t.trustees))
                 result = true;
             else 
-                reason = "REVOKABLE type trust requires sender to be grantor, beneficiary or trustee";
+                reason = "REVOKABLE type trust may be withdrawn only by grantor, beneficiary or trustee";
 
         } else if (t.trustType == TrustType.IRREVOKABLE) {
-            if(sender == t.beneficiaries[0] || 
+            if(sender == t.beneficiary || 
                 exists(sender, t.trustees))
                 result = true;
             else 
-                reason = "IRREVOKABLE type trust requires sender to be beneficiary or trustee";
+                reason = "IRREVOKABLE type trust may be withdrawn only by beneficiary or trustee";
 
         } else { 
             if(sender == t.grantor || exists(sender, t.trustees))
                 result = true;
             else
-                reason = "DEFAULT trust type: Requires sender to be grantor or trustee";
+                reason = "DEFAULT trust type: may be withdrawn only by grantor or trustee";
         }
         return (result, reason);
     }
@@ -264,11 +264,11 @@ contract Trusts {
 
         if(!result) revert(reason);
 
-        // Beneficiaries can only withdraw AFTER the maturityDate
+        // beneficiary can only withdraw AFTER the maturityDate
         // TODO: Support "DEATH" of grantor in addition to maturityDate 
-        if(msg.sender == t.beneficiaries[0] && 
+        if(msg.sender == t.beneficiary && 
             t.maturityDate > block.timestamp) {
-            revert("Beneficiaries can only withdraw AFTER maturity date");
+            revert("beneficiary can only withdraw AFTER maturity date");
         }
         // Check ETHER Amount
         if(etherAmount > t.etherAmount) {

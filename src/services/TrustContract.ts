@@ -37,7 +37,7 @@ export class TrustContract extends ContractWrapper {
 
         await super.connect(signer, Trusts.address, Trusts.abi);
         
-        console.log("TrustContract::connect()");
+        //console.log("TrustContract::connect()");
 
         this.onChange = null;
         
@@ -98,12 +98,11 @@ export class TrustContract extends ContractWrapper {
         for (var i = 0; i <= count - 1; i++) {
             const key = await this.getTrustAtIndex(i);
             const trust = await this.getTrust(key);
-            if(!callback || callback(trust))
-            newTrusts = [...newTrusts, trust];
+            if(!callback || callback(trust)) {
+                newTrusts.push(trust)
+            }
         }
 
-        console.log("TrustContract::getTrusts()", count);
-    
         return newTrusts;
     }
 
@@ -117,7 +116,7 @@ export class TrustContract extends ContractWrapper {
 
         const count: BigNumber = await this.contract!.getTrustCount();
 
-        console.log(`TrustContract::getTrustCount() - ${count} trusts`);
+        //console.log(`TrustContract::getTrustCount() - ${count} trusts`);
 
         return count.toNumber();
 
@@ -130,11 +129,11 @@ export class TrustContract extends ContractWrapper {
      */
     async createTrust(trust: Trust) {
  
-        console.log(`CreateTrust: Beneficiary: ${trust.beneficiaries}, trustee: ${trust.trustees}, Amount: ${trust.etherAmount.toString()}, Grantor: ${trust.grantor}, Date: ${trust.maturityDate}`);
+        console.log(`CreateTrust: Beneficiary: ${trust.beneficiary}, trustee: ${trust.trustees}, Amount: ${trust.etherAmount.toString()}, Grantor: ${trust.grantor}, Date: ${trust.maturityDate}`);
         
         const overflow = { value: trust.etherAmount.toString(), }
         
-        await this.contract!.createTrust(trust.beneficiaries, trust.trustees, trust.name, trust.maturityDate, trust.trustType, overflow);
+        await this.contract!.createTrust(trust.beneficiary, trust.trustees, trust.name, trust.maturityDate, trust.trustType, overflow);
 
     }
 
@@ -156,7 +155,7 @@ export class TrustContract extends ContractWrapper {
      */
     async getTrust(key: string): Promise<Trust> {
    
-        return await this.contract!.getTrust(key);
+        return new Trust(await this.contract!.getTrust(key));
     }
 
     /**
@@ -190,9 +189,9 @@ export class TrustContract extends ContractWrapper {
      */
     async updateTrust(trust: Trust) {
 
-        console.log(`UpdateTrust ${trust.key}: Name: ${trust.name}, maturityDate: ${trust.maturityDate}, Beneficiary: ${trust.beneficiaries[0]}`);
+        console.log(`UpdateTrust ${trust.key}: Name: ${trust.name}, maturityDate: ${trust.maturityDate}, Beneficiary: ${trust.beneficiary}`);
         
-        await this.contract!.updateTrust(trust.key, trust.beneficiaries, trust.trustees, trust.name, trust.maturityDate);
+        await this.contract!.updateTrust(trust.key, trust.beneficiary, trust.trustees, trust.name, trust.maturityDate);
     }
     
     /**

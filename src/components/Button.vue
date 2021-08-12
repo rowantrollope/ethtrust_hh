@@ -47,6 +47,8 @@
     .btn-warning {
         @apply text-black bg-yellow-300 hover:bg-yellow-200 focus:ring-yellow-200;
     }
-
+    .btn-disabled {
+        @apply text-white bg-gray-400 focus:ring-gray-600;    
+    }
 
 </style>

@@ -1,7 +1,7 @@
 
 import { ethers, Signer } from 'ethers';
 import type {Provider} from '@ethersproject/abstract-provider';
-import type {BigNumber} from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
 
 interface changeCallback { (myArgument: string): void }
@@ -11,12 +11,14 @@ export default class BlockchainConnect {
     public signer: Signer|null;
     public account: string;
 
+    #balance: BigNumber;
     #onChange: changeCallback|null;
 
     constructor() {
         this.account = "";
         this.provider = null;
         this.signer = null;
+        this.#balance = BigNumber.from(0);
         this.#onChange = null;
     }
 
@@ -41,7 +43,9 @@ export default class BlockchainConnect {
         }
 
         this.account = await this.signer!.getAddress();
-        console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
+        this.#balance = await this.provider.getBalance(this.account);
+
+        //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
     
         //
         // Setup change notification
@@ -51,7 +55,10 @@ export default class BlockchainConnect {
             this.accountsChanged(accounts);
         });
     }
-   
+    public get balance(): BigNumber {
+        return this.#balance;
+    }
+
     /**
      * Callback handler for when user changes accounts
      * 
@@ -61,6 +68,7 @@ export default class BlockchainConnect {
         if(accounts.length) {
             console.log("BlockchainConnect::accountsChanged()", accounts);
             this.account = accounts[0];
+            this.provider!.getBalance(this.account).then((bn) => this.#balance = bn );
         } else if (accounts.length === 0) {
             console.log('BlockchainConnect::accountsChanged() - Please connect to MetaMask.');
             this.account = "";    
