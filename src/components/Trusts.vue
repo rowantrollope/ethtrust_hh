@@ -51,14 +51,14 @@
                                 list.updating(trust.key) ? 'animate-pulse text-blue-500' : 'text-gray-900',
                                 list.deleting(trust.key) ? 'animate-pulse text-red-500' : 'text-gray-900']" 
                         @click="select(trust.key)">
-                        <td class="row-text inline-flex">
+                        <td class="row-text text-blue-600">
                             {{ shortenAddress(trust.key) }}
                         </td>
                         <td class="row-text"> {{ trust.name }} </td>
                         <td class="row-text"> {{ TypeStrings[trust.trustType] }} </td>
                         <td class="row-text"> {{ shortenAddress(trust.grantor) }} </td>
                         <td class="row-text"> 
-                            <div v-for="trustee in trust.trustees">{{ shortenAddress(trustee) }}, </div>
+                            <div v-for="trustee in trust.trustees" :key="trustee">{{ shortenAddress(trustee) }}, </div>
                         </td>
                         <td class="row-text"> 
                             {{ shortenAddress(trust.beneficiary) }}
