@@ -10,16 +10,19 @@ export default class BlockchainConnect {
     public provider: Provider|null;
     public signer: Signer|null;
     public account: string;
-
+    public loaded: boolean;
+    public connectionError: string;
     #balance: BigNumber;
     #onChange: changeCallback|null;
 
     constructor() {
         this.account = "";
+        this.loaded = false;
         this.provider = null;
         this.signer = null;
         this.#balance = BigNumber.from(0);
         this.#onChange = null;
+        this.connectionError = "";
     }
 
     async connect(): Promise<void> {
@@ -35,7 +38,10 @@ export default class BlockchainConnect {
             this.signer = this.provider.getSigner();
 
             if(this.signer === null || this.signer === undefined)
+            {
                 console.error("BlockchainConnect::connect() Signer returned null")
+                return;
+            }
         
         } else {
             this.provider = <Provider> ethers.providers.getDefaultProvider();
@@ -44,6 +50,7 @@ export default class BlockchainConnect {
 
         this.account = await this.signer!.getAddress();
         this.#balance = await this.provider.getBalance(this.account);
+        this.loaded = true;
 
         //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
     

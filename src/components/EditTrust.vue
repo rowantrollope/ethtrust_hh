@@ -20,11 +20,13 @@
                 <span class="inline -ml-2 text-green-500 text-base items-center">
                 <svg class="inline" xmlns="http://www.w3.org/2000/svg" height="24" width="24" preserveAspectRatio="xMidYMid" viewBox="-38.39985 -104.22675 332.7987 625.3605"><path fill="#343434" d="M125.166 285.168l2.795 2.79 127.962-75.638L127.961 0l-2.795 9.5z"/><path fill="#8C8C8C" d="M127.962 287.959V0L0 212.32z"/><path fill="#3C3C3B" d="M126.386 412.306l1.575 4.6L256 236.587l-128.038 75.6-1.575 1.92z"/><path fill="#8C8C8C" d="M0 236.585l127.962 180.32v-104.72z"/><path fill="#141414" d="M127.961 154.159v133.799l127.96-75.637z"/><path fill="#393939" d="M127.96 154.159L0 212.32l127.96 75.637z"/></svg>
                 </span>
-                <span class="inline text-green-500"> {{ formatEtherString(trust.etherAmount) }} ETH </span>
+                <span class="inline text-green-500"> {{ toEtherStringRounded(trust.etherAmount) }} ETH </span>
             
             <p class="mt-1">Trust Number: <b>{{ shortenAddress(trust.key)}}</b>, Created on {{ toDate(trust.createdDate.toNumber()) }}</p>
             <p class="mt-1">Created by (Grantor): <b>{{ trust.grantor }}</b></p>
             <p class="mt-1">Trust Type: {{ trust.getTypeString() }} </p>
+            <p class="mt-1">Revokable? {{ revokable ? "YES" : "NO" }} </p>
+
         </div>
         
         <div class="mt-5 hidden">
@@ -34,7 +36,7 @@
             </select>
         </div>
         <div class=" mt-5 sm:block">
-            <nav class="flex space-x-4" aria-label="Tabs">
+            <nav class="flex space-x-2" aria-label="Tabs">
                 <a v-for="(tab, index) in tabs" 
                     :key="index" 
                     :class="[activeTab===index ? 'selected-tab' : 'unselected-tab', 'tab']" 
@@ -65,11 +67,17 @@
                         <label for="maturity_date" class="label-text">Maturity Date</label>
                     </div>
                     <div class="col-span-8">     
-                        <DatePicker v-model="maturityDate" mode="date" class="flex-grow">
-                            <template v-slot="{ inputValue, inputEvents }">
-                                <input class="input-field" :value="inputValue" v-on="inputEvents"/>
-                            </template>
-                        </DatePicker>
+                        <div class="mt-2" v-if="!revokable">
+                            {{ toDate(trust.maturityDate) }} 
+                            <span class="text-gray-500 text-sm">(Can't change maturity date on IRREVOKABLE trust)</span>
+                        </div>
+                        <div v-else>
+                            <DatePicker v-model="maturityDate" mode="date" class="flex-grow">
+                                <template v-slot="{ inputValue, inputEvents }">
+                                    <input class="input-field" :value="inputValue" v-on="inputEvents"/>
+                                </template>
+                            </DatePicker>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,31 +85,44 @@
                 TAB: Beneficiary
             -->
             <div v-show="activeTab===1">
+                <div v-if="revokable">
                 <p class="text-sm mb-5 ml-5">Note: The beneficiary is who will receive this ETH after the maturity date. Trustees can also access funds.</p>
                 <InputBeneficiary v-model="trust"
                     @valid="validEntry = true" 
                     @invalid="validEntry = false"></InputBeneficiary>
+                </div>
+                <div v-else>
+                    <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOKABLE and you cannot edit or change the BENEFICIARY.  The beneficiary will receive this ETH after the maturity date. Trustees can also access funds.</p>
+                    <p class="text-center">{{ trust.beneficiary }}</p>
+                </div>
             </div>      
             <!-- 
                 TAB: Trustees
             -->
-            <div v-show="activeTab===2">
-                <p class="text-sm mb-5 ml-5">Note: Each trustee will have full access to transfer or manage the funds in this trust.</p>
-                <InputTrustees v-model="trust"></InputTrustees>
+            <div v-show="activeTab===2">                    
+                <div v-if="revokable">
+                    <p class="text-sm mb-5 ml-5">Note: Each trustee will have full access to transfer or manage the funds in this trust.</p>
+                    <InputTrustees v-model="trust"></InputTrustees>
+                </div>
+                <div v-else>
+                    <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOKABLE and you cannot edit or change the TRUSTEES.</p>
+                    <div class="text-lg"><u>Trustees</u>
+                        <div v-for="trustee in trust.trustees" class="text-center" :key="trustee"><p>{{ trustee }}</p></div>
+                    </div>
+                </div>
             </div>      
             <!--
                 TAB: Withdraw 
             -->
             <div v-show="activeTab===3">
-                <div v-if="!canWithdraw" class="space-y-2 mb-5 text-base">
-                    <div class="">You cannot withdraw from this trustfund.</div>
-                    <div class="">{{ reason }}</div>
-                    <div class="">Trust fund type: {{ trust.getTypeString() }}</div>
+                <div v-if="!canWithdraw" class="space-y-3 mb-5 text-base">
+                    <p>You may not withdraw from this fund:</p>
+                    <p class="text-center">{{ reason }}</p>
                 </div>
                 <div v-else>
                     <p class="ml-5 text-sm"> Note: Funds will be returned to the owner of the trust.  Only the trust fund owner or a trustee may withdraw. 
                         Maximum withdrawal: 
-                        <span class="text-green-500">{{formatEtherString(trust.etherAmount)}} ETH</span>
+                        <span class="text-green-500">{{ toEtherStringRounded(trust.etherAmount) }} ETH</span>
                     </p><br/>
                     
                     <div class="flex justify-center items-center">
@@ -116,7 +137,7 @@
             <div v-show="activeTab===4">
                 <p class="text-sm ml-5">Note: Only ETH deposits are supported at this time.
                     Your Wallet Balance: 
-                    <span class="font-bold text-green-600"> {{ formatEtherString(bc.balance) }} ETH </span>
+                    <span class="font-bold text-green-600"> {{ toEtherStringRounded(bc.balance) }} ETH </span>
                 </p><br/>
 
                 <div class="flex justify-center items-center">
@@ -133,20 +154,22 @@
                 TAB: Delete
             -->
             <div v-show="activeTab===5">
-                <div v-if="!canWithdraw && trust.etherAmount > BigNumber.from(0)"
+                <div v-if="!revokable" class="ml-5">
+                    <p>This trust is IRREVOKABLE and cannot be deleted.</p>
+                </div>
+                <div v-else-if="!canWithdraw"
                     class="mb-5 space-y-2 text-base">
-                    <p>You cannot delete this trust fund because the balance is not 0.</p>    
-                    <p>A trustee or beneficiary must withdraw the funds before the trust can be deleted.</p>
-                    <p>{{ reason }}</p>
-                    
+                    <p>You cannot delete this trust fund..</p>    
+                    <p>{{ reason }}</p>                    
+                </div>
+                <div v-else-if="trust.etherAmount > BigNumber.from(0)">
+                    <p>You cannot delete this trust fund, as the balance is not 0. Please withdraw the funds then delete.</p>
                 </div>
                 <div v-else>
-
-                    <div class="ml-5 text-sm">
-                    Note: Deleting will transfer ETH trust balance back to grantor.
-                    </div>
-                    <div class="flex mt-5 items-center space-x-5 justify-center">
-                        Trust Fund Balance: <span class="ml-2 text-bold text-green-600">{{ formatEtherString(trust.etherAmount) }} ETH</span>
+                    <p class="text-sm ml-5">
+                        Note: The balance on this trust fund is 0 and it can be deleted.
+                    </p>
+                    <div class="mt-5 text-center">
                         <Button class="btn-danger" :onClick="onDelete" >
                         Delete Trust Now
                         </Button>
@@ -185,8 +208,8 @@ import { DatePicker } from 'v-calendar';
 // services
 import BlockchainConnect from '../services/BlockchainConnect';
 import CurrencyExchange from '../services/CurrencyExchange';
-import { Trust } from '../services/Trust'
-import { toDate, formatEtherString, shortenAddress, round } from '../services/Helpers';
+import { Trust, TrustType } from '../services/Trust'
+import { toDate, toEtherStringRounded, shortenAddress, round } from '../services/Helpers';
 
 // components
 import Modal from './Modal.vue';
@@ -226,6 +249,7 @@ const trust = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 });
+const revokable = computed(() => trust.value.trustType === TrustType.REVOKABLE);
 
 const maturityDate = computed({
     get: () => new Date(trust.value.maturityDate.toNumber() * 1000),

@@ -54,10 +54,10 @@ contract Trusts {
     provision to allow benficiary access at all
 */
     enum TrustType { 
-        REVOKABLE, 
+        REVOKABLE,
         IRREVOKABLE,
-        QTIP, 
-        GRAT, 
+        QTIP,          
+        GRAT,       
         SPECIAL_NEEDS,
         SPENDTHRIFT
     }
@@ -76,7 +76,7 @@ contract Trusts {
         uint maturityDate;
         TrustType trustType;
     }
-
+    
     bytes32 nextKey;
  
     mapping(bytes32 => Trust) trusts;
@@ -153,11 +153,22 @@ contract Trusts {
         require(msg.sender == t.grantor, "Only the grantor can update this trust.");
 
         t.name = name;
-        t.beneficiary = beneficiary;
-        t.trustees = trustees;
-        t.maturityDate = maturityDate;
 
-        emit LogUpdateTrust(msg.sender, t.key, t.name);
+        // Apply changes for REVOKABLE trust type only
+        // IF trying to change one of these fields on NON-revokable trust type, throw an error
+        if(t.trustType != TrustType.REVOKABLE && (t.beneficiary != beneficiary || t.maturityDate != maturityDate)) {
+        
+            revert("Beneficiary, Trustees and Maturity date can only be updated in a REVOKABLE trust");
+        
+        } else if(t.trustType == TrustType.REVOKABLE) {
+
+            t.beneficiary = beneficiary;
+            t.trustees = trustees;
+            t.maturityDate = maturityDate;
+            emit LogUpdateTrust(msg.sender, t.key, t.name);
+        
+        } 
+
     }
     
     function depositTrust(bytes32 key) public payable {

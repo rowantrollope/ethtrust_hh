@@ -6,7 +6,7 @@
             TrustContract: 
             <div class="text-lg">
                 Loaded <span class="text-blue-300">{{ shortenAddress( account ) }}</span> 
-                Balance: <span class="text-blue-300">{{ formatEtherString(bc.balance) }}</span>
+                Balance: <span class="text-blue-300">{{ toEtherStringRounded(bc.balance, 3) }}</span>
             </div>
         </div>
         <div v-else>
@@ -109,7 +109,7 @@ import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
 
 import { Trust, TypeStrings, TrustType } from "../services/Trust";
-import { shortenAddress, toEther, toDate, formatEtherString } from '../services/Helpers';
+import { shortenAddress, toEther, toDate, toEtherStringRounded } from '../services/Helpers';
 
 // BLOCKCHAIN connection and prep
 const exchange: CurrencyExchange | undefined = inject('exchange');

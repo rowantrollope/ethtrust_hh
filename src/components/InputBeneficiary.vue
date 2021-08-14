@@ -14,7 +14,7 @@
 <script setup="props, {emit}" lang="ts">
 import { ref, computed, onMounted } from 'vue'
 
-import { Trust } from '../services/Trust';
+import { Trust, TrustType } from '../services/Trust';
 
 const props = defineProps({
     modelValue: { type: Trust, required: true },
@@ -32,6 +32,7 @@ const trust = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 });
+const revokable = computed(() => trust.value.trustType === TrustType.REVOKABLE);
 
 const validate = (beneficiary: string) => {
 
