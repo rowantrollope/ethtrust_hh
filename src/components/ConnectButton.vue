@@ -60,8 +60,6 @@
 import { inject, computed } from 'vue';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { StatusOnlineIcon, ShieldCheckIcon } from '@heroicons/vue/outline';
-import { ChevronDownIcon } from '@heroicons/vue/solid';
-import Jazzicon from 'vue-jazzicon';
 
 import Button from './Button.vue';
 import CurrencyExchange from '../services/CurrencyExchange';

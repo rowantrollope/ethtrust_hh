@@ -152,7 +152,7 @@
                 hover:shadow-md
                 hover:border-white
                 hover:bg-gray-100
-        };
+        }
     
     
     .list-enter-active,

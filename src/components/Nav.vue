@@ -22,7 +22,7 @@
                                             </router-link>
                                         </MenuItem>
                                         <MenuItem>
-                                            <router-link v-on:click="open=false" class="mobile-router-link" tag="li" to="/Manage">
+                                            <router-link class="mobile-router-link" tag="li" to="/Manage">
                                                 Manage & Create Trusts
                                             </router-link>
                                         </MenuItem>

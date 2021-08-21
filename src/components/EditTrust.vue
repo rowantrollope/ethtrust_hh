@@ -147,7 +147,7 @@
             <div v-show="activeTab===4">
                 <p class="text-sm ml-5">Note: Only ETH deposits are supported at this time.
                     Your Wallet Balance: 
-                    <span class="font-bold text-green-600"> {{ toEtherStringRounded(bc.balance) }} ETH </span>
+                    <span class="font-bold text-green-600"> {{ walletBalance }} ETH </span>
                 </p><br/>
 
                 <div class="flex justify-center items-center">
@@ -212,7 +212,7 @@
 
 <script setup="props, {emit}" lang="ts">
 import { ref, inject, computed } from 'vue'
-import { BigNumber} from "@ethersproject/bignumber";
+import { BigNumber } from "@ethersproject/bignumber";
 import { DatePicker } from 'v-calendar';
 
 // services
@@ -253,6 +253,10 @@ const exchange: CurrencyExchange | undefined = inject('exchange');
 let bc: BlockchainConnect | undefined = inject('BlockchainConnect');
 
 const validEntry = ref(true);
+
+const walletBalance = computed(() => {
+    toEtherStringRounded(bc!.balance);
+});
 
 // Variables
 

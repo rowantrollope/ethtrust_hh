@@ -58,7 +58,7 @@ const props = defineProps({
 const totalValue = computed(() => {
     let amount = 0;
     for (const trust of props.trusts) {
-        amount += Number(ethers.utils.formatUnits(trust.etherAmount));
+        amount += Number(ethers.utils.formatUnits((trust as Trust).etherAmount));
     }
     return amount;
 });
@@ -68,8 +68,8 @@ const nextAvailable = computed(() => {
     let next = 0;
     
     for (const trust of props.trusts) { 
-        if(trust.maturityDate > next)
-            next = trust.maturityDate;
+        if((trust as Trust).maturityDate.toNumber() > next)
+            next = (trust as Trust).maturityDate.toNumber();
     }
     return new Date(next * 1000);
 });

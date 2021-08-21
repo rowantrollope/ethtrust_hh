@@ -39,7 +39,7 @@ const eth = computed({
 });
 
 const props = defineProps({
-    modelValue: Number,
+    modelValue: { type: Number, required: true },
 });
 
 </script>

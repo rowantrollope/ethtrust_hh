@@ -5,7 +5,7 @@ import { BigNumber} from "@ethersproject/bignumber";
 
 import { Trust } from "./Trust";
 import { TrustContract, ChangeType, FilterCallback } from './TrustContract';
-import { shortenAddress, toEtherStringRounded } from './Helpers';
+import { shortenAddress } from './Helpers';
 
 enum TrustState {
     None = 0,
@@ -27,7 +27,7 @@ export default class TrustList extends TrustContract {
     // from the blockchain
     public updateMap = ref(new Map());
 
-    private manualTimer: NodeJS.Timeout;
+    private manualTimer: NodeJS.Timeout | undefined;
 
     constructor() {
         super();
@@ -126,12 +126,12 @@ export default class TrustList extends TrustContract {
                     }
 
                 } else
-                    //console.error("BC.vue::onTrustChange() - Can't Find Trust: ", shortenAddress(key));
+                    console.error("BC.vue::onTrustChange() - Can't Find Trust: ", shortenAddress(key));
                 break;
         }
         // IF we receive all the updates, clear the manual refresh timer
         if(this.updateMap.value.size === 0) {
-            clearTimeout(this.manualTimer);
+            clearTimeout((this.manualTimer as NodeJS.Timeout));
         }
 
     }
@@ -146,6 +146,7 @@ export default class TrustList extends TrustContract {
     getTrusts = async (filter: FilterCallback): Promise<Array<Trust>> => {
         this.trusts.value = await super.getTrusts(filter);        
         this.updateMap.value.clear();
+        return this.trusts.value;
     }
     
     updateTrust = async (trust: Trust) => {
@@ -188,7 +189,7 @@ export default class TrustList extends TrustContract {
     }
     private setUpdateState = (key: string, state: TrustState) => {
         this.updateMap.value.set(key, state);
-        clearTimeout(this.manualTimer);
+        clearTimeout((this.manualTimer as NodeJS.Timeout));
         this.manualTimer = setTimeout(() => this.manualRefresh(), 20000);
     }
     private manualRefresh = async () => {
@@ -204,7 +205,7 @@ export default class TrustList extends TrustContract {
         this.updateMap.value.forEach(async (value, key, map) => {
             const idx = this.trusts.value?.findIndex(trust => trust.key === key);
 
-            if(idx === -1) return;
+            if(idx === -1 || idx === undefined) return;
 
             let newTrust: Trust = await super.getTrust(key);
             

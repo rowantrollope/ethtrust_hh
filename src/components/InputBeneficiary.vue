@@ -4,7 +4,7 @@
     <div class="flex">
         <div class="flex items-center"><slot></slot></div>
         <input type="input"
-        @input="validate($event.target.value)"
+        @input="validate($event.target)"
         v-model="beneficiary"
         placeholder="Enter Beneficiary Account #"
         name="beneficiary" id="beneficiary" autocomplete="beneficiary"
@@ -35,16 +35,19 @@ const trust = computed({
 });
 const revokable = computed(() => trust.value.trustType === TrustType.REVOKABLE);
 
-const validate = (beneficiary: string) => {
+const validate = (e: EventTarget | null) => {
+    if(e === null) return;
+    
+    let newBeneficiary = (e as HTMLInputElement).value;
 
-    let result = trust.value.isValidBeneficiary(beneficiary);
+    let result = trust.value.isValidBeneficiary(newBeneficiary);
 
-    console.log(beneficiary);
+    console.log(newBeneficiary);
 
     beneficiaryError.value = '';
 
     if(result.valid) {
-        trust.value.beneficiary = beneficiary;
+        trust.value.beneficiary = newBeneficiary;
         emit('valid');
     } else {
         beneficiaryError.value = result.reason;

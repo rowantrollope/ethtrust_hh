@@ -12,7 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) { /
         from: deployer, // Deployer will be performing the deployment transaction.
         log: true, //Ddisplay the address and gas used in the console (not when run in test though).
     });
-};
+}
 export default func;
 func.tags = ['Trusts']; // This sets up a tag so you can execute the script on its own (and its dependencies).
 

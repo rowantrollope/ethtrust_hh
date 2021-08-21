@@ -4,7 +4,7 @@
 <template>
     <nav aria-label="Progress">
         <ol class="border bg-white border-gray-300 rounded-t divide-y divide-gray-300 md:flex md:divide-y-0">
-        <li v-for="(panel, idx) in panels" :key="panel" class="relative md:flex-1 md:flex">
+        <li v-for="(panel, idx) in panels" class="relative md:flex-1 md:flex">
             <!-- COMPLETED ITEM, CURRENT ITEM, NEXT ITEM --> 
             <transition mode="out-in" name="pop">
                 <div v-if="idx === currentPanel" class="item" aria-current="step">
@@ -46,11 +46,13 @@
 
 <script setup="props, {emit}" lang="ts">
 import { CheckIcon } from '@heroicons/vue/outline'
+import { string } from 'hardhat/internal/core/params/argumentTypes';
 
 const props = defineProps({
-    panels: Array,
-    currentPanel: Number,
+    panels: { type: Array, required: true },
+    currentPanel: { type: Number, required: true },
 });
+let panel: string;
 
 </script>
 

@@ -10,8 +10,9 @@ interface changeCallback { (myArgument: string): void }
 export default class BlockchainConnect {
     public provider: Provider|null;
     public signer: Signer|null;
-    #balance: BigNumber;
-    #onChange: changeCallback|null;
+    
+    private _balance: BigNumber;
+    private _onChange: changeCallback|null;
 
     // Reactive members
     public account: Ref<string>;
@@ -21,8 +22,8 @@ export default class BlockchainConnect {
     constructor() {
         this.provider = null;
         this.signer = null;
-        this.#balance = BigNumber.from(0);
-        this.#onChange = null;
+        this._balance = BigNumber.from(0);
+        this._onChange = null;
         this.loaded = ref(false);
         this.account = ref("");
         this.connectionError = ref("");
@@ -34,11 +35,11 @@ export default class BlockchainConnect {
 
         if(this.provider) {
             // Connect Ethers to Metamask instance
-            this.provider = new ethers.providers.Web3Provider(window.ethereum)
+            this.provider = new ethers.providers.Web3Provider((window.ethereum as ethers.providers.ExternalProvider))
 
-            await this.provider.send("eth_requestAccounts", []);
+            await (this.provider as ethers.providers.Web3Provider).send("eth_requestAccounts", []);
             
-            this.signer = this.provider.getSigner();
+            this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
 
             if(this.signer === null || this.signer === undefined)
             {
@@ -48,11 +49,11 @@ export default class BlockchainConnect {
         
         } else {
             this.provider = <Provider> ethers.providers.getDefaultProvider();
-            this.signer = this.provider.getSigner();
+            this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
         }
 
         this.account.value = await this.signer!.getAddress();
-        this.#balance = await this.provider.getBalance(this.account.value);
+        this._balance = await this.provider.getBalance(this.account.value);
         this.loaded.value = true;
 
         //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
@@ -61,12 +62,12 @@ export default class BlockchainConnect {
         // Setup change notification
         //
         // TODO: Figure out why I can't call this by passing func reference... odd
-        window.ethereum!.on('accountsChanged', (accounts: Array<string>) => {
+        (window.ethereum as Provider).on('accountsChanged', (accounts: Array<string>) => {
             this.accountsChanged(accounts);
         });
     }
     public get balance(): BigNumber {
-        return this.#balance;
+        return this._balance;
     }
 
     /**
@@ -79,7 +80,7 @@ export default class BlockchainConnect {
         if(accounts.length) {
             this.account.value = accounts[0];
             console.log("BlockchainConnect::accountsChanged()", this.account.value);
-            this.provider!.getBalance(this.account.value).then((bn) => this.#balance = bn );
+            this.provider!.getBalance(this.account.value).then((bn) => this._balance = bn );
         } 
         else if (accounts.length === 0) {
             console.log('BlockchainConnect::accountsChanged() - Please connect to MetaMask.');
@@ -87,9 +88,9 @@ export default class BlockchainConnect {
         }
 
         // call user supplied change notification callback
-        if(this.#onChange != null) {
+        if(this._onChange != null) {
             console.log(this.account.value);
-            this.#onChange(this.account.value); 
+            this._onChange(this.account.value); 
         }
         
     }
@@ -98,8 +99,8 @@ export default class BlockchainConnect {
      * Sets the callback to be used when the account changes
      * @param _onChange changeCallback
      */
-    setOnChange(_onChange: changeCallback) {
-        this.#onChange = _onChange;
+    setOnChange(onChange: changeCallback) {
+        this._onChange = onChange;
     }    
     
     /**
@@ -130,7 +131,7 @@ export default class BlockchainConnect {
             return ether;
         else
         {
-            let bal = Math.round(Number((Math.abs(ether) * 10**precision).toPrecision(16))) / 10**precision * Math.sign(ether); 
+            let bal = Math.round(Number((Math.abs(Number(ether)) * 10**precision).toPrecision(16))) / 10**precision * Math.sign(Number(ether)); 
             return bal.toString();
         }
     }

@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 
 type Account = string;
 
-export const enum TrustType {
+export enum TrustType {
     REVOKABLE, 
     IRREVOKABLE,
     QTIP, 
@@ -23,7 +23,7 @@ export const TypeStrings: Array<string> = [
 
 // Trust 
 export class Trust {
-    public _key: BigNumber;
+    public key: string;
     public name: string;
     public grantor: Account;
     public trustees: Account[];
@@ -100,13 +100,7 @@ export class Trust {
     public get beneficiary () {
         return this._beneficiary;
     }
-    public set key(key: String) {
-        this._key = BigNumber.from(Number(key));
-    }
-    public get key() {
-        return "0x" + String(this._key.toNumber()).padStart(32, '0');
-        //return this._key.toString();
-    }
+
     public setMaturityDate = (date: Date) => this.maturityDate = BigNumber.from(Math.floor(date.getTime() / 1000));
     public getMaturityDate = (): Date => new Date(this.maturityDate.toNumber() * 1000);
 

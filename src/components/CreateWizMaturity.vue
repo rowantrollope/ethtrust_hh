@@ -60,7 +60,7 @@ const mounted = onBeforeMount(() => {
     maturityDate.value = tomorrow;
 });
 
-const updated = onUpdated(() => trust.value.setMaturityDate(maturityDate.value));
+const updated = onUpdated(() => trust.value.setMaturityDate(<Date>maturityDate.value));
 
 
 </script>

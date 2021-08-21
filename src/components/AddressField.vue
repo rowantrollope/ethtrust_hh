@@ -51,12 +51,12 @@ const props = defineProps({
 }
 .pop-enter-from {
     opacity: 0;
-    //transform: scale(.6);
+    /* transform: scale(.6);*/
     transition: ease-in-out 0.2s;
 }
 .pop-enter-to {
     opacity: 100%;
-    //transform: scale(1);
+    /* transform: scale(1); */
     transition: ease-in .2s
 }
 .pop-leave-from {

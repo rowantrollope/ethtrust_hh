@@ -6,19 +6,21 @@
 
 */
 import { ethers } from 'ethers';
+import { BigNumberish } from '@ethersproject/bignumber';
 
+interface Exchange {
+    USD: number,
+    BTC: number,
+    EUR: number,
+}
 export default class currencyExchange {
 
-    public exchange = {};
+    public exchange: Exchange | undefined;
     public formatter: Intl.NumberFormat;
 
     //name = ref("CurrencyExchange");
 
     constructor() {
-
-        //this.name.value = "CurrencyExchange";
-
-        //this.init();
 
         this.formatter = new Intl.NumberFormat(undefined, {
             style: 'currency',
@@ -30,6 +32,7 @@ export default class currencyExchange {
         // LOAD ETH-USD 
         const response = await fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,BTC,EUR");
         this.exchange = await response.json();
+        console.log(this.exchange);
     }
 
     // HELPERS

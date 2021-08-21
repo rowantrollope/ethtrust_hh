@@ -8,7 +8,7 @@
             </div>            
         </transition>
         <transition name="pop" mode="out-in">
-            <div class="cert-eth" :key="trust.etherAmount">
+            <div class="cert-eth" :key="trust.etherAmount.toString()">
                 {{ formatEtherString(trust.etherAmount) }}
             </div>    
         </transition>
@@ -17,11 +17,12 @@
 
 <script setup="props, {emit}" lang="ts">
 
-import { inject, computed } from 'vue';
+import { inject } from 'vue';
 
 import { Trust } from '../services/Trust';
+import TrustList from '../services/TrustList';
 
-import { formatEtherString, shortenAddress } from '../services/Helpers';
+import { formatEtherString } from '../services/Helpers';
 
 const props = defineProps({
     trust: { type: Trust, required: true },

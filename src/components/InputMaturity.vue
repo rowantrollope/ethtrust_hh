@@ -24,7 +24,8 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
+import { BigNumber} from "@ethersproject/bignumber";
 
 // components
 import { DatePicker } from 'v-calendar';
@@ -46,21 +47,6 @@ const maturityDate = computed({
     get: () => new Date(trust.value.maturityDate.toNumber() * 1000),
     set: (value) => trust.value.maturityDate = BigNumber.from(value.getTime() / 1000),
 })
-
-const validate = (beneficiary: string) => {
-    let result = trust.value.isValidBeneficiary(beneficiary);
-
-    if(result.valid = true) {
-        trust.value.beneficiary = beneficiary;
-        emit('valid');
-    }
-    else
-    {
-        beneficiaryError.value = result.error;
-        emit('invalid');
-        return; 
-    }
-}
 
 </script>
 

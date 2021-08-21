@@ -10,6 +10,7 @@ import Nav from './components/Nav.vue';
 
 import BlockchainConnect from './services/BlockchainConnect';
 import TrustList from './services/TrustList';
+import { Trust } from './services/Trust';
 
 import CurrencyExchange from './services/CurrencyExchange';
 

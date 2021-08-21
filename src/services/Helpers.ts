@@ -15,4 +15,4 @@ export const toEtherStringRounded = (wei: BigNumberish, precision: number=2) => 
     return ethers.utils.commify(n.toString());
 };
 export const round = (num: number, precision: number=2) => { return Math.round(Number((Math.abs(num) * precision**10).toPrecision(16))) / precision**10 * Math.sign(num); };
-export const formatEtherString = (wei: BigNumberish) => ethers.utils.formatEther(wei, { commify: true } );
+export const formatEtherString = (wei: BigNumberish) => ethers.utils.commify(ethers.utils.formatEther(wei));
