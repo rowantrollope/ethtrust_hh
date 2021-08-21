@@ -5,7 +5,7 @@
     Component used to translate currencies, uses cryptocompare
 
 */
-import { ref } from 'vue';
+import { ethers } from 'ethers';
 
 export default class currencyExchange {
 
@@ -18,7 +18,7 @@ export default class currencyExchange {
 
         //this.name.value = "CurrencyExchange";
 
-        this.init();
+        //this.init();
 
         this.formatter = new Intl.NumberFormat(undefined, {
             style: 'currency',
@@ -41,8 +41,12 @@ export default class currencyExchange {
             console.error("Exchange Not Ready", this.exchange);
             return -1;
         }
-           
         return this.exchange.USD * eth;
+    }
+    
+    wei2usd = (wei: BigNumberish): string => {
+        let eth = ethers.utils.formatEther(wei);
+        return this.eth2usdFormatted(Number(eth));
     }
 
     eth2usdFormatted = (eth: number): string => {

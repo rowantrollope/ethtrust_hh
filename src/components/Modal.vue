@@ -4,7 +4,7 @@
 <template>
     <TransitionRoot as="template" :show="open">
         <Dialog as="div" static class="fixed z-50 inset-0 overflow-y-auto" @close="open = false" :open="open">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="flex items-end justify-center min-h-screen sm:pt-4 px-2 sm:px-4 pb-20 text-center sm:block">
                 <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
                     <DialogOverlay class="screen-overlay" />
                 </TransitionChild>
@@ -56,9 +56,9 @@ const emit = defineEmits(['cancel']);
         @apply mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10;
     }
     .dialog-title {
-        @apply text-2xl leading-6 text-gray-900;
+        @apply text-xl mb-2 sm:mb-0 sm:text-2xl leading-6 text-gray-900;
     }
     .dialog-body {
-        @apply p-4;
+        @apply sm:p-4 p-1;
     }
 </style>

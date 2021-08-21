@@ -18,7 +18,7 @@
             </p>
             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center xl:justify-start">
               <div class="rounded-md shadow">
-                <a @click="$router.push('/Trusts')" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+                <a @click="$router.push('/Manage')" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
                   Get started
                 </a>
               </div>

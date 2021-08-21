@@ -1,4 +1,5 @@
 
+import { ref, Ref } from 'vue';
 import { ethers, Signer } from 'ethers';
 import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
@@ -9,20 +10,22 @@ interface changeCallback { (myArgument: string): void }
 export default class BlockchainConnect {
     public provider: Provider|null;
     public signer: Signer|null;
-    public account: string;
-    public loaded: boolean;
-    public connectionError: string;
     #balance: BigNumber;
     #onChange: changeCallback|null;
 
+    // Reactive members
+    public account: Ref<string>;
+    public loaded: Ref<boolean>;
+    public connectionError: Ref<string>;
+
     constructor() {
-        this.account = "";
-        this.loaded = false;
         this.provider = null;
         this.signer = null;
         this.#balance = BigNumber.from(0);
         this.#onChange = null;
-        this.connectionError = "";
+        this.loaded = ref(false);
+        this.account = ref("");
+        this.connectionError = ref("");
     }
 
     async connect(): Promise<void> {
@@ -48,9 +51,9 @@ export default class BlockchainConnect {
             this.signer = this.provider.getSigner();
         }
 
-        this.account = await this.signer!.getAddress();
-        this.#balance = await this.provider.getBalance(this.account);
-        this.loaded = true;
+        this.account.value = await this.signer!.getAddress();
+        this.#balance = await this.provider.getBalance(this.account.value);
+        this.loaded.value = true;
 
         //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
     
@@ -72,18 +75,23 @@ export default class BlockchainConnect {
      * @param accounts list of accounts - currently MetaMask only sets account[0]
      */
     accountsChanged(accounts: Array<string>) {
+
         if(accounts.length) {
-            console.log("BlockchainConnect::accountsChanged()", accounts);
-            this.account = accounts[0];
-            this.provider!.getBalance(this.account).then((bn) => this.#balance = bn );
-        } else if (accounts.length === 0) {
+            this.account.value = accounts[0];
+            console.log("BlockchainConnect::accountsChanged()", this.account.value);
+            this.provider!.getBalance(this.account.value).then((bn) => this.#balance = bn );
+        } 
+        else if (accounts.length === 0) {
             console.log('BlockchainConnect::accountsChanged() - Please connect to MetaMask.');
-            this.account = "";    
+            this.account.value = "";    
         }
 
         // call user supplied change notification callback
-        if(this.#onChange != null)
-            this.#onChange(this.account); 
+        if(this.#onChange != null) {
+            console.log(this.account.value);
+            this.#onChange(this.account.value); 
+        }
+        
     }
     
     /**

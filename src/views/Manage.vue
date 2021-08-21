@@ -6,7 +6,7 @@
         When empty, display some helpful text
     --> 
     <ConnectBlock/>
-    <div v-if="bc.state.isConnected && ts.state.isConnected">
+    <div v-if="bc.loaded">
         <PageTitle >
             <template v-slot:title>Create & Manage Trusts</template>
             <template v-slot:buttons>           
@@ -16,24 +16,26 @@
             </template>
         </PageTitle>
         <div class="px-5 mt-5">
-            <TrustList @create-clicked="onCreateNew"></TrustList>
+            <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
         </div>
+        <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
     </div>
 
-    <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
+
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { inject, ref } from 'vue';
 
-import Button from '../components/Button';
-import PageTitle from '../components/PageTitle';
-import TrustList from '../components/TrustList';
-import CreateWiz from '../components/CreateWiz';
+import Button from '../components/Button.vue';
+import PageTitle from '../components/PageTitle.vue';
+import ManageTrusts from '../components/ManageTrusts.vue';
+import CreateWiz from '../components/CreateWiz.vue';
 
-import ConnectBlock from '../components/ConnectBlock';
-import bc from '../services/Blockchain';
-import ts from '../services/TrustContract';
+import ConnectBlock from '../components/ConnectBlock.vue';
+import BlockchainConnect from '../services/BlockchainConnect';
+
+let bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
 
 //
 // Create Handlers

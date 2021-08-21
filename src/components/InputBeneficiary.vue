@@ -1,11 +1,12 @@
             trust.value.beneficiary = beneficiary;
 <template>
-    <span v-if="beneficiaryError" class="ml-20 text-red-500" >{{ beneficiaryError }}</span>
-    <div class="flex mb-5">
-        <div class="flex items-center mr-2"> Account: </div>
+    <span v-if="beneficiaryError" class="text-red-500 text-sm" >{{ beneficiaryError }}</span>
+    <div class="flex">
+        <div class="flex items-center"><slot></slot></div>
         <input type="input"
         @input="validate($event.target.value)"
         v-model="beneficiary"
+        placeholder="Enter Beneficiary Account #"
         name="beneficiary" id="beneficiary" autocomplete="beneficiary"
         :class="[beneficiaryError ? 'input-field-invalid' : 'input-field']" />
     </div>
@@ -55,7 +56,7 @@ const validate = (beneficiary: string) => {
 
 <style scoped>
 .input-field {
-    @apply  text-base text-black p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
+    @apply text-base text-black p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
 }
 .input-field-invalid {
     @apply  text-base text-red-500 p-2 block border focus:ring-red-500 focus:border-red-500 w-full min-w-0 rounded-md border-red-500;

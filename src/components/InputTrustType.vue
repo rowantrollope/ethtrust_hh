@@ -5,8 +5,8 @@
         Select Trust Type
         </ListboxLabel>
         <div class="relative">
-        <ListboxButton class="relative w-40 py-2 pl-3 pr-10 text-left bg-white rounded-lg border border-gray-300 cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm">
-            <span class="block truncate">{{ selected.title }}</span>
+        <ListboxButton class="relative w-40 py-2 pl-3 pr-10 text-left bg-white rounded-md border border-gray-300 cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 focus:ring-indigo-500 focus:border-indigo-500">
+            <span class="block truncate text-black">{{ selected.title }}</span>
             <span
             class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
             >
@@ -30,7 +30,7 @@
     -->
 
         <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
-          <ListboxOptions class="origin-top-right absolute z-10 text-left right-0 mt-2 w-72 rounded-md shadow-lg overflow-hidden bg-white divide-y divide-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <ListboxOptions class="origin-top-right z-10 text-left right-0 mt-2 w-full rounded-md shadow-lg overflow-hidden bg-white divide-y divide-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none">
             <ListboxOption as="template" v-for="trustInfo in trustDescriptions" :key="trustInfo.title" :value="trustInfo" v-slot="{ active, selected }">
               <li :class="[active ? 'text-white bg-indigo-500' : 'text-gray-900', 'cursor-default select-none relative p-4 text-sm']">
                 <div class="flex flex-col">
@@ -110,10 +110,10 @@ const trust = computed({
     set: (value) => emit('update:modelValue', value)
 });
 const updated = onUpdated(() => {
-    console.log("onUpdated()");
+    trust.value.trustType = selected.value.type;
 });
+
 const change = watch(trust.value, (val, newVal) => {
-    console.log("change");
     selected.value = trustDescriptions[trust.value.trustType];
 });
 

@@ -5,11 +5,13 @@ import { BigNumber} from "@ethersproject/bignumber";
 
 import { Trust } from "./Trust";
 import { TrustContract, ChangeType, FilterCallback } from './TrustContract';
-import { shortenAddress } from './Helpers';
+import { shortenAddress, toEtherStringRounded } from './Helpers';
 
 enum TrustState {
-    Updating = 1,
+    None = 0,
+    Updating,
     Deleting,
+    Creating,
 };
 
 export default class TrustList extends TrustContract {
@@ -24,6 +26,8 @@ export default class TrustList extends TrustContract {
     // These maps show which items are awaiting updates 
     // from the blockchain
     public updateMap = ref(new Map());
+
+    private manualTimer: NodeJS.Timeout;
 
     constructor() {
         super();
@@ -48,14 +52,14 @@ export default class TrustList extends TrustContract {
      * @param index Item updating
      * @returns bool whether item is awaiting blockchain update
      */
-    updating = (key: string) : boolean => this.updateMap.value.get(key) == TrustState.Updating;
+    updating = (key: string) : boolean => this.updateMap.value.get(key) === TrustState.Updating;
     
     /**
      * 
      * @param index Item deleting
      * @returns bool whether item is awaiting blockchain
      */
-    deleting = (key: string) : boolean => this.updateMap.value.get(key) == TrustState.Deleting;
+    deleting = (key: string) : boolean => this.updateMap.value.get(key) === TrustState.Deleting;
 
     /**
      * 
@@ -64,6 +68,15 @@ export default class TrustList extends TrustContract {
      */
     creating = (key: string) : boolean => key === '0x0'; 
 
+    trustState = (key: string) : TrustState => {
+        const state: TrustState = this.updateMap.value.get(key);
+        if(state)
+            return state;
+        else if(key === '0x0')
+            return TrustState.Creating;
+        else
+            return TrustState.None; 
+    };
     /**
      * 
      * @param key trust being updated
@@ -71,7 +84,7 @@ export default class TrustList extends TrustContract {
      * @returns void
      */
     changeHandler = async (key: string, change: ChangeType) => {
-
+        console.log("changeHandler() - ", key, change);
         if(this.trusts.value === undefined) 
             return ;       
 
@@ -116,6 +129,10 @@ export default class TrustList extends TrustContract {
                     //console.error("BC.vue::onTrustChange() - Can't Find Trust: ", shortenAddress(key));
                 break;
         }
+        // IF we receive all the updates, clear the manual refresh timer
+        if(this.updateMap.value.size === 0) {
+            clearTimeout(this.manualTimer);
+        }
 
     }
 
@@ -126,8 +143,10 @@ export default class TrustList extends TrustContract {
         await super.createTrust(newTrust);
     }
     
-    getTrusts = async (filter: FilterCallback): Promise<Array<Trust>> =>
+    getTrusts = async (filter: FilterCallback): Promise<Array<Trust>> => {
         this.trusts.value = await super.getTrusts(filter);        
+        this.updateMap.value.clear();
+    }
     
     updateTrust = async (trust: Trust) => {
         // Quick-update support
@@ -135,9 +154,9 @@ export default class TrustList extends TrustContract {
         
         if(index !== -1) {
             //console.log("TrustList::updateTrust() Updating: ", trust.key);
-            //console.log("TrustList::updateTrust() Found: ", index, this.trusts.value![index]);
+            console.log("TrustList::updateTrust() Found: ", index, this.trusts.value![index]);
             this.trusts.value![index].clone(trust);        
-            this.updateMap.value.set(trust.key, TrustState.Updating);
+            this.setUpdateState(trust.key, TrustState.Updating);
         }
         // call base
         await super.updateTrust(trust);
@@ -145,7 +164,7 @@ export default class TrustList extends TrustContract {
 
     withdraw = async (key: string, amount: BigNumber): Promise<boolean> => {
 
-        this.updateMap.value.set(key, TrustState.Updating);
+        this.setUpdateState(key, TrustState.Updating);
 
         let success = await super.withdraw(key, amount);
 
@@ -159,12 +178,40 @@ export default class TrustList extends TrustContract {
     }
 
     deposit = async (key: string, amount: BigNumber) => {
-        this.updateMap.value.set(key, TrustState.Updating);
+        this.setUpdateState(key, TrustState.Updating);
         super.deposit(key, amount);
     }
 
     deleteTrust = async (key: string): Promise<boolean> => {
-        this.updateMap.value.set(key, TrustState.Deleting);
+        this.setUpdateState(key, TrustState.Deleting);
         return await super.deleteTrust(key);
+    }
+    private setUpdateState = (key: string, state: TrustState) => {
+        this.updateMap.value.set(key, state);
+        clearTimeout(this.manualTimer);
+        this.manualTimer = setTimeout(() => this.manualRefresh(), 20000);
+    }
+    private manualRefresh = async () => {
+        // If after X seconds, we haven't gotten an update, do a manual refresh
+        console.log("TrustList::manualRefresh() - Updates in queue: ", this.updateMap.value.size)
+        if(this.updateMap.value.size) {
+            this.manualUpdates();
+        }
+    }
+    private manualUpdates = async () => {
+
+        // walk through the updateMap, updating each trust manually 
+        this.updateMap.value.forEach(async (value, key, map) => {
+            const idx = this.trusts.value?.findIndex(trust => trust.key === key);
+
+            if(idx === -1) return;
+
+            let newTrust: Trust = await super.getTrust(key);
+            
+            this.trusts.value![idx] = newTrust;
+
+            this.updateMap.value.delete(key);            
+        });
+        
     }
 }

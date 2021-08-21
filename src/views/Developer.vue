@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import Trusts from '../components/Trusts.vue';
+import Trusts from '../components/DeveloperList.vue';
 
 </script>
 

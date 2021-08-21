@@ -14,11 +14,11 @@
                 :disabled="errorText ? true : false"
                 @click="addTrustee()">Add Trustee</Button>
     </div>
-    <ul class="border shadow border-gray-200 min-w-full divide-y divide-gray-200">
+    <ul class="border rounded-md border-gray-200 min-w-full divide-y divide-gray-200">
         <div class="bg-gray-100">
             <div class="p-2">Trustee Accounts</div>
         </div>
-        <div class="overflow-y-auto bg-white divide-y divide-gray-200">
+        <div class="overflow-y-auto p-1 bg-white divide-y divide-gray-200">
             <li v-for="trustee in trust.trustees" :key="trustee" class="mx-3 py-2 flex">
                 <div class="flex-grow text-sm font-medium text-gray-900">{{ trustee }}</div>
                 <button @click="deleteTrustee(trustee)"><XIcon class="mr-2 text-gray-700 hover:text-red-500 flex-shrink h-4 w-4" aria-hidden="true"  /></button>                
@@ -75,6 +75,7 @@ const addTrustee = () => {
     console.log("AddTrustee", newTrustee.value);
     try {
         trust.value.addTrustee(newTrustee.value)
+        newTrustee.value = '';
     } catch(e) {
         errorText.value = "Error adding trustee: " + e;
         return;

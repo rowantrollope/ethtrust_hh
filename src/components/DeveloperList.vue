@@ -1,30 +1,14 @@
 <template>
-<div v-if="loaded">
+<div v-if="bc.loaded">
 <div class="text-center ">
-    <div class="bg-black">
-        <div v-if="loaded" class="text-2xl md:text-4xl text-white p-1 font-thin mb-2">
-            TrustContract: 
-            <div class="text-lg">
-                Loaded <span class="text-blue-300">{{ shortenAddress( account ) }}</span> 
-                Balance: <span class="text-blue-300">{{ toEtherStringRounded(bc.balance, 3) }}</span>
-            </div>
-        </div>
-        <div v-else>
-            Loading...
-        </div>
-    </div>
-
-    <div class="flex justify-center">
+    <div class="flex mt-5 justify-center">
         <button class="text-base mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
-        <Button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</Button>
-        <button class="text-base mx-2 font-normal bg-indigo-500 rounded-lg text-white hover:bg-indigo-300 p-2" :onClick="getTrusts">READ</button>
+        <Button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</Button>        <button class="text-base mx-2 font-normal bg-indigo-500 rounded-lg text-white hover:bg-indigo-300 p-2" :onClick="testMethod">TEST</button>
         <InputTrustType v-model="selectedTrust"></InputTrustType>
     </div>
     <!-- Account list -->
-    
     <div class="text-sm text-black px-7 mt-5">
-
-    <div class="flex flex-col">
+    <div class="mt-5 flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -52,20 +36,20 @@
                                 list.deleting(trust.key) ? 'animate-pulse text-red-500' : 'text-gray-900']" 
                         @click="select(trust.key)">
                         <td class="row-text text-blue-600">
-                            {{ shortenAddress(trust.key) }}
+                            <AddressField :address="trust.key"/>
                         </td>
                         <td class="row-text"> {{ trust.name }} </td>
                         <td class="row-text"> {{ TypeStrings[trust.trustType] }} </td>
-                        <td class="row-text"> {{ shortenAddress(trust.grantor) }} </td>
+                        <td class="row-text"> <AddressField :address="trust.grantor"/> </td>
                         <td class="row-text"> 
-                            <div v-for="trustee in trust.trustees" :key="trustee">{{ shortenAddress(trustee) }}, </div>
+                            <div v-for="trustee in trust.trustees" :key="trustee"><AddressField :address="trustee"/>, </div>
                         </td>
                         <td class="row-text"> 
-                            {{ shortenAddress(trust.beneficiary) }}
+                            <AddressField :address="trust.beneficiary"/>
                         </td>
                         <td class="row-text"> {{ ethers.utils.commify(toEther(trust.etherAmount)) }} </td>
-                        <td class="row-text"> {{ toDate(trust.maturityDate.toNumber()) }} </td>
-                        <td class="row-text"> {{ toDate(trust.createdDate.toNumber()) }} </td>
+                        <td class="row-text"> {{ trust.getMaturityDate().toLocaleDateString() }} </td>
+                        <td class="row-text"> {{ trust.getCreatedDate().toLocaleDateString() }} </td>
                     </tr>
                     </tbody>
                 </table>
@@ -73,6 +57,7 @@
             </div>
         </div>
     </div>
+
     </div>
 
     <!-- 
@@ -96,7 +81,7 @@
 </template>
 
 <script setup="props" lang="ts">
-import { onMounted, ref, inject } from 'vue';
+import { onMounted, ref, inject, watch } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -104,48 +89,23 @@ import BlockchainConnect from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 
+import AddressField from './AddressField.vue';
 import Button from './Button.vue'
 import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
+import NewTrustCard from './NewTrustCard.vue'
 
 import { Trust, TypeStrings, TrustType } from "../services/Trust";
 import { shortenAddress, toEther, toDate, toEtherStringRounded } from '../services/Helpers';
 
 // BLOCKCHAIN connection and prep
-const exchange: CurrencyExchange | undefined = inject('exchange');
+const exchange = <CurrencyExchange> inject('exchange');
 
 /**
- * Setup
+ * LOAD BC DATA
  */
-let bc: BlockchainConnect | undefined = inject("BlockchainConnect");
-let list: TrustList = new TrustList();
-const loaded = ref(false);
-const account = ref("");
-
-const mounted = onMounted(() => connect());
-
-const connect = async () => {
-    loaded.value = false;
-
-    await bc!.connect();
-
-    if(bc!.signer) {
-        account.value = bc!.account;
-
-        await list.connect(bc!.signer);
-
-        bc!.setOnChange((_account: string) => account.value = _account); 
-
-        await list.getTrusts(trust => true);
-
-        loaded.value = true;
-    }
-    else 
-        console.error("BC::connect() - Unable to connect to blockchain");
-
-}
-
-const getTrusts = async () => list.getTrusts((trust: Trust) => { return true; });
+let bc = <BlockchainConnect> inject("BlockchainConnect");
+const list = <TrustList> inject("TrustList");
 
 /**
  * List select handlers
@@ -153,6 +113,10 @@ const getTrusts = async () => list.getTrusts((trust: Trust) => { return true; })
 
 const selected = (key: string) : boolean => key === selectedTrust.value.key;
 
+const selectEdit = (key: string) => {
+    select(key);
+    onEdit();
+}
 const select = (key: string) => {
     
     const index = list.trusts.value!.findIndex(item => item.key === key);
@@ -162,6 +126,9 @@ const select = (key: string) => {
         console.error("Can't find trust key: ", key);
 
     console.log("Selected", selectedTrust.value.key);
+}
+
+const testMethod = () => {
 }
 /**
  * Edit Handlers
@@ -175,7 +142,7 @@ let selectedTrust = ref(new Trust());
 
 const onEdit = async () => { 
     
-    list.canWithdraw(selectedTrust.value.key, bc!.account).then((arg) => {
+    list.canWithdraw(selectedTrust.value.key, bc!.account.value).then((arg) => {
         canWithdraw.value = arg.result;
         reason.value = arg.reason;
         openEditDialog();

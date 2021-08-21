@@ -9,7 +9,7 @@
 
 <style scoped>
    .btn {
-        @apply inline-flex justify-center items-center px-4 py-2 tracking-wide transition-colors duration-200 transform rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
+        @apply font-medium inline-flex justify-center items-center px-4 py-2 transition-colors duration-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
     }
     .btn-rounded {
         @apply rounded-3xl;
@@ -24,7 +24,7 @@
         @apply text-blue-500 border border-blue-500 hover:bg-blue-400 focus:ring-blue-500 hover:text-white;
     }
     .btn-white {
-        @apply text-black border border-gray-300 hover:bg-gray-100 focus:ring-gray-400 ;
+        @apply text-gray-700 border border-gray-300 hover:bg-gray-100 focus:ring-gray-400 ;
     }
     .btn-danger {
         @apply text-white bg-red-600 hover:bg-red-500 focus:ring-red-500;

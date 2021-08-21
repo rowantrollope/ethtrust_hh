@@ -97,9 +97,14 @@ export class Trust {
         this._beneficiary = beneficiary;
     }
 
-    public get beneficiary() {
+    public get beneficiary () {
         return this._beneficiary;
     }
+
+    public setMaturityDate = (date: Date) => this.maturityDate = BigNumber.from(Math.floor(date.getTime() / 1000));
+    public getMaturityDate = (): Date => new Date(this.maturityDate.toNumber() * 1000);
+
+    public getCreatedDate = (): Date => new Date(this.createdDate.toNumber() * 1000);
 
     //
     // Validation rules!

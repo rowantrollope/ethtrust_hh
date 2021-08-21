@@ -59,7 +59,7 @@ export class TrustContract extends ContractWrapper {
             });
 
         this.contract!.on("LogUpdateTrust", 
-            (...args: Array<any>): void => {
+            (...args: Array<any>): void => { console.log("updateTrust");
                 if(this.onChange) this.onChange(args[1], ChangeType.TRUST_UPDATED);
             });
 

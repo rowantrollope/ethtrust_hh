@@ -15,32 +15,35 @@
                             </MenuButton>
                             <transition name="fadeslide">
                                 <MenuItems class="popover-panel">
-                                    <div class="px-2 pt-2 pb-3 bg-gray-900 space-y-1 sm:px-3">
+                                    <div class="px-3 pt-2 pb-3 bg-gray-900 space-y-1 sm:px-3">
                                         <MenuItem>
                                             <router-link class="mobile-router-link" tag="li" to="/">
                                                 Home
                                             </router-link>
                                         </MenuItem>
-<!--
                                         <MenuItem>
-                                            <router-link v-on:click="open=false" class="mobile-router-link" tag="li" to="/Trusts">
-                                                Manage Trusts
+                                            <router-link v-on:click="open=false" class="mobile-router-link" tag="li" to="/Manage">
+                                                Manage & Create Trusts
                                             </router-link>
                                         </MenuItem>
                                         <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/ForYou">
-                                                Trusts for you
+                                            <router-link class="mobile-router-link" tag="li" to="/Beneficiaries">
+                                                For you (as Beneficiary)
                                             </router-link>
                                         </MenuItem>
-                                        -->
+                                        <MenuItem>
+                                            <router-link class="mobile-router-link" tag="li" to="/Trustees">
+                                                For Trustees
+                                            </router-link>
+                                        </MenuItem>
                                         <MenuItem>
                                             <router-link class="mobile-router-link" tag="li" to="/About">
                                                 About
                                             </router-link>
                                         </MenuItem>
                                         <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/Test">
-                                                Test
+                                            <router-link class="mobile-router-link" tag="li" to="/Developer">
+                                                Developer
                                             </router-link>
                                         </MenuItem>
                                     </div>
@@ -61,25 +64,26 @@
                         <router-link class="router-link" tag="li" to="/">
                             Home
                         </router-link>
-                        <!--
-                        <router-link class="router-link" tag="li" to="/Trusts">
+                        <router-link class="router-link" tag="li" to="/Manage">
                             Manage Trusts
                         </router-link>
-                        <router-link class="router-link" tag="li" to="/ForYou">
+                        <router-link class="router-link" tag="li" to="/Beneficiaries">
                              Trusts for you
                         </router-link>
-                        -->
+                        <router-link class="router-link" tag="li" to="/Trustees">
+                             Trustees
+                        </router-link>
                         <router-link class="router-link" tag="li" to="/About">
                             About
                         </router-link>
-                        <router-link class="router-link" tag="li" to="/Test">
-                            Test
+                        <router-link class="router-link" tag="li" to="/Developer">
+                            Developer
                         </router-link>
                     </div>
 
                 </div>
                 <div class="flex items-center">
-                    <!-- <ConnectButton/> -->
+                    <ConnectButton/>
                 </div>
             </div>
         </div>
@@ -107,7 +111,7 @@ import ConnectButton from './ConnectButton.vue'
         @apply border border-gray-400 bg-black text-white px-3 py-2 rounded-md text-base font-normal;
     }
     .router-link {
-        @apply flex-shrink-0 text-gray-300 hover:bg-black hover:text-white px-3 py-1 rounded-md text-sm font-light;
+        @apply flex-shrink-0 text-gray-300 hover:bg-black hover:text-white px-2 py-1 rounded-md text-sm font-light;
     }
     .mobile-router-link {
         @apply text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium;

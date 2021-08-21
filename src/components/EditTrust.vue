@@ -10,11 +10,11 @@
 <template>
     <Modal @cancel="onCancel">
         <template v-slot:title>
-            <slot name="title"></slot>
+            <slot class="" name="title"></slot>
         </template>
         
-        <div class="col-span-12 text-base border-gray-500 rounded-md p-2">            
-            <span class="mt-1 inline">
+        <div class="col-span-12 text-base border-gray-500 rounded-md sm:p-2">            
+            <span class="mt-1 inline text-gray-500">
                 Balance: 
                 </span>
                 <span class="inline -ml-2 text-green-500 text-base items-center">
@@ -22,20 +22,30 @@
                 </span>
                 <span class="inline text-green-500"> {{ toEtherStringRounded(trust.etherAmount) }} ETH </span>
             
-            <p class="mt-1">Trust Number: <b>{{ shortenAddress(trust.key)}}</b>, Created on {{ toDate(trust.createdDate.toNumber()) }}</p>
-            <p class="mt-1">Created by (Grantor): <b>{{ trust.grantor }}</b></p>
-            <p class="mt-1">Trust Type: {{ trust.getTypeString() }} </p>
-            <p class="mt-1">Revokable? {{ revokable ? "YES" : "NO" }} </p>
+            <p class="mt-1 text-gray-500"> Trust Number: 
+                <span class="text-gray-900"> <AddressField :address="trust.key"/>, Created on {{ trust.getCreatedDate().toLocaleDateString() }} </span>
+            </p>
+            <p class="mt-1 text-gray-500"> Created by (Grantor): 
+                <span class="text-gray-900">
+                    <AddressField :address="trust.grantor"></AddressField>
+                </span>
+            </p>
+            <p class="mt-1 text-gray-500"> Trust Type: 
+                <span class="text-gray-900"> {{ trust.getTypeString() }} </span> 
+            </p>
+            <p class="mt-1 text-gray-500">Revokable? 
+                <span class="text-gray-900">{{ revokable ? "YES" : "NO" }} </span>
+            </p>
 
         </div>
         
-        <div class="mt-5 hidden">
+        <div class="mt-5 sm:hidden">
             <label for="tabs" class="sr-only">Select a tab</label>
-            <select id="tabs" name="tabs" class="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
-                <option v-for="(tab, index) in tabs" :key="index"  :selected="activeTab===index">{{ tab }}</option>
+            <select id="tabs" name="tabs" v-model="activeTab" class="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
+                <option v-for="(tab, index) in tabs" :value="index" :key="index">{{ tab.name }}</option>
             </select>
         </div>
-        <div class=" mt-5 sm:block">
+        <div class=" mt-5 hidden sm:block">
             <nav class="flex space-x-2" aria-label="Tabs">
                 <a v-for="(tab, index) in tabs" 
                     :key="index" 
@@ -56,19 +66,19 @@
             -->
             <div v-show="activeTab===0">
                 <p class="text-sm ml-5">Note: Funds will not be accessible until AFTER the maturity date.</p>
-                <div class="mt-5 grid grid-cols-12 gap-6">
-                    <div class="col-span-4 justify-self-end pt-2 ">
+                <div class="mt-5 grid grid-cols-12 gap-2 sm:gap-6">
+                    <div class="col-span-12 sm:col-span-4 sm:justify-self-end sm:pt-2">
                         <label for="trust_name" class="label-text">Trust name</label>
                     </div>
-                    <div class="col-span-8">
+                    <div class="col-span-12 sm:col-span-8">
                         <input type="text" v-model="trust.name" name="trust_name" id="trust_name" autocomplete="trust-name" class="input-field" />
                     </div>
-                    <div class="col-span-4 justify-self-end pt-2 ">
+                    <div class="col-span-12 sm:col-span-4 sm:justify-self-end sm:pt-2 ">
                         <label for="maturity_date" class="label-text">Maturity Date</label>
                     </div>
-                    <div class="col-span-8">     
+                    <div class="col-span-12 sm:col-span-8">     
                         <div class="mt-2" v-if="!revokable">
-                            {{ toDate(trust.maturityDate) }} 
+                            {{ trust.getMaturityDate().toLocaleDateString() }} 
                             <span class="text-gray-500 text-sm">(Can't change maturity date on IRREVOKABLE trust)</span>
                         </div>
                         <div v-else>
@@ -120,14 +130,14 @@
                     <p class="text-center">{{ reason }}</p>
                 </div>
                 <div v-else>
-                    <p class="ml-5 text-sm"> Note: Funds will be returned to the owner of the trust.  Only the trust fund owner or a trustee may withdraw. 
+                    <p class="sm:ml-5 text-sm"> Note: Funds will be returned to the owner of the trust.  Only the trust fund owner or a trustee may withdraw. 
                         Maximum withdrawal: 
                         <span class="text-green-500">{{ toEtherStringRounded(trust.etherAmount) }} ETH</span>
                     </p><br/>
                     
-                    <div class="flex justify-center items-center">
+                    <div class="sm:flex text-center sm:justify-center items-center">
                         <EthInput v-model="ethWithdraw">Amount to withdraw</EthInput>
-                        <Button class="flex ml-5 btn-success" :onClick="onWithdraw">Withdraw Now</Button>
+                        <Button class="sm:flex sm:ml-5 btn-success" :onClick="onWithdraw">Withdraw Now</Button>
                     </div>
                 </div>
             </div>
@@ -179,9 +189,9 @@
             <!--
                 Tab: Type
             -->
-            <div v-show="activeTab===6">
-                <p class="text-sm ml-5">Note: You cannot change the trust type once it is created.</p>
-                <InputTrustType v-model='trust'></InputTrustType>
+            <div v-show="activeTab===6" >
+                <p class="text-sm ml-10 mb-5">Note: You cannot change the trust type once it is created.</p>
+                <InputTrustType class="ml-10" v-model='trust'></InputTrustType>
             </div>
 
         </div>
@@ -209,15 +219,16 @@ import { DatePicker } from 'v-calendar';
 import BlockchainConnect from '../services/BlockchainConnect';
 import CurrencyExchange from '../services/CurrencyExchange';
 import { Trust, TrustType } from '../services/Trust'
-import { toDate, toEtherStringRounded, shortenAddress, round } from '../services/Helpers';
+import { toEtherStringRounded, shortenAddress } from '../services/Helpers';
 
 // components
 import Modal from './Modal.vue';
 import Button from './Button.vue';
-import EthInput from './EthInput.vue';
+import EthInput from './InputEther.vue';
 import InputBeneficiary from './InputBeneficiary.vue';
-import InputTrustees from './InputTrustees.vue'
-import InputTrustType from './InputTrustType.vue'
+import InputTrustees from './InputTrustees.vue';
+import InputTrustType from './InputTrustType.vue';
+import AddressField from './AddressField.vue';
 
 const props = defineProps({
     modelValue: { type: Trust, required: true },
@@ -252,8 +263,8 @@ const trust = computed({
 const revokable = computed(() => trust.value.trustType === TrustType.REVOKABLE);
 
 const maturityDate = computed({
-    get: () => new Date(trust.value.maturityDate.toNumber() * 1000),
-    set: (value) => trust.value.maturityDate = BigNumber.from(value.getTime() / 1000),
+    get: () => trust.value.getMaturityDate(),
+    set: (value) => trust.value.setMaturityDate(value),
 })
 
 const ethWithdraw = ref(0);
@@ -271,10 +282,10 @@ const onDeposit = () => emit('deposit', ethDeposit.value);
 <style scoped>
 
 .tab {
-    @apply px-3 py-2 font-medium text-lg ;
+    @apply px-3 py-2 sm:font-medium text-lg ;
 }
 .tab-content {
-    @apply border-gray-300 text-base border mt-2 rounded-md p-5;
+    @apply border-gray-300 text-base border mt-2 rounded-md p-2 sm:p-5;
 }
 .tab-title {
     @apply text-lg
@@ -296,6 +307,6 @@ const onDeposit = () => emit('deposit', ethDeposit.value);
     @apply  text-base text-red-500 p-2 block border focus:ring-red-500 focus:border-red-500 w-full min-w-0 rounded-md border-red-500;
 }
 .label-text {
-    @apply block text-left text-base font-medium text-gray-700;
+    @apply block text-left text-base sm:font-medium text-gray-700;
 }
 </style> 
