@@ -23,7 +23,7 @@
                 <span class="inline text-green-500"> {{ toEtherStringRounded(trust.etherAmount) }} ETH </span>
             
             <p class="mt-1 text-gray-500"> Trust Number: 
-                <span class="text-gray-900"> <AddressField :address="trust.key"/>, Created on {{ trust.getCreatedDate().toLocaleDateString() }} </span>
+                <span class="text-gray-900"> <AddressField :address="trust.key"/> </span>
             </p>
             <p class="mt-1 text-gray-500"> Created by (Grantor): 
                 <span class="text-gray-900">

@@ -190,7 +190,7 @@ export default class TrustList extends TrustContract {
     private setUpdateState = (key: string, state: TrustState) => {
         this.updateMap.value.set(key, state);
         clearTimeout((this.manualTimer as NodeJS.Timeout));
-        this.manualTimer = setTimeout(() => this.manualRefresh(), 20000);
+        this.manualTimer = setTimeout(() => this.manualRefresh(), 60000);
     }
     private manualRefresh = async () => {
         // If after X seconds, we haven't gotten an update, do a manual refresh
