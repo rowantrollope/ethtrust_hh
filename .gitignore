@@ -4,6 +4,5 @@ dist
 dist-ssr
 *.local
 artifacts
-deployments
 cache
 .env
