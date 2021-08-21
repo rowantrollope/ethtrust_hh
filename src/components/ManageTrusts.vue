@@ -57,7 +57,7 @@ import CurrencyExchange from '../services/CurrencyExchange';
 import Stats from './Stats.vue';
 import Button from './Button.vue';
 import EditTrust from './EditTrust.vue';
-import NewTrustCard from './NewTrustCard.vue';
+import NewTrustCard from './TrustCard.vue';
 
 import { Trust } from "../services/Trust";
 

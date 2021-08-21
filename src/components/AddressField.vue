@@ -1,5 +1,5 @@
 <!--
-    Input field which displays an ETH logo, and shows a USD (or other) conversion in real-time
+    Input field which displays a truncated address field and has a popup 
 --> 
 <template>
     <span @click.stop="displayPopup=!displayPopup" @mouseleave="displayPopup=false">
@@ -22,8 +22,6 @@ const hover = ref(false);
 const props = defineProps({
     address: { type: String, required: true},
 });
-    // translate(0%, 0%);
-        //translate(0%, 5%);
 
 </script>
 

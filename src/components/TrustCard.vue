@@ -1,115 +1,122 @@
-<!--
-    Individual "Card" display of a single TRUST 
---> 
-<template>
-    <div class="card"
-        :class="[list.creating(trust.key) ? 'animate-pulse border-green-500 border-4' : 'border-gray-300',
-                list.updating(trust.key) ? 'animate-pulse border-blue-500 border-4' : 'border-gray-300',
-                list.deleting(trust.key) ? 'animate-pulse border-red-500 border-4' : 'border-gray-300`']" 
-        >
-        <div class="relative text-center text-black">
-            <img alt="cert" width="250" height="200" src="../assets/money.png">
-            <transition name="highlight" mode="out-in">
-                <div class="cert-name" :key="trust.name">
-                    {{ trust.name }}
-                </div>            
-            </transition>
-            <transition name="pop" mode="out-in">
-                <div class="cert-eth" :key="trust.etherAmount">
-                    {{ formatEtherString(trust.etherAmount) }}
-                </div>    
-            </transition>
-        </div>
 
-        <div class="card-body">
-            <div>
-                <span class="eth-amount"> 
-                    <svg xmlns="http://www.w3.org/2000/svg" height="32" width="32" preserveAspectRatio="xMidYMid" viewBox="-38.39985 -104.22675 332.7987 625.3605"><path fill="#343434" d="M125.166 285.168l2.795 2.79 127.962-75.638L127.961 0l-2.795 9.5z"/><path fill="#8C8C8C" d="M127.962 287.959V0L0 212.32z"/><path fill="#3C3C3B" d="M126.386 412.306l1.575 4.6L256 236.587l-128.038 75.6-1.575 1.92z"/><path fill="#8C8C8C" d="M0 236.585l127.962 180.32v-104.72z"/><path fill="#141414" d="M127.961 154.159v133.799l127.96-75.637z"/><path fill="#393939" d="M127.96 154.159L0 212.32l127.96 75.637z"/></svg>
-                    <transition name="highlight" mode="out-in">
-                        <span :key="trust.etherAmount">{{ formatEtherString(trust.etherAmount) }} ETH </span>
-                    </transition>
-                    <span class="text-base text-gray-400">
-                        &nbsp;({{ usd }})
-                    </span>
-                </span>
-                <div class="flex mt-5 space-x-2 text-sm">
-                    <div class="text-right flex-shrink whitespace-nowrap">
-                        <p>Trust Type: </p>                        
-                        <p>Available on: </p>
-                        <p>Beneficiary: </p>
-                        <p>Trustees: </p>
-                        <p>Created by: </p>
-                        <p>Trust Key: </p>
-                    </div>
-                        <div class="flex-grow whitespace-nowrap">
-                        <transition-group name="highlight" mode="out-in">                
-                            <p :key="trust.trustType">{{ trust.getTypeString() }}</p>                            
-                            <p :key="trust.maturityDate.toNumber()">{{ trust.getMaturityDate().toLocaleDateString() }}</p>
-                            <p :key="trust.beneficiary">{{ shortenAddress(trust.beneficiary) }}</p>
-                            <p v-if="trust.trustees.length > 1"> 
-                                {{ trust.trustees.length }} Trustees </p>
-                            <p v-else>
-                                {{ shortenAddress(trust.trustees[0]) }}
-                            </p>
-                            <p :key="trust.grantor">{{ shortenAddress(trust.grantor) }}</p>
-                            <p :key="trust.key">{{ shortenAddress(trust.key) }}</p>
-                        </transition-group>
-                        </div>
+<template>
+<div class="card" 
+    :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4' : 'border-gray-300',
+            list.updating(trust.key)  ? 'animate-pulse border-blue-300 border-4' : 'border-gray-300',
+            list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4' : 'border-gray-300`']" 
+        >
+    <h2 class="sr-only" id="profile-overview-title">Profile Overview</h2>
+    <div class="p-4">
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <div class="sm:flex sm:space-x-5">
+                <div class="flex-shrink-0">
+                    <TrustCert class="text-black" :trust="trust"/>
+                </div>
+                <div class="mt-3 text-center space-y-0.5 sm:-mt-1 sm:text-left">
+                    <p class="text-xl font-bold text-gray-900 sm:text-2xl">{{ trust.name ? trust.name : "(Unnamed)" }}</p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Beneficiary: <AddressField :address="trust.beneficiary"/> </p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Trust Type: {{ trust.getTypeString() }}
+                    </p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}</p>
+                    <p v-if="trust.trustees.length==1" class="text-sm font-medium text-gray-600"> 
+                        Trustee: <AddressField :address="trust.trustees[0]"/>
+                    </p>
+                    <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium text-gray-600">
+                        {{ trust.trustees.length }} Trustees: 
+                        <span v-for="trustee in trust.trustees"><AddressField :address="trustee"/>, </span>
+                    </p>
                 </div>
             </div>
+            <div v-if="updatingText != ''" class="badge" :class="updatingClass">
+                {{ updatingText }}
+            </div>
+            <div v-else class="mt-5 flex hover:text-blue-500 text-base font-light justify-center items-center sm:mt-0">
+                Edit <ChevronRightIcon class="h-6 w-6" aria-hidden="true" />
+                <!-- <Button class="btn-white" :click="emit('onclick')">Edit</Button> -->
+            </div>
         </div>
-        <div v-if="updatingText != ''"
-            class="badge" :class="updatingClass">
-            {{ updatingText }}
-        </div>
-        <ChevronRightIcon class="h-8 w-8" aria-hidden="true" />
     </div>
+
+    <div class="border-t rounded-b-md border-gray-200 items-center bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
+        <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
+            <span class="text-gray-600">Trust ID:</span>
+            <AddressField :address="trust.key" class="text-gray-900"/>
+        </div>
+        <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
+            <span class="text-gray-600">Amount:</span>
+            <span class="text-gray-900">{{etherAmount}}</span>
+        </div>
+        
+        <div v-if="!available" class="space-x-1 px-6 py-2 text-sm font-medium text-center">
+            <span class="text-gray-600">Available After:</span>
+            <span class="text-red-500">{{trust.getMaturityDate().toLocaleDateString()}}</span>
+        </div>
+        <div v-else-if="available" class="space-x-1 px-6 py-2 text-sm font-medium text-center">
+            <span class="text-green-500">Available Now!</span>
+        </div>
+    </div>
+</div>
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { inject, computed } from 'vue'
+
+import { inject, computed } from 'vue';
 import { ChevronRightIcon } from '@heroicons/vue/outline'
-import { shortenAddress, formatEtherString } from '../services/Helpers';
+
+import Button from './Button.vue'
+import TrustCert from './TrustCert.vue'
+import AddressField from './AddressField.vue'
 
 import { Trust } from '../services/Trust';
 import TrustList from '../services/TrustList';
-
 import CurrencyExchange from '../services/CurrencyExchange';
+import { toEtherStringRounded, shortenAddress } from '../services/Helpers';
 
 const exchange = <CurrencyExchange> inject('exchange');
-const list = <TrustList> inject('TrustList');
 
+const emit = defineEmits(['onclick']);
 const props = defineProps({
     trust: { type: Trust, required: true },
 });
 
-const emit = defineEmits(['onclick']);
+const list = <TrustList> inject("TrustList");
+const usd = computed(() => exchange.wei2usd(props.trust.etherAmount));
+const etherAmount = computed(() => {
+    return toEtherStringRounded(props.trust.etherAmount) + " ETH (" + usd.value + ")";
+})
+const available = computed(() => {
+    const today = new Date();
+    const maturity = new Date(props.trust.maturityDate.toNumber() * 1000)
+    return maturity < today;
+});
+const stats = [
+  { label: 'Trust ID:', value: shortenAddress(props.trust.key) },
+  { label: 'Amount: ', value: etherAmount.value},
+  { label: 'Available On: ', value: props.trust.getMaturityDate().toLocaleDateString() },
+]
 const updatingInfo = [
     { text: "", class: "" },
     { text: "Updating...", class: "badge-updating" },
     { text: "Deleting...", class: "badge-deleting" },
     { text: "Creating...", class: "badge-creating" },
 ];
-const usd = computed(() => exchange.wei2usd(props.trust.etherAmount));
 const updatingText = computed(() => updatingInfo[list.trustState(props.trust.key)].text);
 const updatingClass = computed(() => updatingInfo[list.trustState(props.trust.key)].class);
+
 </script>
 
 <style scoped>
     .card {
-        @apply relative 
-        border
-        py-0 
-        flex 
-        space-x-3 
-        items-center 
-        rounded-r-2xl
-        shadow-sm 
-        bg-white 
+        @apply rounded-lg bg-white shadow
         cursor-pointer
-        hover:border-black
+        hover:border-gray-500
+        hover:text-gray-400
         text-white
-        hover:text-gray-400;
+        border
+        relative
     }
     .eth-amount {
         @apply -ml-2 text-black text-base flex items-center rounded-md whitespace-nowrap;
@@ -122,11 +129,7 @@ const updatingClass = computed(() => updatingInfo[list.trustState(props.trust.ke
         @apply text-base font-serif font-thin leading-tight uppercase;
     }
     .badge {
-        position: absolute;
-        top: 0%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        @apply bg-white border rounded-full px-2 py-1 text-sm;
+        @apply bg-white border rounded-full px-2 py-1 text-sm z-50;
     }
     .badge-updating {
         @apply  border-blue-500 text-blue-500;

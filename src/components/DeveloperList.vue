@@ -93,7 +93,7 @@ import AddressField from './AddressField.vue';
 import Button from './Button.vue'
 import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
-import NewTrustCard from './NewTrustCard.vue'
+import NewTrustCard from './TrustCard.vue'
 
 import { Trust, TypeStrings, TrustType } from "../services/Trust";
 import { shortenAddress, toEther, toDate, toEtherStringRounded } from '../services/Helpers';

@@ -2,7 +2,7 @@
     Navigation bar 
 --> 
 <template>
-        <div class="mx-auto bg-gray-900 pl-2 pr-3">
+        <div class="nav">
             <div class="flex justify-between h-12">
                 <div class="flex">
                     <div class="mr-2 flex items-center md:hidden">
@@ -10,8 +10,8 @@
                         <Menu as="nav" v-slot="{ open }">
                             <MenuButton class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                                 <span class="sr-only">Open main menu</span>
-                                <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
-                                <XIcon v-else class="block h-6 w-6" aria-hidden="true" />
+                                <MenuIcon v-if="!open" class="block h-4 w-4" aria-hidden="true" />
+                                <XIcon v-else class="block h-4 w-4" aria-hidden="true" />
                             </MenuButton>
                             <transition name="fadeslide">
                                 <MenuItems class="popover-panel">
@@ -89,7 +89,7 @@
         </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { MenuIcon, XIcon } from '@heroicons/vue/outline'
 
@@ -98,8 +98,9 @@ import ConnectButton from './ConnectButton.vue'
 </script>
 
 <style scoped>
-    .navi {
-        @apply bg-black text-white;
+    .nav {
+        @apply mx-auto pl-2 pr-3;
+        background-color: rgb(51, 51, 51);
     }
     .brand-text {
         @apply text-lg text-gray-100 tracking-tight subpixel-antialiased;
@@ -129,7 +130,7 @@ import ConnectButton from './ConnectButton.vue'
         transform: rotateZ(360deg);
     }
     .popover-panel {
-        @apply origin-top-left absolute -ml-2 px-5 w-full pt-5 pb-5 shadow-lg bg-gray-900 ring-1 ring-black ring-opacity-5 focus:outline-none z-50;
+        @apply origin-top-left absolute -ml-2 mt-2 px-5 w-full h-full pt-5 pb-5 shadow-lg bg-gray-900 ring-1 ring-black ring-opacity-5 focus:outline-none z-50;
     }
     @keyframes rotating {
         from
@@ -170,10 +171,10 @@ import ConnectButton from './ConnectButton.vue'
     }
 
     .fadeslide-enter-active {
-        @apply transition transform ease-in-out duration-300;
+        @apply transition transform ease-in-out duration-500;
     }
     .fadeslide-enter-from {
-        @apply  opacity-0 scale-y-0;
+        @apply  opacity-100 scale-y-0;
     }
     .fadeslide-enter-to {
         @apply  opacity-100 scale-y-100 ;
@@ -185,6 +186,6 @@ import ConnectButton from './ConnectButton.vue'
         @apply transform scale-y-100 opacity-100;
     }
     .fadeslide-leave-to {
-        @apply transform opacity-0 scale-y-0;
+        @apply transform opacity-100 scale-y-0;
     }
 </style>

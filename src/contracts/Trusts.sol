@@ -2,13 +2,13 @@ pragma solidity >=0.6.0 <0.9.0;
 
 // SPDX-License-Identifier: Unlicensed
 
-import { Bytes16Set } from "./Bytes16Set.sol";
+import { Uint128Set } from "./Uint128Set.sol";
 import "hardhat/console.sol";
 
 contract Trusts {
  
-    using Bytes16Set for Bytes16Set.Set;
-    Bytes16Set.Set trustSet;
+    using Uint128Set for Uint128Set.Set;
+    Uint128Set.Set trustSet;
 
     /*
     REVOKABLE: grantor can change or modify trust at will
@@ -66,7 +66,7 @@ contract Trusts {
     
     // data structure that stores a trust
     struct Trust {
-        bytes16 key;
+        uint128 key;
         string name;
         address grantor;
         address[] trustees;
@@ -77,15 +77,15 @@ contract Trusts {
         TrustType trustType;
     }
     
-    bytes16 nextKey;
+    uint128 nextKey;
  
-    mapping(bytes16 => Trust) trusts;
+    mapping(uint128 => Trust) trusts;
     
-    event LogCreateTrust(address sender, bytes16 key);
-    event LogUpdateTrust(address sender, bytes16 key);    
-    event LogDepositTrust(address sender, bytes16 key, uint etherAmount);    
-    event LogRemoveTrust(address sender, bytes16 key);
-    event LogWithdrawTrust(address sender, bytes16 key, uint etherAmount);
+    event LogCreateTrust(address sender, uint128 key);
+    event LogUpdateTrust(address sender, uint128 key);    
+    event LogDepositTrust(address sender, uint128 key, uint etherAmount);    
+    event LogRemoveTrust(address sender, uint128 key);
+    event LogWithdrawTrust(address sender, uint128 key, uint etherAmount);
 
     /**
      * Constructor function
@@ -108,7 +108,7 @@ contract Trusts {
                           uint maturityDate,
                           TrustType trustType) 
                           
-                          public payable returns(bytes16 key) {
+                          public payable returns(uint128 key) {
         
 
         validateAddresses(beneficiary, trustees, msg.sender);
@@ -127,9 +127,10 @@ contract Trusts {
         t.maturityDate = maturityDate;
         t.trustType = trustType;
 
-        uint128 n = uint128(nextKey);
-        n++;
-        nextKey = bytes16(n);
+        //uint128 n = uint128(nextKey);
+        //n++;
+        //nextKey = uint128(n);
+        nextKey++;
         
         console.log("Trust.sol::createTrust() - createTrust Event Emitting NOW....");
         emit LogCreateTrust(msg.sender, t.key);
@@ -137,7 +138,7 @@ contract Trusts {
         return (t.key);
     }
 
-    function updateTrust(bytes16 key, 
+    function updateTrust(uint128 key, 
                          address beneficiary, 
                          address[] memory trustees,
                          string memory name,  
@@ -190,7 +191,7 @@ contract Trusts {
                                 
     }
 
-    function depositTrust(bytes16 key) public payable {
+    function depositTrust(uint128 key) public payable {
         
         require(trustSet.exists(key), "Can't update a trust that doesn't exist.");
         
@@ -201,7 +202,7 @@ contract Trusts {
         emit LogDepositTrust(msg.sender, key, msg.value);
     }
     
-    function deleteTrust(bytes16 key) public {
+    function deleteTrust(uint128 key) public {
 
         require(trustSet.exists(key), "Can't delete a trust that doesn't exist.");
         
@@ -217,12 +218,12 @@ contract Trusts {
         emit LogRemoveTrust(msg.sender, key);
     }
 
-    function getTrustName(bytes16 key) public view returns(string memory name) {
+    function getTrustName(uint128 key) public view returns(string memory name) {
         require(trustSet.exists(key), "Trust not found");
         Trust storage t = trusts[key];
         return t.name;
     }
-    function getTrust(bytes16 _key) public view returns( bytes16 key,
+    function getTrust(uint128 _key) public view returns( uint128 key,
                                                         string memory name, 
                                                         address grantor,
                                                         address[] memory trustees,
@@ -243,17 +244,17 @@ contract Trusts {
         return trustSet.count();
     }
     
-    function getTrustAtIndex(uint index) public view returns(bytes16 key) {
+    function getTrustAtIndex(uint index) public view returns(uint128 key) {
        
         if(trustSet.count() == 0) {
             console.log("getTrustAtIndex() - trustSet.count is 0");
-            return '0x0';
+            return 0;
         }
         else
             return trustSet.keyAtIndex(index);
     }
 
-    function canWithdraw(bytes16 key, address sender) public view returns(bool result, string memory reason) {
+    function canWithdraw(uint128 key, address sender) public view returns(bool result, string memory reason) {
         require(trustSet.exists(key), "Trust doesn't exist.");
 
         Trust storage t = trusts[key];
@@ -282,7 +283,7 @@ contract Trusts {
         return (result, reason);
     }
     
-    function withdraw (bytes16 key, uint etherAmount) public payable {
+    function withdraw (uint128 key, uint etherAmount) public payable {
         require(trustSet.exists(key), "Trust doesn't exist.");
 
         Trust storage t = trusts[key];
@@ -315,7 +316,7 @@ contract Trusts {
 
     }
     
-    function withdrawAll (bytes16 key) public payable {
+    function withdrawAll (uint128 key) public payable {
     
         require(trustSet.exists(key), "Trust doesn't exist.");
         Trust memory t = trusts[key];

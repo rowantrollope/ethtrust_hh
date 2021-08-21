@@ -50,7 +50,7 @@ import { ethers } from 'ethers';
 
 import PageTitle from './PageTitle.vue';
 import EditTrust from './EditTrust.vue';
-import NewTrustCard from './NewTrustCard.vue';
+import NewTrustCard from './TrustCard.vue';
 import AddressField from './AddressField.vue';
 
 import BlockchainConnect from '../services/BlockchainConnect';

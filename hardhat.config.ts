@@ -5,7 +5,6 @@ import 'hardhat-deploy-ethers';
 import 'dotenv/config';
 import {node_url, accounts} from './utils/network';
 import { task } from 'hardhat/config';
-import { hexStripZeros } from '@ethersproject/bytes';
 
 task("accounts", "Show all Hardhat accounts").setAction(async (taskArgs, hre) => {
     const accounts = await hre.ethers.getSigners();

@@ -51,7 +51,7 @@
     
     import Button from './Button.vue';
     import EditTrust from './EditTrust.vue';
-    import NewTrustCard from './NewTrustCard.vue';
+    import NewTrustCard from './TrustCard.vue';
     import PageTitle from './PageTitle.vue';
     import AddressField from './AddressField.vue'
     import { Trust } from "../services/Trust";
