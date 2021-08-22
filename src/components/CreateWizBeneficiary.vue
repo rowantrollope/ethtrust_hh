@@ -3,12 +3,12 @@
 --> 
 <template>
     <div class="absolute overflow-y-auto">
-        <div class="px-4 py-4 sm:px-6 flex items-center space-x-5 ">
+        <div class="sm:px-4 py-4 flex items-center space-x-5 ">
             <h3 class="text-2xl font-medium leading-6 text-gray-900">
                 <slot></slot>
             </h3>
         </div>
-        <div class="text-lg pl-4">
+        <div class="text-lg sm:pl-4">
             <dl class="sm:divide-y sm:divide-gray-200">
                 <div class="row">
                     <dt class="input-label">

@@ -144,13 +144,13 @@ const prev = () => {
       position: relative;
       z-index: 1;
       overflow: scroll;
-      height: 57vh;
+      height: 62vh;
     }
     .input-field {
         @apply md:flex-1 text-lg p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
     }
     .label-text {
-        @apply flex md:inline-flex block text-left text-lg font-medium text-gray-700;
+        @apply flex md:inline-flex text-left text-lg font-medium text-gray-700;
     }
     .window {
         @apply w-full

@@ -221,37 +221,10 @@ const createTrust = async () => {
 </script>
 
 <style scoped>
-    .row-selected {
-        @apply bg-green-100;
-    }
     .col-header {
         @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
-    }
-    .row {
-        @apply bg-gray-100;
     }
     .row-text {
         @apply font-medium px-1 py-3 whitespace-nowrap md:text-sm text-xs;
     }
-    .input-field {
-        @apply  text-sm p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
-    }
-    .label-text {
-        @apply block text-left text-sm font-medium text-gray-700;
-    }
-    .loader {
-    border-top-color: #3498db;
-    -webkit-animation: spinner 1.5s linear infinite;
-    animation: spinner 1.5s linear infinite;
-  }
-  
-  @-webkit-keyframes spinner {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-  }
-  
-  @keyframes spinner {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
 </style>

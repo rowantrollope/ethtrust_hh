@@ -3,7 +3,7 @@
 
     <div v-if="!trusts.length">
         <h1 class="text-3xl mt-10 ml-5 tracking-tight font-thin text-gray-900 sm:text-5xl md:text-6xl">
-            <span class="block inline">Let's make your first Trust fund </span>
+            <span class="inline">Let's make your first Trust fund </span>
             <div class="flex items-center space-x-5 mt-10 ml-10 ">
                 <span class="block text-3xl sm:text-3xl md:text-5xl text-indigo-600">Click </span>
                 <Button class="btn-rounded text-3xl sm:text-3xl md:text-5xl btn-primary" @click="$emit('create-clicked')">Create New</Button>
@@ -19,7 +19,7 @@
                 <NewTrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
             </transition-group>
             <!-- Create Trusts Item -->
-            <div class="create-new-card hover:border-white p-20 hover:shadow-lg text-gray-300  hover:text-indigo-500" @click="$emit('create-clicked')">
+            <div class="create-new-card hidden sm:block hover:border-white p-20 hover:shadow-lg text-gray-300  hover:text-indigo-500" @click="$emit('create-clicked')">
                 <div class="flex-shrink rounded-lg text-center text-xl "> Create New Trust</div>
             </div>
         </div>

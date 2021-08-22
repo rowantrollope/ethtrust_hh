@@ -3,8 +3,8 @@
 --> 
 <template>
     <TransitionRoot as="template" :show="open">
-        <Dialog as="div" static class="fixed z-50 inset-0 overflow-y-auto" @close="open = false" :open="open">
-            <div class="flex items-end justify-center min-h-screen px-1 pt-4 sm:px-4 pb-20 text-center sm:block ">
+        <Dialog as="div" static class="fixed z-50 inset-0 " @close="open = false" :open="open">
+            <div class="flex items-end justify-center sm:min-h-screen sm:pt-4 sm:px-4 sm:pb-20 text-center sm:block ">
                 <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
                     <DialogOverlay class="screen-overlay" />
                 </TransitionChild>
@@ -51,14 +51,16 @@ const emit = defineEmits(['cancel']);
     }    
     .dialog-window {
         @apply 
+        
         inline-block
         align-bottom
         sm:align-middle
         bg-white
-        rounded-lg
+        sm:rounded-lg
         shadow-xl 
-        overflow-hidden 
-
+        sm:overflow-hidden 
+        h-screen
+        sm:h-auto
         sm:p-6
         p-4 
         
@@ -74,9 +76,9 @@ const emit = defineEmits(['cancel']);
         @apply mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10;
     }
     .dialog-title {
-        @apply text-lg mb-2 sm:mb-0 sm:text-2xl leading-6 text-gray-900;
+        @apply text-xl mb-2 sm:mb-0 sm:text-2xl leading-6 text-gray-900;
     }
     .dialog-body {
-        @apply sm:p-4 p-1;
+        @apply sm:p-4 p-1 h-full;
     }
 </style>

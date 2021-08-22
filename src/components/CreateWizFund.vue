@@ -3,14 +3,14 @@
 --> 
 <template>
     <div class="absolute overflow-y-auto">
-        <div class="px-4 py-5 sm:px-6 flex items-center space-x-5">
+        <div class="sm:px-4 py-5 flex items-center space-x-5">
             <h3 class="text-2xl font-medium leading-6 text-gray-900">
                 <slot></slot>
             </h3>
         </div>
         <div class=" border-gray-200 text-lg px-4 py-5">
             <dl class="sm:divide-y sm:divide-gray-200">
-                <div class="py-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="input-label">
                         Ether amount
                     </dt>

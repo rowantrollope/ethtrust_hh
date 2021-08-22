@@ -1,7 +1,7 @@
 <template>
 <div>
     <dl class="grid grid-cols-13 gap-5 sm:grid-cols-3">
-        <div class="hidden sm:block px-4 py-3 bg-white border shadow rounded-lg overflow-hidden sm:p-3">
+        <div class="px-4 py-3 bg-white border shadow rounded-lg overflow-hidden sm:p-3">
             <dt class="text-sm font-medium text-gray-500 truncate">
                 Total Trusts
             </dt>
@@ -18,7 +18,7 @@
                 <div class="text-lg ml-2 sm:ml-0 text-gray-500">( {{ totalValueUSD }} )</div>
             </dd>
         </div>
-        <div class="px-4 py-3 bg-white border shadow rounded-lg overflow-hidden sm:p-3">
+        <div class="hidden sm:block px-4 py-3 bg-white border shadow rounded-lg overflow-hidden sm:p-3">
             <dt class="text-sm font-medium text-gray-500 truncate">
                 Next Available
             </dt>

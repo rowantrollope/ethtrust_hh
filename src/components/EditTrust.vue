@@ -12,7 +12,7 @@
         <template v-slot:title>
             <slot class="" name="title"></slot>
         </template>
-        
+
         <div class="col-span-12 text-base border-gray-500 rounded-md sm:p-2">            
             <span class="mt-1 inline text-gray-500">
                 Balance: 
@@ -45,7 +45,7 @@
                 <option v-for="(tab, index) in tabs" :value="index" :key="index">{{ tab.name }}</option>
             </select>
         </div>
-        <div class=" mt-5 hidden sm:block">
+        <div class="mt-5 hidden sm:block">
             <nav class="flex space-x-2" aria-label="Tabs">
                 <a v-for="(tab, index) in tabs" 
                     :key="index" 
@@ -196,17 +196,17 @@
 
         </div>
 
-        <div class="dialog-footer">
-                <Button class="flex-1 btn-white mx-2" :onClick="onCancel" >
-                    Cancel
-                </Button>
-                <Button class="flex-1 mx-2" 
-                        :class="[validEntry ? 'btn-primary': 'btn-disabled']"
-                        :onClick="onSave"
-                        :disabled="!validEntry">
-                    Save Changes
-                </Button>                                                    
-            </div>                               
+        <div class="flex flex-col sm:flex-row mt-5">
+            <Button class="flex-1 btn-white" :onClick="onCancel" >
+                Cancel
+            </Button>
+            <Button class="mt-2 sm:mt-0 sm:ml-2 flex-1 " 
+                    :class="[validEntry ? 'btn-primary': 'btn-disabled']"
+                    :onClick="onSave"
+                    :disabled="!validEntry">
+                Save Changes
+            </Button>                                                    
+        </div>                               
     </Modal>
 </template>
 
@@ -299,10 +299,6 @@ const onDeposit = () => emit('deposit', ethDeposit.value);
 }
 .unselected-tab {
     @apply cursor-pointer border border-white text-gray-700 rounded-md hover:border-gray-500;
-}
-
-.dialog-footer {
-    @apply flex mt-5 ;
 }
 .input-field {
     @apply  text-base text-black p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;

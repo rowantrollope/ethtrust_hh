@@ -3,8 +3,8 @@
 --> 
 <template>
     <div class="absolute overflow-y-auto w-full">
-        <div class="sm:px-4 sm:mt-4 md:px-6 flex items-center sm:space-x-5 ">
-            <h3 class="text-xl sm:text-2xl font-medium leading-6 text-gray-900">
+        <div class="sm:px-4 mt-4 md:px-6 flex items-center sm:space-x-5 ">
+            <h3 class="text-2xl sm:text-2xl font-medium leading-6 text-gray-900">
                 <slot></slot>
             </h3>
         </div>

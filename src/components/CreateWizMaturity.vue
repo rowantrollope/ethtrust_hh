@@ -3,12 +3,12 @@
 --> 
 <template>
     <div class="absolute overflow-y-auto">
-        <div class="px-4 mt-4 sm:px-6 flex items-center space-x-5 ">
+        <div class="sm:px-4 mt-4 flex items-center space-x-5 ">
             <h3 class="text-2xl font-medium leading-6 text-gray-900">
                 <slot></slot>
             </h3>
         </div>
-        <div class="text-lg px-4 py-2">
+        <div class="text-lg sm:px-4 py-2">
             <dl class="sm:divide-y sm:divide-gray-200">
 
                 <div class="row">
@@ -19,7 +19,7 @@
                         <DatePicker v-model="maturityDate" :min-date="tomorrow" mode="date" class="flex-grow"/>
                     </dd>
                 </div>
-                <div class="input-description"> 
+                <div class="sm:ml-10 mt-4 mb-5 text-sm text-gray-700 border-none"> 
                     The "Maturity Date" is the date at which this trust will become available to the benficiary.
                     this date can be changed at a later time by you, OR by a trustee in the event of your death.
                 </div>
@@ -72,9 +72,7 @@ const updated = onUpdated(() => trust.value.setMaturityDate(<Date>maturityDate.v
 .input-label {
     @apply font-medium text-gray-900 mt-2;
 }
-.input-description {
-    @apply ml-10 mb-5 text-sm text-gray-400 border-none;
-}
+
 .input-col {
     @apply text-gray-400 sm:mt-0 sm:col-span-2;
 }
