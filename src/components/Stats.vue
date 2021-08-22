@@ -39,7 +39,7 @@ import { Trust } from "../services/Trust"
 
 const exchange = <CurrencyExchange> inject("exchange");
 
-const totalValueUSD = computed(() => exchange ? exchange.eth2usdFormatted(totalValue.value) : "" );
+const totalValueUSD = computed(() => exchange ? exchange.eth2usdFormatted(Number(totalValue.value)) : "" );
 
 const props = defineProps({
     trusts: { type: Array, required: true },
