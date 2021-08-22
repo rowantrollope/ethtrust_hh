@@ -10,13 +10,13 @@
         </div>
         <div class=" border-gray-200 text-lg px-4 py-5">
             <dl class="sm:divide-y sm:divide-gray-200">
-                <div class="py-4 py-5 grid grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="py-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="input-label">
                         Ether amount
                     </dt>
                     <dd class=" text-gray-900 sm:col-span-2">
-                        <EthInput class="-mt-5" :balance="bc.balance" v-model="etherAmount">
-                        </EthInput>
+                        <InputEther class="sm:-mt-5" v-model="etherAmount">
+                        </InputEther>
                     </dd>
                 </div>
                 <div class="input-description"> 
@@ -35,7 +35,7 @@
 import { onUpdated, computed, inject, ref } from 'vue';
 import { ethers } from 'ethers';
 
-import EthInput from './InputEther.vue';
+import InputEther from './InputEther.vue';
 
 import BlockchainConnect from '../services/BlockchainConnect';
 import { Trust } from '../services/Trust';
@@ -54,6 +54,7 @@ const trust = computed({
 });
 
 const updated = onUpdated(() => {
+    console.log("Ether Amount", etherAmount.value);
     if(etherAmount.value > 0)
         trust.value.etherAmount = ethers.utils.parseEther(etherAmount.value.toString())
 })
@@ -65,9 +66,9 @@ const updated = onUpdated(() => {
     @apply md:flex-1 text-lg -mt-2 -ml-3 block border-none w-full min-w-0 focus:ring-indigo-500 ;
 }
 .input-label {
-    @apply font-medium text-gray-900;
+    @apply font-medium sm:text-right sm:-mt-2 text-gray-900;
 }
 .input-description {
-    @apply ml-10 mb-5 text-base text-gray-400 border-none;
+    @apply sm:ml-10 mb-5 text-xs sm:text-base text-gray-400 border-none;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 <div v-if="bc.loaded" class="text-center ">
     <PageTitle>
-        <template v-slot:title>Trusts for you as a TRUSTEE 
+        <template v-slot:title>For you as Trustee: 
             <span class="text-gray-500 text-base">
                 (<AddressField :address="bc.account.value"></AddressField>)
             </span>

@@ -1,15 +1,15 @@
 <template>
 <div>
     <span class="text-red-500">{{ errorText }}</span>
-    <div class="flex mb-5">
-        <input type="flex-grow text-sm" 
+    <div class="sm:flex mb-5">
+        <input type="sm:flex-grow text-sm" 
                 v-model="newTrustee" 
                 name="trustee" 
                 id="trustee" 
                 autocomplete="trustee" 
                 placeholder="Enter a valid address"
                 :class="[!errorText ? 'input-field' : 'input-field-invalid']" />
-        <Button class="flex-shrink-0 ml-4" 
+        <Button class="sm:flex-shrink-0 sm:ml-4 sm:mt-0 mt-2 w-full sm:w-auto" 
                 :class="[!errorText ? 'btn-success' : 'btn-disabled']" 
                 :disabled="errorText ? true : false"
                 @click="addTrustee()">Add Trustee</Button>

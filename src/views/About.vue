@@ -2,7 +2,7 @@
     About the Trusted app, FAQ, etc
 -->
 <template>
-    <div class="relative bg-white mt-10 ml-10 overflow-hidden">
+    <div class="relative bg-white mt-5 sm:mt-10 ml-5 mr-2 sm:ml-10 overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
 
@@ -11,7 +11,7 @@
                 <span class=" text-indigo-600 inline">Questions</span>
                 </h1>
 
-                <div class="ml-10 mt-10 text-left flex flex-col space-y-5">
+                <div class=" mt-5 sm:ml-10 sm:mt-10 text-left flex flex-col space-y-5">
                     <p class="question">What can I use Trusted.eth For?</p>
                     <p class="answer">Trusted.eth provides an easy and secure way to pass on money (ETH) to your friends, family and children.  Set a maturity date and when that date elapses, your beneficiary can withdraw their funds</p>
 

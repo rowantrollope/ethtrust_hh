@@ -29,10 +29,10 @@
                         <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Blockchain Connected
                     </div>
                     <div class="flex">
-                        Account: <span class=""> &nbsp;{{ bc.account.value }} </span>
+                        Account: <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
                     </div>
                     <div class="flex">
-                        Balance: <span class=""> &nbsp;{{ toEtherStringRounded(bc.balance) }} ETH - ( {{ bc.balance }} ) </span>
+                        Balance: <span class=""> &nbsp;{{ toEtherStringRounded(bc.balance) }} ETH </span>
                     </div>
                 </div>
             </PopoverPanel>
@@ -62,12 +62,14 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { StatusOnlineIcon, ShieldCheckIcon } from '@heroicons/vue/outline';
 
 import Button from './Button.vue';
+import AddressField from './AddressField.vue';
+
 import CurrencyExchange from '../services/CurrencyExchange';
 import BlockchainConnect from '../services/BlockchainConnect';
 import { toEtherStringRounded } from '../services/Helpers';
 
 const bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
-const exchange = <CurrencyExchange> inject('CurrencyExchange');
+const exchange = <CurrencyExchange> inject('exchange');
 
 const onClicked = () => {
 
@@ -88,7 +90,7 @@ const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(bc.balance.t
         @apply bg-red-500 px-1 items-center flex rounded-md focus:outline-none focus:ring-2 hover:text-black  focus:ring-offset-2 focus:ring-offset-gray-800 focus:bg-red-200 focus:ring-white;
     }
     .popover-panel {
-        @apply origin-top-right absolute px-5 pt-5 pb-5 text-sm right-0 mt-2 rounded-lg shadow-lg bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50;
+        @apply origin-top-right overflow-hidden absolute w-screen sm:w-auto p-5 text-sm right-0 mt-2 rounded-lg shadow-lg bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50;
     }
     .status-icon {
         @apply text-green-400 h-5 w-5;

@@ -48,7 +48,6 @@
 <script setup="props" lang="ts">
 import { computed, ref, inject } from 'vue';
 import { ethers } from 'ethers';
-import { BigNumber } from '@ethersproject/bignumber'
 
 import BlockchainConnect from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';

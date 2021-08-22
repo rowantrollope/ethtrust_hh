@@ -33,7 +33,7 @@
             <div v-if="updatingText != ''" class="badge" :class="updatingClass">
                 {{ updatingText }}
             </div>
-            <div v-else class="mt-5 flex hover:text-blue-500 text-base font-light justify-center items-center sm:mt-0">
+            <div v-else class="flex hover:text-blue-500 text-base font-light justify-center items-center sm:mt-0">
                 Edit <ChevronRightIcon class="h-6 w-6" aria-hidden="true" />
                 <!-- <Button class="btn-white" :click="emit('onclick')">Edit</Button> -->
             </div>

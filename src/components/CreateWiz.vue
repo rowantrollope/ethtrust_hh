@@ -146,29 +146,15 @@ const prev = () => {
       overflow: scroll;
       height: 57vh;
     }
-
-    .screen-overlay {
-        @apply fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity;
-    }    
-    .dialog-window {
-        @apply inline-block align-bottom bg-white rounded-2xl px-4 pt-5 pb-4 sm:max-w-3xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full sm:p-6;
-    }
-    .dialog-icon {
-        @apply mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10;
-    }
-    .dialog-title {
-        @apply text-2xl leading-6 text-gray-900;
-    }
-    .dialog-footer {
-        @apply flex mt-4 px-4 py-3 text-right sm:px-6;
-    }
     .input-field {
         @apply md:flex-1 text-lg p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
     }
     .label-text {
         @apply flex md:inline-flex block text-left text-lg font-medium text-gray-700;
     }
-
+    .window {
+        @apply w-full
+    }
     .fieldblock {
         @apply sm:flex items-center space-x-3 col-span-12;
     }
