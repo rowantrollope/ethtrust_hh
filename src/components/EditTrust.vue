@@ -211,7 +211,7 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { ref, inject, computed } from 'vue'
+import { ref, inject, computed, onMounted } from 'vue'
 import { BigNumber } from "@ethersproject/bignumber";
 import { DatePicker } from 'v-calendar';
 
@@ -254,10 +254,6 @@ let bc: BlockchainConnect | undefined = inject('BlockchainConnect');
 
 const validEntry = ref(true);
 
-const walletBalance = computed(() => {
-    toEtherStringRounded(bc!.balance);
-});
-
 // Variables
 
 const trust = computed({
@@ -273,6 +269,14 @@ const maturityDate = computed({
 
 const ethWithdraw = ref(0);
 const ethDeposit = ref(0);
+const walletBalance = ref("0");
+
+const mounted = onMounted(() => {
+    bc?.getBalanceString(4).then(val => 
+        walletBalance.value = val 
+    );
+});
+
 
 // Methods
 const onSave = () => emit('save');

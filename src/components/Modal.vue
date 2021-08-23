@@ -46,6 +46,7 @@ const emit = defineEmits(['cancel']);
 </script>
 
 <style scoped>
+    
     .screen-overlay {
         @apply fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-filter backdrop-blur-sm;
     }    

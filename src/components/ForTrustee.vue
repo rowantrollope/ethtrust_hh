@@ -1,5 +1,11 @@
 <template>
-<div v-if="bc.loaded" class="text-center ">
+<div v-if="!loaded">
+    <div class="flex h-20 justify-center items-center">
+        <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
+        </div><span class="ml-2">Loading...</span>
+    </div>        
+</div>
+<div v-else-if="loaded && trusts" class="text-center ">
     <PageTitle>
         <template v-slot:title>For you as Trustee: 
             <span class="text-gray-500 text-base">

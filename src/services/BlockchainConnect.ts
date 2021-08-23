@@ -4,6 +4,7 @@ import { ethers, Signer } from 'ethers';
 import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
+import { toEtherStringRounded } from './Helpers';
 
 interface changeCallback { (myArgument: string): void }
 
@@ -11,7 +12,6 @@ export default class BlockchainConnect {
     public provider: Provider|null;
     public signer: Signer|null;
     
-    private _balance: BigNumber;
     private _onChange: changeCallback|null;
 
     // Reactive members
@@ -22,7 +22,6 @@ export default class BlockchainConnect {
     constructor() {
         this.provider = null;
         this.signer = null;
-        this._balance = BigNumber.from(0);
         this._onChange = null;
         this.loaded = ref(false);
         this.account = ref("");
@@ -53,7 +52,6 @@ export default class BlockchainConnect {
         }
 
         this.account.value = await this.signer!.getAddress();
-        this._balance = await this.provider.getBalance(this.account.value);
         this.loaded.value = true;
 
         //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
@@ -66,9 +64,6 @@ export default class BlockchainConnect {
             this.accountsChanged(accounts);
         });
     }
-    public get balance(): BigNumber {
-        return this._balance;
-    }
 
     /**
      * Callback handler for when user changes accounts
@@ -80,7 +75,6 @@ export default class BlockchainConnect {
         if(accounts.length) {
             this.account.value = accounts[0];
             console.log("BlockchainConnect::accountsChanged()", this.account.value);
-            this.provider!.getBalance(this.account.value).then((bn) => this._balance = bn );
         } 
         else if (accounts.length === 0) {
             console.log('BlockchainConnect::accountsChanged() - Please connect to MetaMask.');
@@ -108,13 +102,12 @@ export default class BlockchainConnect {
      * @param address Account to get balance for
      * @returns promise to the balance in WEI - a string
      */
-    async getBalance(address: string) : Promise<string> {
+    async getBalance() : Promise<BigNumber> {
         if(this.provider) {
-            const balance: BigNumber = await this.provider.getBalance(address);
-            return balance.toString();
+            return await this.provider.getBalance(this.account.value);
         } else {
             console.error("BlockchainConnect::balanceOf() - not loaded yet - call connect first")
-            return "0";
+            return BigNumber.from(0);
         }
     }
     /**
@@ -123,17 +116,9 @@ export default class BlockchainConnect {
      * @param precision Number of decimal places of precision. Default (-1) returns the full number
      * @returns promise to the balance in ETHER - a string
      */
-    async getBalanceEther(address: string, precision: number = -1 ) : Promise<string> {
-        const weiBal: string = await this.getBalance(address);
-        const ether: string = ethers.utils.formatEther(weiBal);
-        console.log("BlockchainConnect::getBalanceEther - ", ether);
-        if(precision === -1)
-            return ether;
-        else
-        {
-            let bal = Math.round(Number((Math.abs(Number(ether)) * 10**precision).toPrecision(16))) / 10**precision * Math.sign(Number(ether)); 
-            return bal.toString();
-        }
+    async getBalanceString(precision: number = 2 ) : Promise<string> {
+        const weiBal = await this.getBalance();
+        return toEtherStringRounded(weiBal, precision);
     }
 
 }

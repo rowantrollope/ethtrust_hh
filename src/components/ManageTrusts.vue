@@ -1,6 +1,11 @@
 <template>
-<div v-if="loaded && trusts">
-
+<div v-if="!loaded">
+    <div class="flex h-20 justify-center items-center">
+        <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
+        </div><span class="ml-2">Loading...</span>
+    </div>        
+</div>
+<div v-else-if="loaded && trusts">
     <div v-if="!trusts.length">
         <h1 class="text-3xl mt-10 ml-5 tracking-tight font-thin text-gray-900 sm:text-5xl md:text-6xl">
             <span class="inline">Let's make your first Trust fund </span>
@@ -11,7 +16,6 @@
             </div>
         </h1>
     </div>
-
     <div v-else-if="trusts.length"> 
         <Stats :trusts="trusts"/>
         <div class="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
