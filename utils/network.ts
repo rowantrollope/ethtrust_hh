@@ -30,6 +30,7 @@ export function getMnemonic(networkName?: string): string {
   if (networkName) {
     const mnemonic = process.env['MNEMONIC_' + networkName.toUpperCase()];
     if (mnemonic && mnemonic !== '') {
+      console.log(mnemonic);
       return mnemonic;
     }
   }

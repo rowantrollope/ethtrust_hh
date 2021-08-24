@@ -18,27 +18,32 @@
         <!-- DIALOGS --> 
         <div class="slider">
             <transition :name="panelClass">
-                <CreateWizBeneficiary class="window" v-model="trust" v-show="currentPanel === 0">
+                <CreateWizWelcome class="window" v-model="trust" v-show="currentPanel === 0">
+                    Getting Started
+                </CreateWizWelcome> 
+            </transition>
+            <transition :name="panelClass">
+                <CreateWizBeneficiary class="window" v-model="trust" v-show="currentPanel === 1">
                     Who is this for?
                 </CreateWizBeneficiary> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 1">
+                <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 2">
                     When should they get it?
                 </CreateWizMaturity> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === 2">
+                <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === 3">
                     Add Trustees
                 </CreateWizTrustees> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === 3">
+                <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === 4">
                     How much should they get?
                 </CreateWizFund> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === 4">
+                <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === 5">
                     Confirm the details
                 </CreateWizConfirm> 
             </transition>
@@ -68,6 +73,7 @@ import { ref, computed, inject, onUpdated } from 'vue';
 
 import Modal from './Modal.vue';
 import Button from './Button.vue';
+import CreateWizWelcome from './CreateWizWelcome.vue';
 import CreateWizBeneficiary from './CreateWizBeneficiary.vue';
 import CreateWizMaturity from './CreateWizMaturity.vue';
 import CreateWizTrustees from './CreateWizTrustees.vue';
@@ -80,7 +86,7 @@ import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnec
 import { Trust } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
-const panels = ref(["Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const panels = ref(["Welcome", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
 
 const trust = ref<Trust>(new Trust());
 
@@ -144,7 +150,7 @@ const prev = () => {
       position: relative;
       z-index: 1;
       overflow: scroll;
-      height: 70vh;
+      height: 68vh;
     }    
     .input-field {
         @apply md:flex-1 text-lg p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;

@@ -24,8 +24,7 @@ const config: HardhatUserConfig = {
         rinkeby: {
             url: node_url('rinkeby'),
             accounts: accounts('rinkeby'),
-            //accounts: ['0xd560951bb76c8b3e974a10d409ac0debef83743e3eeb220663b1e3f39d428d76'],
-       },
+        },
         hardhat: {
             chainId: 1337,
             accounts: {
@@ -39,7 +38,7 @@ const config: HardhatUserConfig = {
     namedAccounts: {
         deployer: {
             default: 0, 
-            4: 'privatekey://0xd560951bb76c8b3e974a10d409ac0debef83743e3eeb220663b1e3f39d428d76', // rinkeby
+            4: 'privatekey://cbe8457ebb2c9425ea9213a816010e3935f07dd794d08d8c07cca0d6f5c8db50', // rinkeby
         },
         trustCreator: 3,
         trustBeneficiary: 1,

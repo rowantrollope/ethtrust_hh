@@ -25,7 +25,7 @@
                                 sm:h-auto
                                 sm:p-6
                                 p-4 
-                                sm:max-w-3xl 
+                                sm:max-w-4xl 
                                 w-full 
                                 text-left 
                                 transform 

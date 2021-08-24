@@ -118,7 +118,7 @@ contract Trusts {
 
         validateAddresses(beneficiary, trustees, msg.sender);
 
-        bytes32 newKey = hashKey(name, maturityDate, msg.sender, beneficiary, block.timestamp);
+        bytes32 newKey =  hashKey(name, maturityDate, msg.sender, beneficiary, block.timestamp);
         
         trustSet.insert(newKey); // Note that this will fail automatically if the key already exists.
         

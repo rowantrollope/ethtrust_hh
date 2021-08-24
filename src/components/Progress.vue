@@ -3,13 +3,14 @@
 --> 
 <template>
     <nav aria-label="Progress">
-        <ol class="border bg-white border-gray-300 rounded-t divide-y divide-gray-300 md:flex md:divide-y-0">
-        <li v-for="(panel, idx) in panels" class="relative md:flex-1 md:flex">
+        <ol class="border bg-white border-gray-300 rounded-t flex divide-y-0">
+        <li v-for="(panel, idx) in panels" class="relative flex-1 flex">
             <!-- COMPLETED ITEM, CURRENT ITEM, NEXT ITEM --> 
+            
             <transition mode="out-in" name="pop">
                 <div v-if="idx === currentPanel" class="item" aria-current="step">
-                    <span class="border-black item-circle ml-2 md:ml-auto">                    
-                        <span v-if="idx===currentPanel" class="text-black text-sm font-black">{{ idx+1 }}</span>
+                    <span class="border-black item-circle ml-2 ml-auto">                    
+                        <span v-if="idx===currentPanel" class="text-black text-sm">{{ idx+1 }}</span>
                     </span>
                     <span class="item-text text-black">{{ panel }}</span>
                 </div>
@@ -27,13 +28,13 @@
                     <span class="border-gray-300 item-circle">
                         <span class="text-gray-500">{{ idx+1 }}</span>
                     </span>
-                    <span class="item-text text-gray-500">{{ panel }}</span>
+                    <span class="item-text -ml-2 text-gray-500">{{ panel }}</span>
                 </span>
             </div>
 
             <template v-if="(idx !== panels.length - 1)">
                 <!-- Arrow separator for lg screens and up -->
-                <div class="hidden md:block absolute top-0 right-0 h-full w-5" aria-hidden="true">
+                <div class="block absolute top-0 right-0 h-full w-5" aria-hidden="true">
                     <svg class="h-full w-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
                         <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
                     </svg>
@@ -61,10 +62,10 @@ let panel: string;
         @apply px-2 py-2 flex items-center;
     }
     .item-circle {
-        @apply flex-shrink-0 w-6 h-6 flex items-center justify-center border rounded-full;
+        @apply hidden lg:flex flex-shrink-0 w-6 h-6 items-center justify-center border rounded-full;
     }
     .item-text {
-        @apply ml-1 whitespace-nowrap text-sm font-medium mr-2;
+        @apply lg:ml-1 whitespace-nowrap lg:text-sm text-xs font-medium;
     }
     .pop-enter-active {
         @apply transition transform ease-in duration-700;
