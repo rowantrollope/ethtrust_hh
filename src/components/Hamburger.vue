@@ -59,7 +59,7 @@ const props = defineProps({
     width: 14px;
     height: 1px;
     background-color: #fff;
-    border-radius: 4px;
+    border-radius: 0px;
     position: absolute;
     transition-property: transform;
     transition-duration: 0.15s;

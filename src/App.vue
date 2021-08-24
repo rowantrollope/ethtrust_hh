@@ -39,6 +39,24 @@ const connect = async () => {
 
         await list.getTrusts((trust: Trust) => true );
     
+        let filtered: Array<Trust> | undefined;
+
+        // Count trusts by role
+        filtered = list.trusts.value?.filter(trust => trust.grantor.toUpperCase() === bc.account.value.toUpperCase() );
+        const grantorTrusts: number = filtered ? filtered.length : 0;
+
+        filtered = list.trusts.value?.filter(trust => trust.beneficiary.toUpperCase() === bc.account.value.toUpperCase() );
+        const beneficiaryTrusts: number = filtered ? filtered.length : 0;
+        
+        filtered = list.trusts.value?.filter(trust => 
+                -1 !== trust.trustees.findIndex(trustee => 
+                    trustee.toUpperCase() === bc.account.value.toUpperCase()
+                )
+            );
+        const trusteeTrusts: number = filtered ? filtered.length : 0;
+        
+        console.log(`Trusts counts: Grantors: ${grantorTrusts}, Beneficiaries: ${beneficiaryTrusts}, Trustees ${trusteeTrusts}`);
+
     }
     
 }
