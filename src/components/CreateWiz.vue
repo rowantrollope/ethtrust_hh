@@ -43,7 +43,7 @@
                 </CreateWizConfirm> 
             </transition>
         </div>
-
+        
         <!-- FOOTER --> 
         <div class="mt-1 flex bg-white space-x-5">
             <Button class="flex-1 btn btn-danger-outline" :onClick="onClose">
@@ -144,8 +144,8 @@ const prev = () => {
       position: relative;
       z-index: 1;
       overflow: scroll;
-      height: 62vh;
-    }
+      height: 70vh;
+    }    
     .input-field {
         @apply md:flex-1 text-lg p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
     }

@@ -57,9 +57,10 @@
             </nav>
         </div>
         
-
-        <div class="tab-content">
-            <p class="tab-title">{{tabs[activeTab].title}}</p> <br/>
+        <!-- tab-content> -->
+        <div class="border-gray-300 text-base border mt-2 rounded-md p-2 sm:p-5">
+            <!-- tab-title -->
+            <p class="text-lg">{{tabs[activeTab].title}}</p> <br/>
 
             <!--
                 Tab: Details
@@ -196,11 +197,11 @@
 
         </div>
 
-        <div class="flex flex-col sm:flex-row mt-5">
+        <div class="flex flex-row mt-5">
             <Button class="flex-1 btn-white" :onClick="onCancel" >
                 Cancel
             </Button>
-            <Button class="mt-2 sm:mt-0 sm:ml-2 flex-1 " 
+            <Button class="mt-0 ml-2 flex-1 " 
                     :class="[validEntry ? 'btn-primary': 'btn-disabled']"
                     :onClick="onSave"
                     :disabled="!validEntry">
@@ -292,12 +293,7 @@ const onDeposit = () => emit('deposit', ethDeposit.value);
 .tab {
     @apply px-3 py-2 sm:font-medium text-lg ;
 }
-.tab-content {
-    @apply border-gray-300 text-base border mt-2 rounded-md p-2 sm:p-5;
-}
-.tab-title {
-    @apply text-lg
-}
+
 .selected-tab {
     @apply cursor-pointer text-white bg-gray-500 rounded-md border-gray-300;
 }

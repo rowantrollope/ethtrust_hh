@@ -4,17 +4,34 @@
 <template>
     <TransitionRoot as="template" :show="open">
         <Dialog as="div" static class="fixed z-50 inset-0 " @close="open = false" :open="open">
-            <div class="flex items-end justify-center sm:min-h-screen sm:pt-4 sm:px-4 sm:pb-20 text-center sm:block ">
+            <div class="flex h-full items-end justify-center sm:min-h-screen sm:pt-4 sm:px-4 sm:pb-20 text-center sm:block ">
                 <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-                    <DialogOverlay class="screen-overlay" />
+                    <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-filter backdrop-blur-sm" />
                 </TransitionChild>
 
                 <!-- This element is to trick the browser into centering the modal contents. -->
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
                     
                 <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                    <div class="dialog-window">
-                        <div class="dialog-title">
+                    <div class="inline-block
+                                align-bottom
+                                sm:align-middle
+                                bg-white
+                                sm:rounded-lg
+                                shadow-xl 
+                                sm:overflow-hidden 
+                                h-full
+                                sm:h-auto
+                                sm:p-6
+                                p-4 
+                                sm:max-w-3xl 
+                                w-full 
+                                text-left 
+                                transform 
+                                transition-all 
+                                sm:my-8">
+                        <!-- Dialog Title -->
+                        <div class="text-xl mb-2 sm:mb-0 sm:text-2xl leading-6 text-gray-900">
                             <slot name="title"></slot>
                         </div>
                         <div class="sm:block absolute top-0 right-0 pt-4 pr-4">
@@ -23,7 +40,7 @@
                                 <XIcon class="h-6 w-6" aria-hidden="true" />
                             </button>
                         </div>
-                        <div class="dialog-body">
+                        <div class="sm:p-4 p-1 h-full">
                             <slot></slot>    
                         </div>
                     </div>
@@ -47,39 +64,4 @@ const emit = defineEmits(['cancel']);
 
 <style scoped>
     
-    .screen-overlay {
-        @apply fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-filter backdrop-blur-sm;
-    }    
-    .dialog-window {
-        @apply 
-        
-        inline-block
-        align-bottom
-        sm:align-middle
-        bg-white
-        sm:rounded-lg
-        shadow-xl 
-        sm:overflow-hidden 
-        h-screen
-        sm:h-auto
-        sm:p-6
-        p-4 
-        
-        sm:max-w-3xl 
-        w-full 
-
-        text-left 
-        transform 
-        transition-all 
-        sm:my-8 
-    }
-    .dialog-icon {
-        @apply mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10;
-    }
-    .dialog-title {
-        @apply text-xl mb-2 sm:mb-0 sm:text-2xl leading-6 text-gray-900;
-    }
-    .dialog-body {
-        @apply sm:p-4 p-1 h-full;
-    }
 </style>
