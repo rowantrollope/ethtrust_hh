@@ -1,5 +1,5 @@
 <template>
-<div v-if="bc.loaded">
+<div v-if="bc.connectionState.value === bcState.Connected">
 <div class="text-center ">
     <div class="flex mt-5 justify-center">
         <button class="text-base mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
@@ -85,7 +85,7 @@ import { onMounted, ref, inject, watch } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { BlockchainConnect } from '../services/BlockchainConnect';
+import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 
@@ -100,7 +100,7 @@ import { shortenAddress, toEther, toDate, toEtherStringRounded } from '../servic
 
 // BLOCKCHAIN connection and prep
 const exchange = <CurrencyExchange> inject('exchange');
-
+const bcState = ConnectionState;
 /**
  * LOAD BC DATA
  */
