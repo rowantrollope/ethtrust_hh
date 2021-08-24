@@ -1,9 +1,12 @@
 <template>
     <div>
         <span>{{ grantorTrusts }} trusts as Grantor, {{ beneficiaryTrusts }} as Beneficiary, {{ trusteeTrusts }} as Trustee </span>
+        <button @click="onClick()" 
+                class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+                Get started
+            </button>       
         <div v-if="beneficiaryTrusts">
             We found {{ beneficiaryTrusts }} for your account!
-            <button class="btn btn-primary">Go to my trust</button>
         </div>
         <div v-if="trusteeTrusts">
             We found {{ trusteeTrusts }} for you as a trustee!
@@ -11,15 +14,15 @@
         </div>
         <div v-if="grantorTrusts">
             We found {{ grantorTrusts }} created by you!
-            <button class="btn btn-primary">Go to my trust</button>
-        </div>
+       </div>
     </div>
 
 </template>
 
 <script setup lang="ts">
 
-import { inject, ref, onMounted } from 'vue';
+import { inject, ref, onMounted, } from 'vue';
+import router from '../router';
 import TrustList from '../services/TrustList';
 import { Trust } from '../services/Trust';
 import { BlockchainConnect } from '../services/BlockchainConnect';
@@ -50,7 +53,16 @@ const mounted = onMounted(() => {
         );
     trusteeTrusts.value = filtered ? filtered.length : 0;
 
-
 });
+
+const onClick = () => {
+    
+    if(grantorTrusts.value > 0)
+        router.push('/Manage');
+    else if(beneficiaryTrusts.value > 0)
+        router.push('/Beneficiaries');
+    else if(trusteeTrusts.value > 0)
+        router.push('/Trustees')
+}
 
 </script>
