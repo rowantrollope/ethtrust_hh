@@ -21,7 +21,7 @@ export default class currencyExchange {
     //name = ref("CurrencyExchange");
 
     constructor() {
-
+    
         this.formatter = new Intl.NumberFormat(undefined, {
             style: 'currency',
             currency: 'USD',
@@ -32,7 +32,8 @@ export default class currencyExchange {
         // LOAD ETH-USD 
         const response = await fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,BTC,EUR");
         this.exchange = await response.json();
-        console.log(this.exchange);
+        
+        //console.log(this.exchange);
     }
 
     // HELPERS

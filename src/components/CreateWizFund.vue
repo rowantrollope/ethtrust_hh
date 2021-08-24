@@ -37,7 +37,7 @@ import { ethers } from 'ethers';
 
 import InputEther from './InputEther.vue';
 
-import BlockchainConnect from '../services/BlockchainConnect';
+import { BlockchainConnect } from '../services/BlockchainConnect';
 import { Trust } from '../services/Trust';
 
 const etherAmount = ref(0);

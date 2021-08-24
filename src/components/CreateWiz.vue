@@ -76,7 +76,7 @@ import CreateWizFund from './CreateWizFund.vue';
 import CreateWizConfirm from './CreateWizConfirm.vue';
 import Progress from './Progress.vue';
 
-import BlockchainConnect from '../services/BlockchainConnect';
+import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import { Trust } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
@@ -119,7 +119,7 @@ const updated = onUpdated(() => {
 const init = () => {
     trust.value = new Trust(); 
     currentPanel.value = 0;
-    if(bc.loaded.value) {
+    if(bc.connectionState.value === ConnectionState.Connected) {
         trust.value.grantor = bc.account.value; 
         console.log("CreateWiz::init() - ", bc.account.value, trust.value.grantor);
     } else console.error("Blockchain not loaded");

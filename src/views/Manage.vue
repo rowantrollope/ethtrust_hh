@@ -5,8 +5,6 @@
     <!-- 
         When empty, display some helpful text
     --> 
-    <ConnectBlock/>
-    <div v-if="bc.loaded">
         <PageTitle >
             <template v-slot:title>Create & Manage Trusts</template>
             <template v-slot:buttons>           
@@ -19,7 +17,6 @@
             <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
         </div>
         <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
-    </div>
 
 
 </template>
@@ -33,9 +30,10 @@ import ManageTrusts from '../components/ManageTrusts.vue';
 import CreateWiz from '../components/CreateWiz.vue';
 
 import ConnectBlock from '../components/ConnectBlock.vue';
-import BlockchainConnect from '../services/BlockchainConnect';
+import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 
 let bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
+const state = ConnectionState;
 
 //
 // Create Handlers

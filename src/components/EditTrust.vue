@@ -216,7 +216,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { DatePicker } from 'v-calendar';
 
 // services
-import BlockchainConnect from '../services/BlockchainConnect';
+import { BlockchainConnect } from '../services/BlockchainConnect';
 import CurrencyExchange from '../services/CurrencyExchange';
 import { Trust, TrustType } from '../services/Trust'
 import { toEtherStringRounded, shortenAddress } from '../services/Helpers';

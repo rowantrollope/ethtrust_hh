@@ -1,11 +1,14 @@
 <template>
-<div v-if="!loaded">
+
+<ConnectBlock v-if="bc.connectionState.value !== state.Connected" />
+
+<div v-else-if="bc.connectionState.value === state.Connected && !trusts">
     <div class="flex h-20 justify-center items-center">
         <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
-        </div><span class="ml-2">Loading...</span>
+        </div><span class="ml-2">Fetching your Trusts...</span>
     </div>        
 </div>
-<div v-else-if="loaded && trusts" class="text-center ">
+<div v-else-if="bc.connectionState.value === state.Connected && trusts" class="text-center ">
     <PageTitle>
         <template v-slot:title>For you as Trustee: 
             <span class="text-gray-500 text-base">
@@ -15,11 +18,22 @@
     </PageTitle> 
     
     <div v-if="trusts && !trusts.length" class=" m-10 mt-10 " >
-        <h1 class="text-4xl tracking-tight font-thin text-gray-900 sm:text-5xl md:text-6xl">
+        <h1 class="text-2xl tracking-tight font-thin text-gray-900 sm:text-3xl md:text-4xl">
             <span class="block xl:inline">
-                There arent any trust funds for you as trustee. 
+                We can't find any trust funds with your account number: (<AddressField class="text-lg" v-if="bc.account" :address="bc.account.value"></AddressField>) 
+                listed as a <span class="text-indigo-500">trustee.</span> 
             </span>
         </h1>
+        <p class="mt-12 text-left">Need help?</p>
+        <p class="text-base text-left font-light m-5">If you believe there should a trust for you as a trustee, double check your account information
+                and check with the trust creator to ensure that you've connected your wallet to the same
+                address they listed for you as trustee.
+
+        </p>
+        <p class="m-5 text-left">
+            <a class="text-blue-500 underline" @click="$router.push('/About')">Click here for more information.</a>
+        </p>
+
     </div>
 
 
@@ -47,11 +61,11 @@
 </div>
 </template>
     
-    <script setup="props" lang="ts">
+<script setup="props" lang="ts">
     import { computed, ref, inject } from 'vue';
     import { ethers } from 'ethers';
 
-    import BlockchainConnect from '../services/BlockchainConnect';
+    import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
     import TrustList from '../services/TrustList';
     import CurrencyExchange from '../services/CurrencyExchange';
     
@@ -60,6 +74,8 @@
     import NewTrustCard from './TrustCard.vue';
     import PageTitle from './PageTitle.vue';
     import AddressField from './AddressField.vue'
+    import ConnectBlock from './ConnectBlock.vue'
+
     import { Trust } from "../services/Trust";
     
     // BLOCKCHAIN connection and prep
@@ -69,9 +85,10 @@
      * LOAD BC DATA
      */
     let bc = <BlockchainConnect> inject("BlockchainConnect");
-    const list = <TrustList> inject("TrustList");
-    const loaded = inject("loaded");
+    const state = ConnectionState;
 
+    const list = <TrustList> inject("TrustList");
+  
     const trusts = computed(() => 
         list.trusts.value?.filter(trust => 
             -1 !== trust.trustees.findIndex(trustee => 
@@ -144,49 +161,48 @@
         await list.updateTrust(selectedTrust.value);
     }  
     
-    </script>
+</script>
     
-    <style scoped>
-       .create-new-card {
-            @apply cursor-pointer 
-                border-2 
-                border-dashed
-                border-gray-300 
-                rounded-lg 
-                h-48 
-                hover:text-indigo-500
-                hover:shadow-md
-                hover:border-white
-                hover:bg-gray-100
-        }
-    
-    
-    .list-enter-active,
-    .list-leave-active,
-    .list-move {
-      transition: 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95);
-      transition-property: opacity, transform;
+<style scoped>
+    .create-new-card {
+        @apply cursor-pointer 
+            border-2 
+            border-dashed
+            border-gray-300 
+            rounded-lg 
+            h-48 
+            hover:text-indigo-500
+            hover:shadow-md
+            hover:border-white
+            hover:bg-gray-100
     }
-    
-    .list-enter-from {
-      opacity: 0;
-      transform: translateX(50px) scaleY(0.5);
-    }
-    
-    .list-enter-to {
-      opacity: 1;
-      transform: translateX(0) scaleY(1);
-    }
-    
-    .list-leave-active {
-      position: absolute;
-    }
-    
-    .list-leave-to {
-      opacity: 0;
-      transform: scaleY(0);
-      transform-origin: center top;
-    }
-    
-    </style>
-    
+
+
+.list-enter-active,
+.list-leave-active,
+.list-move {
+    transition: 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95);
+    transition-property: opacity, transform;
+}
+
+.list-enter-from {
+    opacity: 0;
+    transform: translateX(50px) scaleY(0.5);
+}
+
+.list-enter-to {
+    opacity: 1;
+    transform: translateX(0) scaleY(1);
+}
+
+.list-leave-active {
+    position: absolute;
+}
+
+.list-leave-to {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: center top;
+}
+
+</style>

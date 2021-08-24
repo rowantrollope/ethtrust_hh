@@ -8,7 +8,15 @@ import { toEtherStringRounded } from './Helpers';
 
 interface changeCallback { (myArgument: string): void }
 
-export default class BlockchainConnect {
+export enum ConnectionState {
+    Unknown = 0,
+    NotConnected,
+    Connecting,
+    Connected,
+    Error,
+};
+
+export class BlockchainConnect {
     public provider: Provider|null;
     public signer: Signer|null;
     
@@ -16,53 +24,75 @@ export default class BlockchainConnect {
 
     // Reactive members
     public account: Ref<string>;
-    public loaded: Ref<boolean>;
+    public connectionState: Ref<ConnectionState>;
     public connectionError: Ref<string>;
 
     constructor() {
         this.provider = null;
         this.signer = null;
         this._onChange = null;
-        this.loaded = ref(false);
-        this.account = ref("");
+
+        this.connectionState = ref(ConnectionState.Unknown);
         this.connectionError = ref("");
+        this.account = ref("");
     }
 
     async connect(): Promise<void> {
-        // Connect MetaMask
-        this.provider = <Provider> await detectEthereumProvider();
+        try {
+            this.connectionState.value = ConnectionState.Connecting;
 
-        if(this.provider) {
-            // Connect Ethers to Metamask instance
-            this.provider = new ethers.providers.Web3Provider((window.ethereum as ethers.providers.ExternalProvider))
-
-            await (this.provider as ethers.providers.Web3Provider).send("eth_requestAccounts", []);
+            // Connect MetaMask
+            this.provider = <Provider> await detectEthereumProvider();
+            //console.log("detectEthereumProvider(): ", this.provider);
             
-            this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
-
-            if(this.signer === null || this.signer === undefined)
-            {
-                console.error("BlockchainConnect::connect() Signer returned null")
-                return;
-            }
-        
-        } else {
-            this.provider = <Provider> ethers.providers.getDefaultProvider();
-            this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
-        }
-
-        this.account.value = await this.signer!.getAddress();
-        this.loaded.value = true;
-
-        //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
+            if(this.provider) {
+                // Connect Ethers to Metamask instance
+                this.provider = new ethers.providers.Web3Provider((window.ethereum as ethers.providers.ExternalProvider))
     
-        //
+                await (this.provider as ethers.providers.Web3Provider).send("eth_requestAccounts", []);
+                
+                this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
+    
+                if(this.signer === null || this.signer === undefined)
+                {
+                    this.connectionState.value = ConnectionState.Error;
+                    this.connectionError.value = "BlockchainConnect::connect() Signer returned null";
+                    console.error(this.connectionError.value);
+                    return;
+                }
+            
+            } else {
+                console.log("METAMASK not loaded, calling getDefaultProvider()");
+
+                this.provider = <Provider> ethers.providers.getDefaultProvider();
+                
+                if(!this.provider) {
+                    this.connectionState.value = ConnectionState.Error;
+                    this.connectionError.value = "Error getting default provider, please install Metamask";
+                    console.error(this.connectionError.value)
+                    return;
+                }
+                
+                this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
+            }
+        } catch(e) {
+            this.connectionState.value = ConnectionState.Error;
+            this.connectionError.value = "Error loading blockchain: " + e;
+            console.error(this.connectionError.value);
+            return;
+        }
+    
         // Setup change notification
-        //
         // TODO: Figure out why I can't call this by passing func reference... odd
         (window.ethereum as Provider).on('accountsChanged', (accounts: Array<string>) => {
             this.accountsChanged(accounts);
         });
+
+        this.account.value = await this.signer!.getAddress();
+        this.connectionState.value = ConnectionState.Connected;
+        this.connectionError.value = "";
+
+        //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
     }
 
     /**

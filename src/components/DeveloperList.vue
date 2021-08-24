@@ -85,7 +85,7 @@ import { onMounted, ref, inject, watch } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
-import BlockchainConnect from '../services/BlockchainConnect';
+import { BlockchainConnect } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 

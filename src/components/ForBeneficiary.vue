@@ -1,27 +1,40 @@
 <template>
-<div v-if="!loaded">
+
+<ConnectBlock v-if="bc.connectionState.value !== state.Connected" />
+
+<div v-else-if="bc.connectionState.value === state.Connected && !trusts">
     <div class="flex h-20 justify-center items-center">
         <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
-        </div><span class="ml-2">Loading...</span>
+        </div><span class="ml-2">Fetching your Trusts...</span>
     </div>        
 </div>
-<div v-else-if="loaded && trusts" class="text-center ">
+<div v-else-if="bc.connectionState.value === state.Connected && trusts" class="text-center ">
     <PageTitle>
             <template v-slot:title>Trusts Created for You 
                 <span class="text-gray-500 text-base">(<AddressField v-if="bc.account" :address="bc.account.value"></AddressField>)</span>
             </template>
     </PageTitle>  
 
-    <div v-if="trusts && !trusts.length" class=" m-10 mt-10 " >
-        <h1 class="text-4xl tracking-tight font-thin text-gray-900 sm:text-5xl md:text-6xl">
+    <div v-if="!trusts.length" class="m-10 mt-10" >
+        <h1 class="text-2xl tracking-tight font-thin text-gray-900 sm:text-2xl md:text-3xl">
             <span class="block xl:inline">
-                There arent any trust funds for you yet. 
+                We can't find any trust funds with your account number: 
+                (<AddressField class="text-lg" v-if="bc.account" :address="bc.account.value"></AddressField>) 
+                listed as a <span class="text-indigo-500">beneficiary. </span>
             </span>
-            <span class="block mt-10 text-indigo-600 xl:inline">Maybe later...</span>
         </h1>
+        <p class="mt-12 text-left">Need help?</p>
+        <p class="text-base text-left font-light m-5">If you believe there should a trust for you, double check your account information
+                and check with the trust creator to ensure that you've connected your wallet to the same
+                address they listed for you as beneficiary.
+
+        </p>
+        <p class="m-5 text-left">
+            <a class="text-blue-500 underline" @click="$router.push('/About')">Click here for more information.</a>
+        </p>
     </div>
 
-    <div v-else-if="trusts && trusts.length" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div v-else-if="trusts.length" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
         There are {{ trusts.length }} trust funds for you.
         None of them are accessible yet.
         <transition-group name="list">
@@ -43,11 +56,7 @@
             <template v-slot:title>Trust Fund: {{ selectedTrust.name }}</template>
         </EditTrust>
     </div>
-
-
 </div>
-
-
 </template>
 
 <script setup="props" lang="ts">
@@ -58,8 +67,9 @@ import PageTitle from './PageTitle.vue';
 import EditTrust from './EditTrust.vue';
 import NewTrustCard from './TrustCard.vue';
 import AddressField from './AddressField.vue';
+import ConnectBlock from './ConnectBlock.vue';
 
-import BlockchainConnect from '../services/BlockchainConnect';
+import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 
@@ -67,12 +77,13 @@ import { Trust } from "../services/Trust";
 
 // BLOCKCHAIN connection and prep
 const exchange: CurrencyExchange | undefined = inject('exchange');
-const loaded = inject("loaded");
 
 /**
  * LOAD BC DATA
  */
 let bc = <BlockchainConnect> inject("BlockchainConnect");
+const state = ConnectionState;
+
 const list = <TrustList> inject("TrustList");
 
 const trusts = computed(() => list.trusts.value?.filter(trust => trust.beneficiary.toUpperCase() === bc.account.value.toUpperCase() ));

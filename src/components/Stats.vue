@@ -13,9 +13,14 @@
             <dt class="text-sm font-medium text-gray-500 truncate">
                 Total Value
             </dt>
-            <dd class="mt-1 text-xl flex sm:block font-semibold text-green-500">
-                {{ totalValue }} ETH
-                <div class="text-lg ml-2 sm:ml-0 text-gray-500">( {{ totalValueUSD }} )</div>
+            <dd class="mt-1 text-xl flex font-semibold text-green-500">
+                <span class="text-blueGray-300 bg-transparent ">
+                    <svg class="-ml-2" xmlns="http://www.w3.org/2000/svg" height="28" width="28" preserveAspectRatio="xMidYMid" viewBox="-38.39985 -104.22675 332.7987 625.3605"><path fill="#343434" d="M125.166 285.168l2.795 2.79 127.962-75.638L127.961 0l-2.795 9.5z"/><path fill="#8C8C8C" d="M127.962 287.959V0L0 212.32z"/><path fill="#3C3C3B" d="M126.386 412.306l1.575 4.6L256 236.587l-128.038 75.6-1.575 1.92z"/><path fill="#8C8C8C" d="M0 236.585l127.962 180.32v-104.72z"/><path fill="#141414" d="M127.961 154.159v133.799l127.96-75.637z"/><path fill="#393939" d="M127.96 154.159L0 212.32l127.96 75.637z"/></svg>
+                </span>
+                <span class="-ml-1 flex-shrink-0">
+                    {{ totalValue }} ETH
+                </span>
+                <span class="text-lg ml-2 sm:ml-2 text-gray-500">({{totalValueUSD}})</span>
             </dd>
         </div>
         <div class="hidden sm:block px-4 py-3 bg-white border shadow rounded-lg overflow-hidden sm:p-3">

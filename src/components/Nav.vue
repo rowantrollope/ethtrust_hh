@@ -2,18 +2,21 @@
     Navigation bar 
 --> 
 <template>
-        <div class="nav">
-            <div class="flex justify-between h-12">
-                <div class="flex-grow flex">
-                    <div class="flex items-center md:hidden">
+        <div class="mx-auto px-2 h-11" style="background-color: rgb(51, 51, 51);">
+            <div class="flex h-full justify-between">
+                <div class="flex-grow flex items-center">
+                    <!--
+                        Mobile menu
+                    -->
+                    <div class="flex md:hidden">
                         <!-- Mobile menu button -->
                         <Menu as="nav" v-slot="{ open }">
-                            <MenuButton class="inline-flex items-center justify-center p-1 text-white ">
+                            <MenuButton>
                                 <span class="sr-only">Open main menu</span>
                                 <Hamburger :open="open"/>
                             </MenuButton>
                             <transition name="fadeslide">
-                                <MenuItems class="origin-top-left absolute -ml-2 mt-2 px-2 w-full h-full pt-5 pb-5 shadow-lg bg-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                <MenuItems class="origin-top-left absolute mt-1 -ml-2 px-2 w-full h-full pt-5 pb-5 shadow-lg bg-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                                         <MenuItem>
                                             <router-link class="mobile-router-link" tag="li" to="/">
@@ -51,12 +54,15 @@
                         </Menu>
 
                     </div>
-                    <div class="flex flex-grow items-center mr-3">
-                        <div class="text-lg text-gray-100 tracking-tight subpixel-antialiased uppercase">
+                    
+                    <!-- Brand name --> 
+                    <div class="flex mr-3">
+                        <div class="sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased uppercase">
                             Safe <span class="font-thin -ml-1">Trust</span>
                         </div>
                     </div>
-
+                    
+                    <!-- Normal desktop menu items --> 
                     <div class="md:flex hidden items-center">
                         <router-link class="router-link" tag="li" to="/">
                             Home
@@ -79,6 +85,8 @@
                     </div>
 
                 </div>
+                
+                <!-- Connect button (ON THE RIGHT) --> 
                 <div class="flex items-center">
                     <ConnectButton/>
                 </div>
@@ -87,6 +95,7 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 
 import Hamburger from './Hamburger.vue'
@@ -95,19 +104,15 @@ import ConnectButton from './ConnectButton.vue'
 </script>
 
 <style scoped>
-    .nav {
-        @apply mx-auto pl-2 pr-3;
-        background-color: rgb(51, 51, 51);
-    }
 
     .nav-items {
         @apply hidden md:ml-6 md:flex md:items-center md:space-x-4;
     }
     .router-link-active {
-        @apply border border-gray-400 text-white px-3 py-2 rounded-md text-base font-normal;
+        @apply border border-gray-400 px-3 py-2 rounded-md text-base font-normal;
     }
     .router-link {
-        @apply flex-shrink-0 text-gray-200 hover:bg-black hover:text-white px-2 py-1 rounded-md text-sm font-light;
+        @apply flex-shrink-0 text-white hover:bg-black hover:text-white px-2 py-1 rounded-md text-sm font-light;
     }
     .mobile-router-link {
         @apply text-gray-300 hover:bg-gray-700 hover:text-white block px-2 py-2 rounded-md text-base font-thin;
