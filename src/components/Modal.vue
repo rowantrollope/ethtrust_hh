@@ -4,7 +4,7 @@
 <template>
     <TransitionRoot as="template" :show="open">
         <Dialog as="div" static class="fixed z-50 inset-0 " @close="open = false" :open="open">
-            <div class="flex h-full items-end justify-center sm:min-h-screen sm:pt-4 sm:px-4 sm:pb-20 text-center sm:block ">
+            <div class="flex h-full sm:items-end sm:align-top justify-center sm:min-h-screen sm:pt-4 sm:px-4 sm:pb-20 text-center sm:block ">
                 <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
                     <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-filter backdrop-blur-sm" />
                 </TransitionChild>
@@ -20,7 +20,8 @@
                                 sm:rounded-lg
                                 shadow-xl 
                                 sm:overflow-hidden 
-                                h-full
+                                overflow-y-scroll
+                                h-auto
                                 sm:h-auto
                                 sm:p-6
                                 p-4 
@@ -40,7 +41,7 @@
                                 <XIcon class="h-6 w-6" aria-hidden="true" />
                             </button>
                         </div>
-                        <div class="sm:p-4 p-1 h-full">
+                        <div class="sm:p-4 p-1">
                             <slot></slot>    
                         </div>
                     </div>
