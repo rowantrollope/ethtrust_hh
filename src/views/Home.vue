@@ -5,6 +5,14 @@
 <div class="relative bg-white overflow-hidden">
     <div class="max-w-7xl mx-auto">
 
+        <div v-if="bc?.connectionState.value !== state.Connected || !list || !list.trusts.value">
+            <div class="flex h-20 justify-center items-center">
+            <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
+            </div>
+            <span class="ml-2">Connecting to Blockchain...</span>
+        </div>        
+
+        </div>
         <div v-if="bc?.connectionState.value === state.Connected && list && list.trusts.value" class="relative z-10 pb-8 sm:pb-16 md:pb-20 xl:max-w-2xl xl:w-full xl:pb-32">
 
             <!-- PAGE - WELCOME -- ZERO TRUSTS FOUND 
