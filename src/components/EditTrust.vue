@@ -197,17 +197,19 @@
 
         </div>
 
-        <div class="flex flex-row mt-5">
-            <Button class="flex-1 btn-white" :onClick="onCancel" >
-                Cancel
-            </Button>
-            <Button class="mt-0 ml-2 flex-1 " 
-                    :class="[validEntry ? 'btn-primary': 'btn-disabled']"
-                    :onClick="onSave"
-                    :disabled="!validEntry">
-                Save Changes
-            </Button>                                                    
-        </div>                               
+        <template v-slot:buttons> 
+            <div class="flex flex-row mt-5">
+                <Button class="flex-1 btn-white" :onClick="onCancel" >
+                    Cancel
+                </Button>
+                <Button class="mt-0 ml-2 flex-1 " 
+                        :class="[validEntry ? 'btn-primary': 'btn-disabled']"
+                        :onClick="onSave"
+                        :disabled="!validEntry">
+                    Save Changes
+                </Button>                                                    
+            </div>
+        </template> 
     </Modal>
 </template>
 

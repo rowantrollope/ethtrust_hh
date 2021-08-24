@@ -50,20 +50,22 @@
         </div>
         
         <!-- FOOTER --> 
-        <div class="mt-1 flex bg-white space-x-5">
-            <Button class="flex-1 btn btn-danger-outline" :onClick="onClose">
-                Cancel
-            </Button>
-            <Button v-if="!isFirstPanel" class="flex-1 btn btn-primary-outline" :onClick="prev">
-                Back
-            </Button>
-            <Button v-if="isLastPanel" class="flex-1 btn btn-success" :onClick="onCreate">
-                Create Now 
-            </Button>
-            <Button v-else-if="!isLastPanel" class="flex-1 btn btn-primary" :onClick="next">
-                Next >
-            </Button>
-        </div>
+        <template v-slot:buttons>
+            <div class="mt-1 flex bg-white space-x-5">
+                <Button class="flex-1 btn btn-danger-outline" :onClick="onClose">
+                    Cancel
+                </Button>
+                <Button v-if="!isFirstPanel" class="flex-1 btn btn-primary-outline" :onClick="prev">
+                    Back
+                </Button>
+                <Button v-if="isLastPanel" class="flex-1 btn btn-success" :onClick="onCreate">
+                    Create Now 
+                </Button>
+                <Button v-else-if="!isLastPanel" class="flex-1 btn btn-primary" :onClick="next">
+                    Next >
+                </Button>
+            </div>
+        </template>
     </Modal>
 </template>
 

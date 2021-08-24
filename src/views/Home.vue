@@ -37,16 +37,30 @@
                 </button>
                 </div>
             </div>
+            <div class="m-10">
+                <UserDirection v-if="bc.connectionState.value === state.Connected && list.trusts.value"/>
+            </div>
             </div>
         </main>
         </div>
     </div>
     <div class="xl:absolute xl:inset-y-0 xl:right-0 xl:w-1/2">
         <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmFtaWx5JTIwa2lkc3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=60" alt="" />
-
     </div>
 </div>
 </template>
 
 <script setup lang="ts">
+
+import { inject } from 'vue';
+
+import UserDirection from '../components/UserDirection.vue';
+import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import TrustList from '../services/TrustList';
+
+const state = ConnectionState;
+
+const bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
+const list: TrustList = <TrustList> inject('TrustList');
+
 </script>
