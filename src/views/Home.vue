@@ -3,17 +3,17 @@
 -->
 <template>
 
-<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && user == UserType.Grantor"
+<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && isGrantor"
     @click="$router.push('/Manage')">
     We found {{ grantorTrusts }} trust funds created by your account. <a @click="$router.push('/Manage')" class="text-blue-500 underline">Show me!</a>
 </TopAlert>
 
-<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && user == UserType.Beneficiary"
+<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && isBeneficiary"
     @click="$router.push('/Beneficiaries')">
     We found {{ beneficiaryTrusts }} trust funds in your name as Beneficiary. <a @click="$router.push('/Beneficiaries')" class="text-blue-500 underline">Show me!</a>
 </TopAlert>
 
-<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && user == UserType.Trustee"
+<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && isTrustee"
 @click="$router.push('/Trustees')">
     We found {{ trusteeTrusts }} trust funds for you as a TRUSTEE.  <a @click="$router.push('/Trustees')" class="text-blue-500 underline">Show me!</a>
 </TopAlert>
@@ -88,6 +88,10 @@ enum UserType {
     Beneficiary,
     Trustee,
 }
+
+const isGrantor = computed(() => user.value === UserType.Grantor )
+const isTrustee = computed(() => user.value === UserType.Trustee )
+const isBeneficiary = computed(() => user.value === UserType.Beneficiary )
 
 //const user: UserType = UserType.None;
 
