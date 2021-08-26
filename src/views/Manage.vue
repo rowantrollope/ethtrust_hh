@@ -2,23 +2,26 @@
     The primary list of trusts "Manage Trusts" (this is designed for the creators )
 -->
 <template>
+<div>
+
     <!-- 
         When empty, display some helpful text
     --> 
-        <PageTitle >
-            <template v-slot:title>Create & Manage Trusts</template>
-            <template v-slot:buttons>           
-                <Button class="btn-rounded btn-primary text-sm" :onClick="onCreateNew">
-                    Create New
-                </Button>            
-            </template>
-        </PageTitle>
-        <div class="px-5 mt-5">
-            <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
-        </div>
-        <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
-
-
+    <PageTitle >
+        <template v-slot:title>Create & Manage Trusts</template>
+        <template v-slot:buttons>           
+            <Button class="btn-rounded btn-primary text-sm" :onClick="onCreateNew">
+                Create New
+            </Button>            
+        </template>
+    </PageTitle>
+    <div class="px-5 mt-5">
+        <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
+    </div>
+    <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
+    
+    
+</div>
 </template>
 
 <script setup lang="ts">

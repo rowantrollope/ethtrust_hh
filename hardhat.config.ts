@@ -21,6 +21,10 @@ const config: HardhatUserConfig = {
         version: '0.8.4',
     },
     networks: {
+        mainnet: {
+            url: node_url('mainnet'),
+            accounts: accounts('mainnet'),
+        },
         rinkeby: {
             url: node_url('rinkeby'),
             accounts: accounts('rinkeby'),
@@ -38,6 +42,7 @@ const config: HardhatUserConfig = {
     namedAccounts: {
         deployer: {
             default: 0, 
+            1: 'privatekey://x', // mainnet
             4: 'privatekey://cbe8457ebb2c9425ea9213a816010e3935f07dd794d08d8c07cca0d6f5c8db50', // rinkeby
         },
         trustCreator: 3,
