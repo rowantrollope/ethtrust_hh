@@ -259,6 +259,7 @@ contract Trusts {
     }
 
     function canWithdraw(bytes32 key, address sender) public view returns(bool result, string memory reason) {
+        result = false;
         require(trustSet.exists(key), "Trust doesn't exist.");
 
         Trust storage t = trusts[key];
@@ -271,9 +272,12 @@ contract Trusts {
             else 
                 reason = "REVOKABLE type trust may be withdrawn only by grantor, beneficiary or trustee";
 
-        } else if (t.trustType == TrustType.IRREVOKABLE) {
-            if(sender == t.beneficiary || 
-                exists(sender, t.trustees))
+        } else if (t.trustType == TrustType.IRREVOKABLE ||
+                    t.trustType == TrustType.QTIP ||
+                    t.trustType == TrustType.GRAT ||
+                    t.trustType == TrustType.SPECIAL_NEEDS ||
+                    t.trustType == TrustType.SPENDTHRIFT) {
+            if(sender == t.beneficiary || exists(sender, t.trustees))
                 result = true;
             else 
                 reason = "IRREVOKABLE type trust may be withdrawn only by beneficiary or trustee";
