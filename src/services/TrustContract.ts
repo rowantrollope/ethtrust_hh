@@ -3,8 +3,9 @@ import { BigNumber} from "@ethersproject/bignumber";
 import ContractWrapper from "./ContractWrapper"
 
 import { Trust }  from "./Trust";
-//import Trusts from '../../deployments/localhost/Trusts.json';
-import Trusts from '../../deployments/mainnet/Trusts.json';
+import Trusts_localhost from '../../deployments/localhost/Trusts.json';
+import Trusts_rinkeby from '../../deployments/rinkeby/Trusts.json';
+import Trusts_mainnet from '../../deployments/mainnet/Trusts.json';
 
 /**
  * Emitted by ChangeCallback
@@ -35,6 +36,19 @@ export class TrustContract extends ContractWrapper {
      * @returns void
      */
     async connect(signer: Signer) {
+
+        let Trusts;
+        const chainId = await signer.getChainId();
+        switch(chainId) {
+            case 0:
+                Trusts = Trusts_localhost; break;
+            case 1: 
+                Trusts = Trusts_mainnet; break;
+            case 4: 
+                Trusts = Trusts_rinkeby; break;
+            default:
+                Trusts = Trusts_localhost; break;
+        }
 
         await super.connect(signer, Trusts.address, Trusts.abi);
         

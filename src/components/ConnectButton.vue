@@ -38,6 +38,12 @@
                         <div class="flex">
                             Balance: <span class=""> &nbsp;{{ balance }} ETH </span>
                         </div>
+                        <div class="flex">
+                            Network ID:<span class=""> &nbsp;{{ bc.chainId }} </span>
+                        </div>
+                        <div class="flex">
+                            Network Name:<span class=""> &nbsp;{{ bc.chainName }} </span>
+                        </div>
                     </div>
                 </div>
                 <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">

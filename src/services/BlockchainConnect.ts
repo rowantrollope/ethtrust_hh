@@ -5,6 +5,7 @@ import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
 import { toEtherStringRounded } from './Helpers';
+import { runInThisContext } from 'vm';
 
 interface changeCallback { (myArgument: string): void }
 
@@ -19,7 +20,8 @@ export enum ConnectionState {
 export class BlockchainConnect {
     public provider: Provider|null;
     public signer: Signer|null;
-    
+    public chainId: number;
+    public chainName: string;
     private _onChange: changeCallback|null;
 
     // Reactive members
@@ -31,6 +33,8 @@ export class BlockchainConnect {
         this.provider = null;
         this.signer = null;
         this._onChange = null;
+        this.chainId = 0;
+        this.chainName = "";
 
         this.connectionState = ref(ConnectionState.Unknown);
         this.connectionError = ref("");
@@ -65,7 +69,7 @@ export class BlockchainConnect {
                 console.log("METAMASK not loaded, calling getDefaultProvider()");
 
                 this.provider = <Provider> ethers.providers.getDefaultProvider();
-                
+
                 if(!this.provider) {
                     this.connectionState.value = ConnectionState.Error;
                     this.connectionError.value = "Error getting default provider, please install Metamask";
@@ -82,6 +86,9 @@ export class BlockchainConnect {
             return;
         }
     
+        this.chainId = (await this.provider.getNetwork()).chainId;
+        this.chainName = (await this.provider.getNetwork()).name;
+
         // Setup change notification
         // TODO: Figure out why I can't call this by passing func reference... odd
         (window.ethereum as Provider).on('accountsChanged', (accounts: Array<string>) => {
