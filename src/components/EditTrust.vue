@@ -191,8 +191,10 @@
                 Tab: Type
             -->
             <div v-show="activeTab===6" >
-                <p class="text-sm ml-10 mb-5">Note: You cannot change the trust type once it is created.</p>
-                <InputTrustType class="ml-10" v-model='trust'></InputTrustType>
+                <p class="text-sm ml-10 text-red-500">Note: You cannot change the trust type once it is created.</p>
+                <div class="flex items-center justify-center w-full">
+                    <InputTrustType class="w-full m-10" v-model='trust'></InputTrustType>
+                </div>
             </div>
 
         </div>
@@ -247,7 +249,7 @@ const tabs = ref([
     { name: "Withdraw", title: "Withdraw Funds" },
     { name: "Deposit", title: "Deposit Funds" },
     { name: "Delete", title: "Delete this Trust Fund" },
-    { name: "Type", title: "Select Trust Type" }]
+    { name: "Trust Type", title: "Select Trust Type" }]
 );
 
 const emit = defineEmits(['update:modelValue', 'save', 'cancel', 'delete', 'withdraw', 'deposit', 'invest']);

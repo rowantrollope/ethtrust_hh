@@ -4,7 +4,7 @@ import ContractWrapper from "./ContractWrapper"
 
 import { Trust }  from "./Trust";
 //import Trusts from '../../deployments/localhost/Trusts.json';
-import Trusts from '../../deployments/rinkeby/Trusts.json';
+import Trusts from '../../deployments/mainnet/Trusts.json';
 
 /**
  * Emitted by ChangeCallback

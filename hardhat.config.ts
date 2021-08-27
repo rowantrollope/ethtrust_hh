@@ -42,7 +42,7 @@ const config: HardhatUserConfig = {
     namedAccounts: {
         deployer: {
             default: 0, 
-            1: 'privatekey://x', // mainnet
+            1: 'privatekey://0af401fb7edbf55c5d523561cf0e24be8efe92e60575e7f9e7a4800a3bfd977d', // mainnet deployer
             4: 'privatekey://cbe8457ebb2c9425ea9213a816010e3935f07dd794d08d8c07cca0d6f5c8db50', // rinkeby
         },
         trustCreator: 3,

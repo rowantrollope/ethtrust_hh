@@ -16,7 +16,7 @@
                 <TrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
             </transition-group>
 
-            <div class="create-new-card hidden sm:block hover:border-white p-20 hover:shadow-lg text-gray-300  hover:text-indigo-500" @click="$emit('create-clicked')">
+            <div class=" create-new-card hidden sm:block md:block lg:hidden hover:border-white p-20 hover:shadow-lg text-gray-300  hover:text-indigo-500" @click="$emit('create-clicked')">
                 <div class="flex-shrink rounded-lg text-center text-xl "> Create New Trust</div>
             </div>
         </div>
