@@ -27,8 +27,7 @@
                 </div>
                 <div class="input-description"> 
                     Note: The name of the trust will be publicly visible on the blockchain. 
-                    </div>
-                
+                </div>
                 <div class="row">
                     <dt class="input-label">
                         Beneficiary
@@ -61,11 +60,14 @@
 
 import { computed, ref } from 'vue';
 
+import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
+
 import InputBeneficiary from './InputBeneficiary.vue';
 import InputTrustType from './InputTrustType.vue';
 
 import { Trust } from '../services/Trust';
 
+const selected = ref('');
 const props = defineProps({
     modelValue: { type: Trust, required: true },
 });
