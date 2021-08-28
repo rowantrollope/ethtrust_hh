@@ -37,8 +37,8 @@
     </div>
 </template>
 
-<script setup="props, {emit}">
-import { defineProps } from 'vue'
+<script setup="props, {emit}" lang="ts">
+
 import { XIcon, CheckCircleIcon } from '@heroicons/vue/outline';
 import { TransitionRoot, TransitionChild } from '@headlessui/vue';
 

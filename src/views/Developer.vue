@@ -2,8 +2,7 @@
     TESTING goes here
 -->
 <template>
-    <Test/>
-    <!-- <Trusts class="bg-white"/> --> 
+    <Trusts class="bg-white"/>
 </template>
 
 <script setup lang="ts">

@@ -44,6 +44,9 @@
                         <div class="flex">
                             Network Name:<span class=""> &nbsp;{{ bc.chainName }} </span>
                         </div>
+                        <p class="flex">
+                            Trust Contract: <span class=""> &nbsp; {{ list.address.value }} </span> 
+                        </p>
                     </div>
                 </div>
                 <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">
@@ -56,8 +59,11 @@
                     <p class="flex">
                         Account: &nbsp; <b> {{ bc.account.value }} } </b>
                     </p>
+                    <p class="flex">
+                        Trust Contract: &nbsp; <b> {{ list.address }} } </b>
+                    </p>
                     <div class="text-right">
-                    <Button class="btn-primary" @click="onClicked()">Try Again</Button>
+                    <button class="btn btn-primary" @click="onClicked()">Try Again</button>
                     </div>
                 </div>
             </PopoverPanel>
@@ -70,15 +76,17 @@ import { ref, inject, computed, onMounted } from 'vue';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { StatusOnlineIcon, ShieldCheckIcon } from '@heroicons/vue/outline';
 
-import Button from './Button.vue';
 import AddressField from './AddressField.vue';
 
 import CurrencyExchange from '../services/CurrencyExchange';
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import TrustList from '../services/TrustList';
 
 const state = ConnectionState;
 
 const bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
+const list: TrustList = <TrustList> inject('TrustList');
+
 const exchange = <CurrencyExchange> inject('exchange');
 const balance = ref('0');
 

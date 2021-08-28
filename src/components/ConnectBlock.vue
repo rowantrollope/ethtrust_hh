@@ -27,7 +27,7 @@
         class="ml-20 text-2xl mt-10 tracking-tight font-extrabold text-gray-900">
         <div class="flex items-center space-x-5 mt-10">
             <span class="block text-indigo-600">Click </span>
-            <Button class="btn-rounded btn-success" @click="onConnect">Start</Button>
+            <button class="btn btn-rounded btn-success" @click="onConnect">Start</button>
             <span class="block text-indigo-600">to connect your wallet</span>
         </div>
     </div>
@@ -35,7 +35,6 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
-import Button from './Button.vue';
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 
 let bc: BlockchainConnect = <BlockchainConnect> inject("BlockchainConnect");

@@ -35,24 +35,12 @@ contract Trusts {
     */
 
     /*
-    TODO: Support multiple trustees
-    TODO: Support reporting of trustee and grantor actions to beneficiary (Withdrawals, Deposits, Returns )
     TODO: Support "Grantor death event" - which switches the trust to irrevokable and activates the trustee
             (Also support DUAL trustors (Spouses) such that one death transfers to the living trustor)
-    TODO: How to determine death? 
     TODO: Rules: beneficiary to receive income from trust until a certain age, at which point the property will distrubute to them
     TODO: ADD Support for Successor trustee. 1) Grantor = Trustee until death.  ONLY For REVOKABLE TRUST
-
     */
-    // need multiple beneficiary
-/*
-    (1) revocable trust, 
-    (2) irrevocable trust, 
-    (3) QTIP, // needs spouse account - irrevokable
-    (5) GRAT, // irrevokable
-    (6) special needs
-    provision to allow benficiary access at all
-*/
+    
     enum TrustType { 
         REVOKABLE,
         IRREVOKABLE,
@@ -89,14 +77,6 @@ contract Trusts {
      * Constructor function
      */
     constructor() {
-    }
-
-    function hashKey(string memory _name,
-                  uint _num,
-                  address _sender,
-                  address _beneficiary,
-                  uint _timestamp) private pure returns (bytes32) {
-        return keccak256(abi.encodePacked(_name, _num, _sender, _beneficiary, _timestamp));
     }
 
     /**
@@ -142,6 +122,14 @@ contract Trusts {
         return (t.key);
     }
 
+    /**
+     * Update some of the settings of the trust (not all)
+     * @param key Trust to update
+     * @param beneficiary New Beneficiary
+     * @param trustees New Trustees (array)
+     * @param name New name
+     * @param maturityDate New Date
+     */
     function updateTrust(bytes32 key, 
                          address beneficiary, 
                          address[] memory trustees,
@@ -195,6 +183,10 @@ contract Trusts {
                                 
     }
 
+    /**
+     * Deposit some ETH to this account
+     * @param key Trust to deposit to
+     */
     function depositTrust(bytes32 key) public payable {
         
         require(trustSet.exists(key), "Can't update a trust that doesn't exist.");
@@ -205,7 +197,11 @@ contract Trusts {
 
         emit LogDepositTrust(msg.sender, key, msg.value);
     }
-    
+
+    /**
+     * Delete a trust - must have 0 balance
+     * @param key Trust to delete
+     */    
     function deleteTrust(bytes32 key) public {
 
         require(trustSet.exists(key), "Can't delete a trust that doesn't exist.");
@@ -222,11 +218,10 @@ contract Trusts {
         emit LogRemoveTrust(msg.sender, key);
     }
 
-    function getTrustName(bytes32 key) public view returns(string memory name) {
-        require(trustSet.exists(key), "Trust not found");
-        Trust storage t = trusts[key];
-        return t.name;
-    }
+    /**
+     * Get a trust details
+     * @param _key Trust to return
+     */
     function getTrust(bytes32 _key) public view returns( bytes32 key,
                                                         string memory name, 
                                                         address grantor,
@@ -244,10 +239,18 @@ contract Trusts {
         return(t.key, t.name, t.grantor, t.trustees, t.beneficiary, t.etherAmount, t.createdDate, t.maturityDate, t.trustType);
     }
     
+    /**
+     * Get the number of trusts
+     * @param none
+     */
     function getTrustCount() public view returns(uint count) {
         return trustSet.count();
     }
     
+    /**
+     * Read the trust details at a given index (used to iterate)
+     * @param index trust index
+     */
     function getTrustAtIndex(uint index) public view returns(bytes32 key) {
        
         if(trustSet.count() == 0) {
@@ -258,6 +261,11 @@ contract Trusts {
             return trustSet.keyAtIndex(index);
     }
 
+    /**
+     * Returns whether a withdrawal can be made 
+     * @param key Trust to check
+     * @param sender Who is withdrawing
+     */
     function canWithdraw(bytes32 key, address sender) public view returns(bool result, string memory reason) {
         result = false;
         require(trustSet.exists(key), "Trust doesn't exist.");
@@ -291,6 +299,11 @@ contract Trusts {
         return (result, reason);
     }
     
+    /**
+     * Withdraw ETH
+     * @param key Trust to withdraw from
+     * @param etherAmount Amount to withdraw
+     */
     function withdraw (bytes32 key, uint etherAmount) public payable {
         require(trustSet.exists(key), "Trust doesn't exist.");
 
@@ -324,18 +337,15 @@ contract Trusts {
 
     }
     
-    function withdrawAll (bytes32 key) public payable {
-    
-        require(trustSet.exists(key), "Trust doesn't exist.");
-        Trust memory t = trusts[key];
-        console.log("Trust.sol - withdrawAll(), key: ");
-        withdraw(key, t.etherAmount);
-
-    }
-
     /**
         PRIVATE helpers    
      */
+    
+    /**
+    * Check if a trustee exists
+    * @param item to check for
+    * @param list of items to iterate
+    */
     function exists(address item, address[] memory list) private pure returns(bool result) {
         for(uint i = 0; i < list.length; i++)
             if(item == list[i])
@@ -344,4 +354,20 @@ contract Trusts {
         return false;
     }
     
+    /**
+     * return a hash for the key for a trust
+     * @param name of trust
+     * @param _num Trust number?
+     * @param _sender Sender address
+     * @param _beneficiary Beneficiary address
+     * @param _timestamp the current time
+    */
+    function hashKey(string memory _name,
+                  uint _num,
+                  address _sender,
+                  address _beneficiary,
+                  uint _timestamp) private pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_name, _num, _sender, _beneficiary, _timestamp));
+    }
+
 }

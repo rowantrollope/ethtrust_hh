@@ -10,9 +10,9 @@
     <PageTitle >
         <template v-slot:title>Create & Manage Trusts</template>
         <template v-slot:buttons>           
-            <Button class="btn-rounded btn-primary text-sm" :onClick="onCreateNew">
+            <button class="btn btn-rounded btn-primary text-sm" :onClick="onCreateNew">
                 Create New
-            </Button>            
+            </button>            
         </template>
     </PageTitle>
     <div class="px-5 mt-5">
@@ -27,7 +27,6 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
 
-import Button from '../components/Button.vue';
 import PageTitle from '../components/PageTitle.vue';
 import ManageTrusts from '../components/ManageTrusts.vue';
 import CreateWiz from '../components/CreateWiz.vue';

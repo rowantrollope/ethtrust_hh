@@ -3,7 +3,7 @@
 <div class="text-center ">
     <div class="flex mt-5 justify-center">
         <button class="text-base mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
-        <Button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</Button>        <button class="text-base mx-2 font-normal bg-indigo-500 rounded-lg text-white hover:bg-indigo-300 p-2" :onClick="testMethod">TEST</button>
+        <button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</button>        <button class="btn btn-danger" :onClick="testMethod">TEST</button>
         <InputTrustType v-model="selectedTrust"></InputTrustType>
     </div>
     <!-- Account list -->
@@ -90,7 +90,6 @@ import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 
 import AddressField from './AddressField.vue';
-import Button from './Button.vue'
 import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
 

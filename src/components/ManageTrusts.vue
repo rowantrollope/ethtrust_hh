@@ -38,7 +38,7 @@
             <div class="inline">Let's make your first Trust fund </div>
             <div class="flex text-center items-center space-x-3 mt-10 ml-5 ">
                 <span class="block text-xl sm:text-3xl  text-indigo-600">Click </span>
-                <Button class="btn-rounded flex-shrink-0 text-xl sm:text-3xl btn-primary" @click="$emit('create-clicked')">Create New</Button>
+                <button class="btn btn-rounded flex-shrink-0 text-xl sm:text-3xl btn-primary" @click="$emit('create-clicked')">Create New</button>
                 <span class="block text-xl sm:text-3xl flex-shrink-0 text-indigo-600">to begin</span>
             </div>
         </h1>
@@ -56,7 +56,6 @@ import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 
 import Stats from './Stats.vue';
-import Button from './Button.vue';
 import EditTrust from './EditTrust.vue';
 import TrustCard from './TrustCard.vue';
 import ConnectBlock from './ConnectBlock.vue';

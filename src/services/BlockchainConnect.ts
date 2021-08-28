@@ -5,7 +5,6 @@ import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
 import { toEtherStringRounded } from './Helpers';
-import { runInThisContext } from 'vm';
 
 interface changeCallback { (myArgument: string): void }
 
@@ -89,10 +88,16 @@ export class BlockchainConnect {
         this.chainId = (await this.provider.getNetwork()).chainId;
         this.chainName = (await this.provider.getNetwork()).name;
 
-        // Setup change notification
+        // Setup change notification2
         // TODO: Figure out why I can't call this by passing func reference... odd
         (window.ethereum as Provider).on('accountsChanged', (accounts: Array<string>) => {
             this.accountsChanged(accounts);
+        });
+
+        (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
+            console.log()
+            console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
+            window.location.reload();
         });
 
         this.account.value = await this.signer!.getAddress();
@@ -107,6 +112,18 @@ export class BlockchainConnect {
      * 
      * @param accounts list of accounts - currently MetaMask only sets account[0]
      */
+    chainChanged(chainId: number) {
+        this.chainId = chainId;
+        if(this._onChange != null) {
+            console.log(`BlockchainConnect::networkChanged ${chainId}`);
+        }
+    }
+    /**
+     * Callback handler for when user changes accounts
+     * 
+     * @param accounts list of accounts - currently MetaMask only sets account[0]
+     */
+
     accountsChanged(accounts: Array<string>) {
 
         if(accounts.length) {

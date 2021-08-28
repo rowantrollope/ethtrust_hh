@@ -9,10 +9,10 @@
                 autocomplete="trustee" 
                 placeholder="Enter a valid address"
                 :class="[!errorText ? 'input-field' : 'input-field-invalid']" />
-        <Button class="sm:flex-shrink-0 sm:ml-4 sm:mt-0 mt-2 w-full sm:w-auto" 
+        <button class="btn sm:flex-shrink-0 sm:ml-4 sm:mt-0 mt-2 w-full sm:w-auto" 
                 :class="[!errorText ? 'btn-success' : 'btn-disabled']" 
                 :disabled="errorText ? true : false"
-                @click="addTrustee()">Add Trustee</Button>
+                @click="addTrustee()">Add Trustee</button>
     </div>
     <ul class="border rounded-md border-gray-200 min-w-full divide-y divide-gray-200">
         <div class="bg-gray-100">
@@ -33,8 +33,6 @@ import { ref, computed, watch } from 'vue'
 import { XIcon } from '@heroicons/vue/solid';
 
 import { Trust } from '../services/Trust'
-
-import Button from './Button.vue';
 
 const props = defineProps({
     modelValue: { type: Trust, required: true },

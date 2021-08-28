@@ -2,6 +2,8 @@ import { Signer } from 'ethers';
 import { BigNumber} from "@ethersproject/bignumber";
 import ContractWrapper from "./ContractWrapper"
 
+import { ref } from 'vue';
+
 import { Trust }  from "./Trust";
 import Trusts_localhost from '../../deployments/localhost/Trusts.json';
 import Trusts_rinkeby from '../../deployments/rinkeby/Trusts.json';
@@ -23,6 +25,8 @@ export interface FilterCallback { (trust: Trust): boolean }
 
 export class TrustContract extends ContractWrapper {
     
+    public address = ref("");
+
     private onChange: ChangeCallback|null;
 
     constructor() {
@@ -49,10 +53,12 @@ export class TrustContract extends ContractWrapper {
             default:
                 Trusts = Trusts_localhost; break;
         }
+        
+        this.address.value = Trusts.address;
 
         await super.connect(signer, Trusts.address, Trusts.abi);
         
-        //console.log("TrustContract::connect()");
+        console.log("TrustContract::connect() Address: ", this.address);
 
         this.onChange = null;
         

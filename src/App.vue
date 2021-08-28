@@ -30,6 +30,9 @@ provide('TrustList', list);
 const exchange = new CurrencyExchange();
 provide('exchange', exchange)
 
+const contractAddress = ref("");
+provide ('contractAddress', contractAddress);
+
 const beforeMount = onBeforeMount(() => {
     connect();
 });
@@ -45,7 +48,8 @@ const connect = async () => {
         await list.connect(bc!.signer);
 
         await list.getTrusts((trust: Trust) => true );
-    
+        console.log(list.address);
+        contractAddress.value = list.address;
     }
     
 }

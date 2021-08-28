@@ -138,7 +138,7 @@
                     
                     <div class="sm:flex text-center sm:justify-center items-center">
                         <EthInput v-model="ethWithdraw">Amount to withdraw</EthInput>
-                        <Button class="sm:flex sm:ml-5 btn-success" :onClick="onWithdraw">Withdraw Now</Button>
+                        <button class="btn sm:flex sm:ml-5 btn-success" :onClick="onWithdraw">Withdraw Now</button>
                     </div>
                 </div>
             </div>
@@ -155,9 +155,9 @@
 
                     <EthInput v-model="ethDeposit">Deposit Amount</EthInput>
 
-                    <Button class="ml-5 btn-success" :onClick="onDeposit">
+                    <button class="ml-5 btn btn-success" :onClick="onDeposit">
                         Deposit Now
-                    </Button>
+                    </button>
                 </div>
             </div>
 
@@ -181,9 +181,9 @@
                         Note: The balance on this trust fund is 0 and it can be deleted.
                     </p>
                     <div class="mt-5 text-center">
-                        <Button class="btn-danger" :onClick="onDelete" >
+                        <button class="btn btn-danger" :onClick="onDelete" >
                         Delete Trust Now
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </div> 
@@ -201,15 +201,15 @@
 
         <template v-slot:buttons> 
             <div class="flex flex-row mt-5">
-                <Button class="flex-1 btn-white" :onClick="onCancel" >
+                <button class="flex-1 btn btn-white" :onClick="onCancel" >
                     Cancel
-                </Button>
-                <Button class="mt-0 ml-2 flex-1 " 
+                </button>
+                <button class="mt-0 btn ml-2 flex-1 " 
                         :class="[validEntry ? 'btn-primary': 'btn-disabled']"
                         :onClick="onSave"
                         :disabled="!validEntry">
                     Save Changes
-                </Button>                                                    
+                </button>                                                    
             </div>
         </template> 
     </Modal>
@@ -228,7 +228,6 @@ import { toEtherStringRounded, shortenAddress } from '../services/Helpers';
 
 // components
 import Modal from './Modal.vue';
-import Button from './Button.vue';
 import EthInput from './InputEther.vue';
 import InputBeneficiary from './InputBeneficiary.vue';
 import InputTrustees from './InputTrustees.vue';

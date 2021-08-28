@@ -69,7 +69,6 @@
     import TrustList from '../services/TrustList';
     import CurrencyExchange from '../services/CurrencyExchange';
     
-    import Button from './Button.vue';
     import EditTrust from './EditTrust.vue';
     import NewTrustCard from './TrustCard.vue';
     import PageTitle from './PageTitle.vue';

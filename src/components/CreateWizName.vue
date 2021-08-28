@@ -30,20 +30,6 @@
                 </div>
                 <div class="row">
                     <dt class="input-label">
-                        Beneficiary
-                    </dt>
-                    <dd class="input-col">
-                        <InputBeneficiary v-model="trust"
-                            @valid="validEntry = true" 
-                            @invalid="validEntry = false"></InputBeneficiary>
-                    </dd>
-                </div>
-                <div class="input-description"> 
-                    (Required)
-                    The Beneficiary is the person who will get access to this trust fund after the maturity date.
-                </div>
-                <div class="row">
-                    <dt class="input-label">
                         Trust Type
                     </dt>
                     <dd class="input-col flex items-center">

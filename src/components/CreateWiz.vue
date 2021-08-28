@@ -23,27 +23,32 @@
                 </CreateWizWelcome> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizBeneficiary class="window" v-model="trust" v-show="currentPanel === 1">
+                <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === 1">
                     Who is this for?
-                </CreateWizBeneficiary> 
+                </CreateWizBeneficiaryNew> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 2">
+                <CreateWizName class="window" v-model="trust" v-show="currentPanel === 2">
+                    Name and Type
+                </CreateWizName> 
+            </transition>
+            <transition :name="panelClass">
+                <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 3">
                     When should they get it?
                 </CreateWizMaturity> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === 3">
+                <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === 4">
                     Add Trustees
                 </CreateWizTrustees> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === 4">
+                <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === 5">
                     How much should they get?
                 </CreateWizFund> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === 5">
+                <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === 6">
                     Confirm the details
                 </CreateWizConfirm> 
             </transition>
@@ -52,18 +57,18 @@
         <!-- FOOTER --> 
         <template v-slot:buttons>
             <div class="mt-1 flex bg-white space-x-5">
-                <Button class="flex-1 btn btn-danger-outline" :onClick="onClose">
+                <button class="flex-1 btn btn-danger-outline" :onClick="onClose">
                     Cancel
-                </Button>
-                <Button v-if="!isFirstPanel" class="flex-1 btn btn-primary-outline" :onClick="prev">
+                </button>
+                <button v-if="!isFirstPanel" class="flex-1 btn btn-primary-outline" :onClick="prev">
                     Back
-                </Button>
-                <Button v-if="isLastPanel" class="flex-1 btn btn-success" :onClick="onCreate">
+                </button>
+                <button v-if="isLastPanel" class="flex-1 btn btn-success" :onClick="onCreate">
                     Create Now 
-                </Button>
-                <Button v-else-if="!isLastPanel" class="flex-1 btn btn-primary" :onClick="next">
+                </button>
+                <button v-else-if="!isLastPanel" class="flex-1 btn btn-primary" :onClick="next">
                     Next >
-                </Button>
+                </button>
             </div>
         </template>
     </Modal>
@@ -74,9 +79,9 @@
 import { ref, computed, inject, onUpdated } from 'vue';
 
 import Modal from './Modal.vue';
-import Button from './Button.vue';
 import CreateWizWelcome from './CreateWizWelcome.vue';
-import CreateWizBeneficiary from './CreateWizBeneficiary.vue';
+import CreateWizName from './CreateWizName.vue';
+import CreateWizBeneficiaryNew from './CreateWizBeneficiaryNew.vue';
 import CreateWizMaturity from './CreateWizMaturity.vue';
 import CreateWizTrustees from './CreateWizTrustees.vue';
 
@@ -88,7 +93,7 @@ import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnec
 import { Trust } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
-const panels = ref(["Welcome", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const panels = ref(["Welcome", "Beneficiary", "Type", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
 
 const trust = ref<Trust>(new Trust());
 

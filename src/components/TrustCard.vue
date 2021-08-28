@@ -66,7 +66,6 @@
 import { inject, computed } from 'vue';
 import { ChevronRightIcon } from '@heroicons/vue/outline'
 
-import Button from './Button.vue'
 import TrustCert from './TrustCert.vue'
 import AddressField from './AddressField.vue'
 
