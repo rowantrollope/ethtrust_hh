@@ -30,7 +30,7 @@
             </template>
     
             <div class="item-label">Amount:</div>
-                <div class="item-text">{{ toEther(trust.etherAmount) }}</div>
+                <div class="item-text">{{ utils.toEther(trust.etherAmount) }}</div>
             </div>
 
             <div class="text-red-500 leading-tight sm:ml-12 text-sm sm:text-base">
@@ -48,7 +48,7 @@ import AddressField from './AddressField.vue';
 
 
 import { Trust } from '../services/Trust';
-import { toEther, toDate } from '../services/Helpers';
+import * as utils from '../services/Utils';
 
 const props = defineProps({
     modelValue: { type: Trust, required: true },

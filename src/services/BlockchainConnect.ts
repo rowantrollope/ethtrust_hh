@@ -4,7 +4,7 @@ import { ethers, Signer } from 'ethers';
 import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
-import { toEtherStringRounded } from './Helpers';
+import * as utils from './Utils';
 
 interface changeCallback { (myArgument: string): void }
 
@@ -172,7 +172,7 @@ export class BlockchainConnect {
      */
     async getBalanceString(precision: number = 2 ) : Promise<string> {
         const weiBal = await this.getBalance();
-        return toEtherStringRounded(weiBal, precision);
+        return utils.toEtherStringRounded(weiBal, precision);
     }
 
 }

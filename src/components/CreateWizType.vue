@@ -12,6 +12,15 @@
             <dl class="sm:divide-y sm:divide-gray-200">
                 <div class="row">
                     <dt class="input-label">
+                        Trust Type
+                    </dt>
+                    <dd class="input-col flex items-center">
+                        <InputTrustType class="text-base" v-model="trust"></InputTrustType> 
+                        <a class="text-blue-500 underline ml-5" href="#/About">Learn More</a>
+                    </dd>
+                </div>
+                <div class="row">
+                    <dt class="input-label">
                         Trust name
                     </dt>
                     <dd class="input-col">
@@ -27,15 +36,6 @@
                 </div>
                 <div class="input-description"> 
                     Note: The name of the trust will be publicly visible on the blockchain. 
-                </div>
-                <div class="row">
-                    <dt class="input-label">
-                        Trust Type
-                    </dt>
-                    <dd class="input-col flex items-center">
-                        <InputTrustType class="text-base" v-model="trust"></InputTrustType> 
-                        <a class="text-blue-500 underline ml-5" href="#/About">Learn More</a>
-                    </dd>
                 </div>
             </dl>
         </div>

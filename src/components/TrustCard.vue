@@ -72,7 +72,7 @@ import AddressField from './AddressField.vue'
 import { Trust } from '../services/Trust';
 import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
-import { toEtherStringRounded, shortenAddress } from '../services/Helpers';
+import * as utils from '../services/Utils';
 
 const exchange = <CurrencyExchange> inject('exchange');
 
@@ -84,7 +84,7 @@ const props = defineProps({
 const list = <TrustList> inject("TrustList");
 const usd = computed(() => exchange.wei2usd(props.trust.etherAmount));
 const etherAmount = computed(() => {
-    return toEtherStringRounded(props.trust.etherAmount) + " ETH (" + usd.value + ")";
+    return utils.toEtherStringRounded(props.trust.etherAmount) + " ETH (" + usd.value + ")";
 })
 const available = computed(() => {
     const today = new Date();
@@ -92,7 +92,7 @@ const available = computed(() => {
     return maturity < today;
 });
 const stats = [
-  { label: 'Trust ID:', value: shortenAddress(props.trust.key) },
+  { label: 'Trust ID:', value: utils.shortenAddress(props.trust.key) },
   { label: 'Amount: ', value: etherAmount.value},
   { label: 'Available On: ', value: props.trust.getMaturityDate().toLocaleDateString() },
 ]

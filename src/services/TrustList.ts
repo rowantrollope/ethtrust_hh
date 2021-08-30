@@ -5,7 +5,7 @@ import { BigNumber} from "@ethersproject/bignumber";
 
 import { Trust } from "./Trust";
 import { TrustContract, ChangeType, FilterCallback } from './TrustContract';
-import { shortenAddress } from './Helpers';
+import * as utils from './Utils';
 
 enum TrustState {
     None = 0,
@@ -132,7 +132,7 @@ export default class TrustList extends TrustContract {
                     }
 
                 } else
-                    console.error("BC.vue::onTrustChange() - Can't Find Trust: ", shortenAddress(key));
+                    console.error("BC.vue::onTrustChange() - Can't Find Trust: ", utils.shortenAddress(key));
                 break;
         }
         // IF we receive all the updates, clear the manual refresh timer

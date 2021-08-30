@@ -47,7 +47,7 @@
                         <td class="row-text"> 
                             <AddressField :address="trust.beneficiary"/>
                         </td>
-                        <td class="row-text"> {{ ethers.utils.commify(toEther(trust.etherAmount)) }} </td>
+                        <td class="row-text"> {{ ethers.utils.commify(utils.toEther(trust.etherAmount)) }} </td>
                         <td class="row-text"> {{ trust.getMaturityDate().toLocaleDateString() }} </td>
                         <td class="row-text"> {{ trust.getCreatedDate().toLocaleDateString() }} </td>
                     </tr>
@@ -94,7 +94,7 @@ import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
 
 import { Trust, TypeStrings, TrustType } from "../services/Trust";
-import { toEther } from '../services/Helpers';
+import * as utils from '../services/Utils';
 
 // BLOCKCHAIN connection and prep
 const bcState = ConnectionState;

@@ -8,18 +8,18 @@
         <div class="card-inner">
             <img alt="cert" width="400" src="../assets/money.png">
             <div class="cert-name">{{ trust.name }}</div>            
-            <div class="cert-eth">{{ formatEtherString(trust.etherAmount) }}</div>
+            <div class="cert-eth">{{ utils.formatEtherString(trust.etherAmount) }}</div>
             <div class="cert-date">Available: {{ trust.getMaturityDate().toLocaleDateString() }}</div>              
-            <div class="cert-creator text-xs">{{ shortenAddress(trust.grantor) }}3</div>            
+            <div class="cert-creator text-xs">{{ utils.shortenAddress(trust.grantor) }}3</div>            
             <div class="cert-trustee text-xs">
-                <span v-for="trustee in trust.trustees">{{ shortenAddress(trustee) }}, </span></div>            
+                <span v-for="trustee in trust.trustees">{{ utils.shortenAddress(trustee) }}, </span></div>            
         </div>
     </div>
 </template>
 
 <script setup="props, {emit}" lang="ts">
 import { Trust } from '../services/Trust';
-import { formatEtherString, shortenAddress, toDate } from '../services/Helpers';
+import * as utils from '../services/Utils';
 
 const props = defineProps({
     trust: { type: Trust, required: true },

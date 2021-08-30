@@ -5,7 +5,7 @@
     <span @mouseover="hover=true" @mouseleave="hover=false" class="cursor-pointer">
 
         <span class="relative border-b p-0.5 border-gray-300 hover:border-blue-400 hover:text-blue-500">
-            {{ shortenAddress(address) }}
+            {{ utils.shortenAddress(address) }}
             <transition name="pop" mode="out-in">
                 <span v-if="viewTip" class="tooltip">
                     {{tooltipText}}
@@ -31,7 +31,7 @@
 
 <script setup="props, { emit, slots }" lang="ts">
 import { ref } from 'vue';
-import { shortenAddress } from '../services/Helpers';
+import * as utils from '../services/Utils';
 
 const displayPopup = ref(false);
 const hover = ref(false);

@@ -23,14 +23,14 @@
                 </CreateWizWelcome> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === 1">
-                    Who is this for?
-                </CreateWizBeneficiaryNew> 
+                <CreateWizName class="window" v-model="trust" v-show="currentPanel === 1">
+                    Define the trust type
+                </CreateWizName> 
             </transition>
             <transition :name="panelClass">
-                <CreateWizName class="window" v-model="trust" v-show="currentPanel === 2">
-                    Name and Type
-                </CreateWizName> 
+                <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === 2">
+                    Who is this for?
+                </CreateWizBeneficiaryNew> 
             </transition>
             <transition :name="panelClass">
                 <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 3">
@@ -80,7 +80,7 @@ import { ref, computed, inject, onUpdated } from 'vue';
 
 import Modal from './Modal.vue';
 import CreateWizWelcome from './CreateWizWelcome.vue';
-import CreateWizName from './CreateWizName.vue';
+import CreateWizName from './CreateWizType.vue';
 import CreateWizBeneficiaryNew from './CreateWizBeneficiaryNew.vue';
 import CreateWizMaturity from './CreateWizMaturity.vue';
 import CreateWizTrustees from './CreateWizTrustees.vue';
@@ -93,7 +93,7 @@ import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnec
 import { Trust } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
-const panels = ref(["Welcome", "Beneficiary", "Type", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const panels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
 
 const trust = ref<Trust>(new Trust());
 
