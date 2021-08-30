@@ -12,6 +12,7 @@
     "@types/chai": "^4.2.21",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.4.0",
+    "@vuedx/typescript-plugin-vue": "^0.7.4",
     "chai": "^4.3.4",
     "chai-ethers": "^0.0.1",
     "dotenv": "^10.0.0",

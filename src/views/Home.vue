@@ -71,7 +71,6 @@ import { inject, ref, computed, } from 'vue';
 
 import router from '../router';
 
-import ReturningUserPopup from '../components/ReturningUserPopup.vue';
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
 import { Trust } from '../services/Trust';

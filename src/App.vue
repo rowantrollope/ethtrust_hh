@@ -48,8 +48,8 @@ const connect = async () => {
         await list.connect(bc!.signer);
 
         await list.getTrusts((trust: Trust) => true );
-        console.log(list.address);
-        contractAddress.value = list.address;
+        console.log(list.address.value);
+        contractAddress.value = list.address.value;
     }
     
 }
