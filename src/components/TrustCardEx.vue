@@ -2,24 +2,25 @@
     Card display for a single trust, shown by the ForYou list.
 --> 
 <template>
-    <div :class="selectable ? 'card-selectable' : ''" 
-         class="card justify-center cursor-pointer" 
-         @click="emit('click')">
-        <div class="card-inner">
-            <img alt="cert" width="400" src="../assets/money.png">
-            <div class="cert-name">{{ trust.name }}</div>            
-            <div class="cert-eth">{{ utils.formatEtherString(trust.etherAmount) }}</div>
-            <div class="cert-date">Available: {{ trust.getMaturityDate().toLocaleDateString() }}</div>              
-            <div class="cert-creator text-xs">{{ utils.shortenAddress(trust.grantor) }}3</div>            
-            <div class="cert-trustee text-xs">
-                <span v-for="trustee in trust.trustees">{{ utils.shortenAddress(trustee) }}, </span></div>            
-        </div>
+<div :class="selectable ? 'card-selectable' : ''" 
+        class="card justify-center cursor-pointer" 
+        @click="emit('click')">
+    <div class="card-inner">
+        <img alt="cert" width="400" src="../assets/money.png">
+        <div class="cert-name">{{ trust.name }}</div>            
+        <div class="cert-eth">{{ utils.formatEtherString(trust.etherAmount) }}</div>
+        <div class="cert-date">Available: {{ trust.getMaturityDate().toLocaleDateString() }}</div>              
+        <div class="cert-creator text-xs">{{ utils.shortenAddress(trust.grantor) }}3</div>            
+        <div class="cert-trustee text-xs">
+            <span v-for="trustee in trust.trustees">{{ utils.shortenAddress(trustee) }}, </span></div>            
     </div>
+</div>
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { Trust } from '../services/Trust';
-import * as utils from '../services/Utils';
+// components
+import Trust from '../services/Trust';
+import { utils } from '../services/Utils';
 
 const props = defineProps({
     trust: { type: Trust, required: true },

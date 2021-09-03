@@ -2,95 +2,95 @@
     Create New Trust Wizard
 --> 
 <template>
-    <Modal :open="open" @cancel="onClose">
-        <template v-slot:title>
-            <!-- HEADER --> 
-            <div class="flex items-center space-x-2 sm:space-x-5 ">
-                <img class="" alt="cert" width="60" src="../assets/money.png">
-                <h3 class="flex-1 text-base sm:text-3xl font-light sm:leading-6 text-gray-900">
-                    Create new trust
-                </h3>
-            </div>
-        </template>
-        <!-- PROGRESS INDICATOR --> 
-        <Progress class="hidden sm:block" :panels="panels" :currentPanel="currentPanel"></Progress>
-
-        <!-- DIALOGS --> 
-        <div class="slider">
-            <transition :name="panelClass">
-                <CreateWizWelcome class="window" v-model="trust" v-show="currentPanel === 0">
-                    Getting Started
-                </CreateWizWelcome> 
-            </transition>
-            <transition :name="panelClass">
-                <CreateWizName class="window" v-model="trust" v-show="currentPanel === 1">
-                    Define the trust type
-                </CreateWizName> 
-            </transition>
-            <transition :name="panelClass">
-                <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === 2">
-                    Who is this for?
-                </CreateWizBeneficiaryNew> 
-            </transition>
-            <transition :name="panelClass">
-                <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 3">
-                    When should they get it?
-                </CreateWizMaturity> 
-            </transition>
-            <transition :name="panelClass">
-                <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === 4">
-                    Add Trustees
-                </CreateWizTrustees> 
-            </transition>
-            <transition :name="panelClass">
-                <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === 5">
-                    How much should they get?
-                </CreateWizFund> 
-            </transition>
-            <transition :name="panelClass">
-                <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === 6">
-                    Confirm the details
-                </CreateWizConfirm> 
-            </transition>
+<Modal :open="open" @cancel="onClose">
+    <template v-slot:title>
+        <!-- HEADER --> 
+        <div class="flex items-center space-x-2 sm:space-x-5 ">
+            <img class="" alt="cert" width="60" src="../assets/money.png">
+            <h3 class="flex-1 text-base sm:text-3xl font-light sm:leading-6 text-gray-900">
+                Create new trust
+            </h3>
         </div>
-        
-        <!-- FOOTER --> 
-        <template v-slot:buttons>
-            <div class="mt-1 flex bg-white space-x-5">
-                <button class="flex-1 btn btn-danger-outline" :onClick="onClose">
-                    Cancel
-                </button>
-                <button v-if="!isFirstPanel" class="flex-1 btn btn-primary-outline" :onClick="prev">
-                    Back
-                </button>
-                <button v-if="isLastPanel" class="flex-1 btn btn-success" :onClick="onCreate">
-                    Create Now 
-                </button>
-                <button v-else-if="!isLastPanel" class="flex-1 btn btn-primary" :onClick="next">
-                    Next >
-                </button>
-            </div>
-        </template>
-    </Modal>
+    </template>
+    <!-- PROGRESS INDICATOR --> 
+    <Progress class="hidden sm:block" :panels="panels" :currentPanel="currentPanel"></Progress>
+
+    <!-- DIALOGS --> 
+    <div class="slider">
+        <transition :name="panelClass">
+            <CreateWizWelcome class="window" v-model="trust" v-show="currentPanel === 0">
+                Getting Started
+            </CreateWizWelcome> 
+        </transition>
+        <transition :name="panelClass">
+            <CreateWizName class="window" v-model="trust" v-show="currentPanel === 1">
+                Define the trust type
+            </CreateWizName> 
+        </transition>
+        <transition :name="panelClass">
+            <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === 2">
+                Who is this for?
+            </CreateWizBeneficiaryNew> 
+        </transition>
+        <transition :name="panelClass">
+            <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 3">
+                When should they get it?
+            </CreateWizMaturity> 
+        </transition>
+        <transition :name="panelClass">
+            <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === 4">
+                Add Trustees
+            </CreateWizTrustees> 
+        </transition>
+        <transition :name="panelClass">
+            <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === 5">
+                How much should they get?
+            </CreateWizFund> 
+        </transition>
+        <transition :name="panelClass">
+            <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === 6">
+                Confirm the details
+            </CreateWizConfirm> 
+        </transition>
+    </div>
+    
+    <!-- FOOTER --> 
+    <template v-slot:buttons>
+        <div class="mt-1 flex bg-white space-x-5">
+            <button class="flex-1 btn btn-danger-outline" :onClick="onClose">
+                Cancel
+            </button>
+            <button v-if="!isFirstPanel" class="flex-1 btn btn-primary-outline" :onClick="prev">
+                Back
+            </button>
+            <button v-if="isLastPanel" class="flex-1 btn btn-success" :onClick="onCreate">
+                Create Now 
+            </button>
+            <button v-else-if="!isLastPanel" class="flex-1 btn btn-primary" :onClick="next">
+                Next >
+            </button>
+        </div>
+    </template>
+</Modal>
 </template>
 
 <script setup="props, {emit}" lang="ts">
-
 import { ref, computed, inject, onUpdated } from 'vue';
 
+// components
 import Modal from './Modal.vue';
 import CreateWizWelcome from './CreateWizWelcome.vue';
 import CreateWizName from './CreateWizType.vue';
 import CreateWizBeneficiaryNew from './CreateWizBeneficiaryNew.vue';
 import CreateWizMaturity from './CreateWizMaturity.vue';
 import CreateWizTrustees from './CreateWizTrustees.vue';
-
 import CreateWizFund from './CreateWizFund.vue';
 import CreateWizConfirm from './CreateWizConfirm.vue';
 import Progress from './Progress.vue';
 
+// services
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import { Trust } from '../services/Trust';
+import Trust from '../services/Trust';
 import TrustList from '../services/TrustList';
 
 const panels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
@@ -109,6 +109,17 @@ const isLastPanel = computed(() => currentPanel.value === panelCount.value-1 )
 const panelCount = computed(() => panels.value.length );
 const panelClass = ref('slide-left');
 
+onUpdated(() => init() );
+
+const init = () => {
+    trust.value = new Trust(); 
+    currentPanel.value = 0;
+    if(bc.connectionState.value === ConnectionState.Connected) {
+        trust.value.grantor = bc.account.value; 
+        console.log("CreateWiz::init() - ", bc.account.value, trust.value.grantor);
+    } else console.error("Blockchain not loaded");
+}
+
 const onClose = () => { open.value = false; init(); emit('close'); }
 
 const onCreate = async () => { 
@@ -121,21 +132,6 @@ const onCreate = async () => {
     // Close this dialog
     open.value = false;
     emit('close');
-    // RESET to start
-    //init();
-}
-
-const updated = onUpdated(() => {
-    init();
-});
-
-const init = () => {
-    trust.value = new Trust(); 
-    currentPanel.value = 0;
-    if(bc.connectionState.value === ConnectionState.Connected) {
-        trust.value.grantor = bc.account.value; 
-        console.log("CreateWiz::init() - ", bc.account.value, trust.value.grantor);
-    } else console.error("Blockchain not loaded");
 }
 
 const next = () => {

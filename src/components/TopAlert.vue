@@ -1,28 +1,26 @@
 <template>
-    <transition name="slide" @after-enter="afterEnter">
-        <div v-if="show">
-            <div class="w-full h-auto items-center text-white p-3 font-light text-sm text-center"
-            :class="bgClass">
-                <slot></slot>
-                <button class="hidden btn no-wrap" @click="$emit('click')"
-                        :class="buttonClass">Lets Go!</button>
-            </div>
+<transition name="slide" @after-enter="afterEnter">
+    <div v-if="show">
+        <div class="w-full h-auto items-center text-white p-3 font-light text-sm text-center"
+        :class="bgClass">
+            <slot></slot>
+            <button class="hidden btn no-wrap" @click="$emit('click')"
+                    :class="buttonClass">Lets Go!</button>
         </div>
-    </transition>
+    </div>
+</transition>
 </template>
 
 <script setup="props, emits" lang="ts">
-
-import { boolean } from 'hardhat/internal/core/params/argumentTypes';
 import { ref } from 'vue';
-
-const bgClass = ref("bg-blue-500");
-const buttonClass = ref("btn-black");
-const emit = defineEmits(['click']);
 
 const props = defineProps({
     show: Boolean,
-})
+});
+const emit = defineEmits(['click']);
+
+const bgClass = ref("bg-blue-500");
+const buttonClass = ref("btn-black");
 
 const afterEnter = () => {
     setTimeout(() => {

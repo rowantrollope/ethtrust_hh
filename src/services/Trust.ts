@@ -22,7 +22,7 @@ export const TypeStrings: Array<string> = [
 ];
 
 // Trust 
-export class Trust {
+export default class Trust {
     public key: string;
     public name: string;
     public grantor: Account;

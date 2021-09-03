@@ -6,78 +6,107 @@
     TODO: Add animation for transitions.    
 -->
 <template>
-    <Popover class="relative">
+<Popover class="relative" v-slot="{ open }">
 
-        <PopoverButton v-if="bc.connectionState.value === state.Connected" class="h-7 text-white px-1 font-thin items-center flex text-xs rounded-full hover:bg-black hover:text-white focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" @click="onClicked()">
-            <!-- <Jazzicon class="-ml-1 mt-1" :address="bc.account.value" :diameter="24"/> -->
-            <StatusOnlineIcon class="text-green-400 h-5 w-5" aria-hidden="true" />
-            <span class="ml-1">Connected</span>
-            <!-- <ChevronDownIcon class="text-black -ml-1 h-6 w-6" aria-hidden="true" /> -->
-        </PopoverButton>
+    <PopoverButton  
+        :class="open ? 'bg-black' : '' "
+        class="text-white p-2 space-x-1 rounded-lg font-thin items-center flex text-xs hover:bg-black hover:text-white focus:outline-none " @click="onClicked()">
 
-        <PopoverButton v-else-if="bc.connectionState.value === state.Connecting" class="h-7 text-white px-1 font-thin items-center flex text-xs rounded-full hover:bg-black hover:text-white focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" v-on:click.prevent="onClicked()">
+        <div v-if="bc.connectionState.value === state.Unknown">
+            <div class="flex items-center space-x-1">
+                <StatusOfflineIcon class="text-gray-300 ml-1 h-5 w-5" aria-hidden="true" />
+                <span>Connect Wallet</span>
+            </div>
+        </div>
+
+        <div v-else-if="bc.connectionState.value === state.Connected">
+            <div class="flex items-center space-x-1">
+                <!-- <Jazzicon class="-ml-1 mt-1" :address="0x012314151351395359153891359818351385893" :diameter="24"/> -->
+                <StatusOnlineIcon class="text-green-400 h-5 w-5" aria-hidden="true" />
+                <span>Connected</span>
+            </div>
+        </div>
+
+        <div v-else-if="bc.connectionState.value === state.Connecting">
+            <div class="animate-pulse flex items-center space-x-1">
+                <StatusOfflineIcon class="text-white hover:text-black h-5 w-5" aria-hidden="true" />
+                <span>Connecting...</span>
+            </div>
+        </div>
+
+        <div v-else-if="bc.connectionState.value === state.Error">
             <StatusOnlineIcon class="text-white hover:text-black h-5 w-5" aria-hidden="true" />
-            <span class="text-white hover:text-black ml-1 mr-2">Connecting...</span>
-        </PopoverButton>
+            <span>Not Connected</span>
+        </div>
 
-        <PopoverButton v-else-if="bc.connectionState.value === state.Error" class="bg-red-500 px-1 items-center flex rounded-md focus:outline-none focus:ring-2 hover:text-black  focus:ring-offset-1 focus:ring-offset-gray-800 focus:bg-red-200 focus:ring-white" @click="onClicked()">
-            <StatusOnlineIcon class="text-white hover:text-black h-5 w-5" aria-hidden="true" />
-            <span class="text-gray-100 hover:text-black text-xs font-thin ml-1 ">Not Connected </span>
-        </PopoverButton>
+        <ChevronDownIcon v-if="!open" class="text-gray-300 h-3 w-3" aria-hidden="true" />
+        <ChevronUpIcon v-else-if="open" class="text-gray-300 h-3 w-3" aria-hidden="true" />
 
-        <transition name="fadeslide">
-            <PopoverPanel class="origin-top-right absolute w-screen sm:w-max opacity-90 p-5 text-sm -right-2 sm:right-0 mt-2 sm:mt-3 h-screen sm:h-auto sm:rounded-md shadow-md bg-black text-white z-50">
-                <div v-if="bc.connectionState.value === state.Connected">
-                    <div class="flex-col text-left vertical space-y-3">
-                        <div class="flex items-center space-y-3 text-lg ">
-                            <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Blockchain Connected
-                        </div>
-                        <div class="flex">
-                            Account: <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
-                        </div>
-                        <div class="flex">
-                            Balance: <span class=""> &nbsp;{{ balance }} ETH </span>
-                        </div>
-                        <div class="flex">
-                            Network ID:<span class=""> &nbsp;{{ bc.chainId }} </span>
-                        </div>
-                        <div class="flex">
-                            Network Name:<span class=""> &nbsp;{{ bc.chainName }} </span>
-                        </div>
-                        <p class="flex">
-                            Trust Contract: <span class=""> &nbsp; {{ list.address.value }} </span> 
-                        </p>
-                    </div>
+    </PopoverButton>
+
+    <transition name="fadeslide">
+        <PopoverPanel class="origin-top-right absolute w-screen bg-white text-black  sm:w-max opacity-100 p-5 text-sm -right-2 sm:-right-1 mt-2 sm:mt-3 h-screen sm:h-auto sm:rounded-md shadow-md z-50">
+            <div v-if="bc.connectionState.value === state.Unknown" class="flex items-center space-x-2">
+                <div class="text-xl font-thin">
+                    Connect your wallet
                 </div>
-                <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">
-                    <p class="flex text-xl border text-red-500 border-red-500 p-2 rounded-md ">
-                        Failed to connect to the Blockchain
-                    </p>
-                    <p>
-                        Error Message: {{ bc.connectionError.value }}
-                    </p>
-                    <p class="flex">
-                        Account: &nbsp; <b> {{ bc.account.value }} } </b>
-                    </p>
-                    <p class="flex">
-                        Trust Contract: &nbsp; <b> {{ list.address }} } </b>
-                    </p>
-                    <div class="text-right">
-                    <button class="btn btn-primary" @click="onClicked()">Try Again</button>
+                <button class="btn btn-primary">Connect Now</button>
+            </div>
+            <div v-else-if="bc.connectionState.value === state.Connected">
+                <div class="flex-col text-left vertical space-y-3">
+                    <div class="flex items-center space-y-3 text-lg ">
+                        <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Blockchain Connected
                     </div>
+                    <div class="flex">
+                        Account: <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
+                    </div>
+                    <div class="flex">
+                        Balance: <span class=""> &nbsp;{{ balance }} ETH </span>
+                    </div>
+                    <div class="flex">
+                        Network ID:<span class=""> &nbsp;{{ bc.chainId }} </span>
+                    </div>
+                    <div class="flex">
+                        Network Name:<span class=""> &nbsp;{{ bc.chainName }} </span>
+                    </div>
+                    <p class="flex">
+                        Trust Contract: <span class=""> &nbsp; {{ list.address.value }} </span> 
+                    </p>
                 </div>
-            </PopoverPanel>
-        </transition>
-    </Popover>
+            </div>
+            <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">
+                <p class="flex text-xl border text-red-500 border-red-500 p-2 rounded-md ">
+                    Failed to connect to the Blockchain
+                </p>
+                <p>
+                    Error Message: {{ bc.connectionError.value }}
+                </p>
+                <p class="flex">
+                    Account: &nbsp; <b> {{ bc.account.value }} } </b>
+                </p>
+                <p class="flex">
+                    Trust Contract: &nbsp; <b> {{ list.address }} } </b>
+                </p>
+                <div class="text-right">
+                <button class="btn btn-primary" @click="onClicked()">Try Again</button>
+                </div>
+            </div>
+        </PopoverPanel>
+    </transition>
+</Popover>
 </template>
 
 <script setup lang="ts">
-import { ref, inject, computed, onMounted } from 'vue';
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
-import { StatusOnlineIcon, ShieldCheckIcon } from '@heroicons/vue/outline';
+import { ref, inject, computed } from 'vue';
 
+// 3rd party Components
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
+import { StatusOnlineIcon, StatusOfflineIcon, ChevronDownIcon, ChevronUpIcon, ShieldCheckIcon } from '@heroicons/vue/outline';
+
+// components
 import AddressField from './AddressField.vue';
 
+// services
 import CurrencyExchange from '../services/CurrencyExchange';
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';

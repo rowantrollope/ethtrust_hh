@@ -1,28 +1,27 @@
 
 <template>
-    <div class="relative flex justify-center text-center">
-        <img class="sm:w-40 w-60" alt="cert" width="" src="../assets/money.png">
-        <transition name="highlight" mode="out-in">
-            <div class="cert-name" :key="trust.name">
-                {{ trust.name }}
-            </div>            
-        </transition>
-        <transition name="pop" mode="out-in">
-            <div class="cert-eth" :key="trust.etherAmount.toString()">
-                {{ utils.formatEtherString(trust.etherAmount) }}
-            </div>    
-        </transition>
-    </div>
+<div class="relative flex justify-center text-center">
+    <img class="sm:w-40 w-60" alt="cert" width="" src="../assets/money.png">
+    <transition name="highlight" mode="out-in">
+        <div class="cert-name" :key="trust.name">
+            {{ trust.name }}
+        </div>            
+    </transition>
+    <transition name="pop" mode="out-in">
+        <div class="cert-eth" :key="trust.etherAmount.toString()">
+            {{ utils.formatEtherString(trust.etherAmount) }}
+        </div>    
+    </transition>
+</div>
 </template>
 
 <script setup="props, {emit}" lang="ts">
-
 import { inject } from 'vue';
 
-import { Trust } from '../services/Trust';
+// services
+import Trust from '../services/Trust';
 import TrustList from '../services/TrustList';
-
-import * as utils from '../services/Utils';
+import { utils } from '../services/Utils';
 
 const props = defineProps({
     trust: { type: Trust, required: true },

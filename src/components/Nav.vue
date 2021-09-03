@@ -2,102 +2,105 @@
     Navigation bar 
 --> 
 <template>
-        <div class="mx-auto px-2 h-11" style="background-color: rgb(51, 51, 51);">
-            <div class="flex h-full justify-between">
-                <div class="flex-grow flex items-center">
-                    <!--
-                        Mobile menu
-                    -->
-                    <div class="flex md:hidden">
-                        <!-- Mobile menu button -->
-                        <Menu as="nav" v-slot="{ open }">
-                            <MenuButton>
-                                <span class="sr-only">Open main menu</span>
-                                <Hamburger :open="open"/>
-                            </MenuButton>
-                            <transition name="fadeslide">
-                                <MenuItems class="origin-top-left absolute mt-1 -ml-2 px-2 w-full h-full pt-5 pb-5 shadow-lg bg-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                                    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                                        <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/">
-                                                Home
-                                            </router-link>
-                                        </MenuItem>
-                                        <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/Manage">
-                                                Manage & Create Trusts
-                                            </router-link>
-                                        </MenuItem>
-                                        <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/Beneficiaries">
-                                                For you (as Beneficiary)
-                                            </router-link>
-                                        </MenuItem>
-                                        <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/Trustees">
-                                                For Trustees
-                                            </router-link>
-                                        </MenuItem>
-                                        <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/About">
-                                                About
-                                            </router-link>
-                                        </MenuItem>
-                                        <MenuItem>
-                                            <router-link class="mobile-router-link" tag="li" to="/Developer">
-                                                Developer
-                                            </router-link>
-                                        </MenuItem>
-                                    </div>
-                                </MenuItems>
-                            </transition>
-                        </Menu>
+<div class="mx-auto px-2 h-11" style="background-color: rgb(51, 51, 51);">
+    <div class="flex h-full justify-between">
+        <div class="flex-grow flex items-center">
+            <!--
+                Mobile menu
+            -->
+            <div class="flex md:hidden">
+                <!-- Mobile menu button -->
+                <Menu as="nav" v-slot="{ open }">
+                    <MenuButton>
+                        <span class="sr-only">Open main menu</span>
+                        <Hamburger :open="open"/>
+                    </MenuButton>
+                    <transition name="fadeslide">
+                        <MenuItems class="origin-top-left absolute mt-1 -ml-2 px-2 w-full h-full pt-5 pb-5 shadow-lg bg-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                                <MenuItem>
+                                    <router-link class="mobile-router-link" tag="li" to="/">
+                                        Home
+                                    </router-link>
+                                </MenuItem>
+                                <MenuItem>
+                                    <router-link class="mobile-router-link" tag="li" to="/Manage">
+                                        Manage & Create Trusts
+                                    </router-link>
+                                </MenuItem>
+                                <MenuItem>
+                                    <router-link class="mobile-router-link" tag="li" to="/Beneficiaries">
+                                        For you (as Beneficiary)
+                                    </router-link>
+                                </MenuItem>
+                                <MenuItem>
+                                    <router-link class="mobile-router-link" tag="li" to="/Trustees">
+                                        For Trustees
+                                    </router-link>
+                                </MenuItem>
+                                <MenuItem>
+                                    <router-link class="mobile-router-link" tag="li" to="/About">
+                                        About
+                                    </router-link>
+                                </MenuItem>
+                                <MenuItem>
+                                    <router-link class="mobile-router-link" tag="li" to="/Developer">
+                                        Developer
+                                    </router-link>
+                                </MenuItem>
+                            </div>
+                        </MenuItems>
+                    </transition>
+                </Menu>
 
-                    </div>
-                    
-                    <!-- Brand name --> 
-                    <div class="flex mr-3">
-                        <div class="sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased uppercase">
-                            Safe <span class="font-thin -ml-1">Trust</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Normal desktop menu items --> 
-                    <div class="md:flex hidden items-center">
-                        <router-link class="router-link" tag="li" to="/">
-                            Home
-                        </router-link>
-                        <router-link class="router-link" tag="li" to="/Manage">
-                            Manage Trusts
-                        </router-link>
-                        <router-link class="router-link" tag="li" to="/Beneficiaries">
-                             Trusts for you
-                        </router-link>
-                        <router-link class="router-link" tag="li" to="/Trustees">
-                             Trustees
-                        </router-link>
-                        <router-link class="router-link" tag="li" to="/About">
-                            About
-                        </router-link>
-                        <router-link class="router-link" tag="li" to="/Developer">
-                            Developer
-                        </router-link>
-                    </div>
-
-                </div>
-                
-                <!-- Connect button (ON THE RIGHT) --> 
-                <div class="flex items-center">
-                    <ConnectButton/>
+            </div>
+            
+            <!-- Brand name --> 
+            <div class="flex mr-3">
+                <div class="sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased uppercase">
+                    Safe <span class="font-thin -ml-1">Trust</span>
                 </div>
             </div>
+            
+            <!-- Normal desktop menu items --> 
+            <div class="md:flex hidden items-center">
+                <router-link class="router-link" tag="li" to="/">
+                    Home
+                </router-link>
+                <router-link class="router-link" tag="li" to="/Manage">
+                    Manage Trusts
+                </router-link>
+                <router-link class="router-link" tag="li" to="/Beneficiaries">
+                        Trusts for you
+                </router-link>
+                <router-link class="router-link" tag="li" to="/Trustees">
+                        Trustees
+                </router-link>
+                <router-link class="router-link" tag="li" to="/About">
+                    About
+                </router-link>
+                <router-link class="router-link" tag="li" to="/Developer">
+                    Developer
+                </router-link>
+            </div>
+
         </div>
+        
+        <!-- Connect button (ON THE RIGHT) --> 
+        <div class="flex items-center">
+            <ConnectButton/>
+        </div>
+    </div>
+</div>
 </template>
 
 <script setup lang="ts">
 import { inject } from 'vue';
+
+// 3rd party Components
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 
+// components
 import Hamburger from './Hamburger.vue'
 import ConnectButton from './ConnectButton.vue'
 

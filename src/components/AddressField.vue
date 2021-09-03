@@ -2,36 +2,38 @@
     Input field which displays a truncated address field and has a popup 
 --> 
 <template>
-    <span @mouseover="hover=true" @mouseleave="hover=false" class="cursor-pointer">
+<span @mouseover="hover=true" @mouseleave="hover=false" class="cursor-pointer">
 
-        <span class="relative border-b p-0.5 border-gray-300 hover:border-blue-400 hover:text-blue-500">
-            {{ utils.shortenAddress(address) }}
-            <transition name="pop" mode="out-in">
-                <span v-if="viewTip" class="tooltip">
-                    {{tooltipText}}
-                </span>
-            </transition>
-            <transition name="slide" mode="in-out">
-            <svg v-if="hover" 
-                @mouseover="tooltip('copy address')" @mouseleave="tooltip()"
-                @click.stop="onCopy" xmlns="http://www.w3.org/2000/svg" class="inline -mt-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-            </svg>
-            </transition>
-            <transition name="slide" mode="in-out">
-            <svg v-if="hover" 
-                @mouseover="tooltip('Open on EtherScan')" @mouseleave="tooltip()"
-                @click.stop="onLink" xmlns="http://www.w3.org/2000/svg" class="inline -mt-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>            
-            </transition>
-        </span>
+    <span class="relative border-b p-0.5 border-gray-300 hover:border-blue-400 hover:text-blue-500">
+        {{ utils.shortenAddress(address) }}
+        <transition name="pop" mode="out-in">
+            <span v-if="viewTip" class="tooltip">
+                {{tooltipText}}
+            </span>
+        </transition>
+        <transition name="slide" mode="in-out">
+        <svg v-if="hover" 
+            @mouseover="tooltip('copy address')" @mouseleave="tooltip()"
+            @click.stop="onCopy" xmlns="http://www.w3.org/2000/svg" class="inline -mt-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+        </svg>
+        </transition>
+        <transition name="slide" mode="in-out">
+        <svg v-if="hover" 
+            @mouseover="tooltip('Open on EtherScan')" @mouseleave="tooltip()"
+            @click.stop="onLink" xmlns="http://www.w3.org/2000/svg" class="inline -mt-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>            
+        </transition>
     </span>
+</span>
 </template>
 
 <script setup="props, { emit, slots }" lang="ts">
 import { ref } from 'vue';
-import * as utils from '../services/Utils';
+
+// services
+import { utils } from '../services/Utils';
 
 const displayPopup = ref(false);
 const hover = ref(false);
@@ -42,8 +44,7 @@ const props = defineProps({
 
 const onCopy = () => {
     navigator.clipboard.writeText(props.address);
-    tooltip("Copied!");
-    setTimeout(()=> viewTip.value = false, 1000);
+    tooltip("Copied!", 1000);
 }
 const onLink = () => {
     
@@ -55,17 +56,10 @@ const viewTip = ref(false);
 
 const tooltipText = ref('');
 
-const tooltip = (text: string = "") => {
-    if(text === '') {
-        tooltipText.value = '';
-        viewTip.value = false;
-        return;
-    }
-    else {
-        tooltipText.value = text;
-        viewTip.value = true;
-    }
-
+const tooltip = (text: string = "", timeout: number = 0) => {
+    tooltipText.value = text;
+    viewTip.value = text.length ? true : false;
+    if(timeout) setTimeout(() => viewTip.value = false, timeout);
 }
 </script>
 

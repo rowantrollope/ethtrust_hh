@@ -4,7 +4,7 @@
     Displays a Connect now option to user (currently disabled) to allow for manual connection
     to blockchain services.  TODO: Remember previous state with a cookie and auto-reconnect for 
     returning users, and manually display this text for first time users.
--->    
+-->   
     <div v-if="bc.connectionState.value === state.Connecting">
         <div class="flex h-20 justify-center items-center">
             <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
@@ -35,6 +35,8 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
+
+// services
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 
 let bc: BlockchainConnect = <BlockchainConnect> inject("BlockchainConnect");

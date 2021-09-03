@@ -2,69 +2,70 @@
     Create Wizard - Beneficiary
 --> 
 <template>
-    <div class="absolute overflow-y-auto">
-        <div class="sm:px-4 py-4 flex items-center space-x-5 ">
-            <h3 class="text-2xl font-medium leading-6 text-gray-900">
-                <slot></slot>
-            </h3>
-        </div>
-        <div class="text-lg sm:pl-4">
-            <dl class="sm:divide-y sm:divide-gray-200">
-                <div class="row">
-                    <dt class="input-label">
-                        Trust Type
-                    </dt>
-                    <dd class="input-col flex items-center">
-                        <InputTrustType class="text-base" v-model="trust"></InputTrustType> 
-                        <a class="text-blue-500 underline ml-5" href="#/About">Learn More</a>
-                    </dd>
-                </div>
-                <div class="row">
-                    <dt class="input-label">
-                        Trust name
-                    </dt>
-                    <dd class="input-col">
-                        <input type="text" 
-                            placeholder="(Optional) Enter name of the trust"
-                            v-model="trust.name" 
-                            name="trust_name" 
-                            id="trust_name" 
-                            autocomplete="trust_name" 
-                            class="input-field" />
-                    </dd>
-
-                </div>
-                <div class="input-description"> 
-                    Note: The name of the trust will be publicly visible on the blockchain. 
-                </div>
-            </dl>
-        </div>
+<div class="absolute overflow-y-auto">
+    <div class="sm:px-4 py-4 flex items-center space-x-5 ">
+        <h3 class="text-2xl font-medium leading-6 text-gray-900">
+            <slot></slot>
+        </h3>
     </div>
+    <div class="text-lg sm:pl-4">
+        <dl class="sm:divide-y sm:divide-gray-200">
+            <div class="row">
+                <dt class="input-label">
+                    Trust Type
+                </dt>
+                <dd class="input-col flex items-center">
+                    <InputTrustType class="text-base" v-model="trust"></InputTrustType> 
+                    <a class="text-blue-500 underline ml-5" href="#/About">Learn More</a>
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="input-label">
+                    Trust name
+                </dt>
+                <dd class="input-col">
+                    <input type="text" 
+                        placeholder="(Optional) Enter name of the trust"
+                        v-model="trust.name" 
+                        name="trust_name" 
+                        id="trust_name" 
+                        autocomplete="trust_name" 
+                        class="input-field" />
+                </dd>
+
+            </div>
+            <div class="input-description"> 
+                Note: The name of the trust will be publicly visible on the blockchain. 
+            </div>
+        </dl>
+    </div>
+</div>
 </template>
 
 <script setup="props, {emit}" lang="ts">
-
 import { computed, ref } from 'vue';
 
+// 3rd party Components
 import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 
+// components
 import InputBeneficiary from './InputBeneficiary.vue';
 import InputTrustType from './InputTrustType.vue';
 
-import { Trust } from '../services/Trust';
+// services
+import Trust from '../services/Trust';
 
-const selected = ref('');
-const props = defineProps({
-    modelValue: { type: Trust, required: true },
-});
+const props = defineProps({ modelValue: { type: Trust, required: true } });
 const emit = defineEmits(['update:modelValue']);
-
-const validEntry = ref(true);
 
 const trust = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 });
+
+const selected = ref('');
+const validEntry = ref(true);
+
 </script>
 
 <style scoped>

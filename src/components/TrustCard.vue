@@ -62,24 +62,27 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-
 import { inject, computed } from 'vue';
+
+// 3rd party Components
 import { ChevronRightIcon } from '@heroicons/vue/outline'
 
+// components
 import TrustCert from './TrustCert.vue'
 import AddressField from './AddressField.vue'
 
-import { Trust } from '../services/Trust';
+// services
+import Trust from '../services/Trust';
 import TrustList from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
-import * as utils from '../services/Utils';
+import { utils } from '../services/Utils';
 
 const exchange = <CurrencyExchange> inject('exchange');
 
-const emit = defineEmits(['onclick']);
 const props = defineProps({
     trust: { type: Trust, required: true },
 });
+const emit = defineEmits(['onclick']);
 
 const list = <TrustList> inject("TrustList");
 const usd = computed(() => exchange.wei2usd(props.trust.etherAmount));

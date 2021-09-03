@@ -1,5 +1,6 @@
             trust.value.beneficiary = beneficiary;
 <template>
+<div>
     <span v-if="beneficiaryError" class="text-red-500 text-sm" >{{ beneficiaryError }}</span>
     <div class="flex">
         <div class="flex items-center"><slot></slot></div>
@@ -10,29 +11,29 @@
         name="beneficiary" id="beneficiary" autocomplete="beneficiary"
         :class="[beneficiaryError ? 'input-field-invalid' : 'input-field']" />
     </div>
+</div>
 </template>
 
 <script setup="props, {emit}" lang="ts">
 import { ref, computed, onMounted } from 'vue'
 
-import { Trust, TrustType } from '../services/Trust';
+// services
+import Trust, { TrustType } from '../services/Trust';
 
-const props = defineProps({
-    modelValue: { type: Trust, required: true },
-});
+const props = defineProps({ modelValue: { type: Trust, required: true } });
 
 const emit = defineEmits(['update:modelValue', 'valid', 'invalid']);
-
-const beneficiaryError = ref('');
-const beneficiary = ref('');
-const mounted = onMounted(() => {
-    beneficiary.value = props.modelValue.beneficiary; 
-})
 
 const trust = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 });
+
+const beneficiaryError = ref('');
+const beneficiary = ref('');
+
+onMounted(() => beneficiary.value = props.modelValue.beneficiary );
+
 const revokable = computed(() => trust.value.trustType === TrustType.REVOKABLE);
 
 const validate = (e: EventTarget | null) => {

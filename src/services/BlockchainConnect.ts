@@ -4,7 +4,7 @@ import { ethers, Signer } from 'ethers';
 import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
-import * as utils from './Utils';
+import { utils } from './Utils';
 
 interface changeCallback { (myArgument: string): void }
 

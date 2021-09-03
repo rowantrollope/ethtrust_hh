@@ -1,66 +1,67 @@
 <template>
+<div>
+    <ConnectBlock v-if="bc.connectionState.value !== state.Connected" />
 
-<ConnectBlock v-if="bc.connectionState.value !== state.Connected" />
+    <div v-else-if="bc.connectionState.value === state.Connected && !trusts">
+        <div class="flex h-20 justify-center items-center">
+            <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
+            </div><span class="ml-2">Fetching your Trusts...</span>
+        </div>        
+    </div>
+    <div v-else-if="bc.connectionState.value === state.Connected && trusts">
+        <div v-if="trusts.length"> 
+            <Stats :trusts="trusts"/>
+            <div class="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+                <transition-group name="list">
+                    <TrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
+                </transition-group>
 
-<div v-else-if="bc.connectionState.value === state.Connected && !trusts">
-    <div class="flex h-20 justify-center items-center">
-        <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
-        </div><span class="ml-2">Fetching your Trusts...</span>
-    </div>        
-</div>
-<div v-else-if="bc.connectionState.value === state.Connected && trusts">
-    <div v-if="trusts.length"> 
-        <Stats :trusts="trusts"/>
-        <div class="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
-            <transition-group name="list">
-                <TrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
-            </transition-group>
-
-            <div class=" create-new-card hidden sm:block md:block lg:hidden hover:border-white p-20 hover:shadow-lg text-gray-300  hover:text-indigo-500" @click="$emit('create-clicked')">
-                <div class="flex-shrink rounded-lg text-center text-xl "> Create New Trust</div>
+                <div class=" create-new-card hidden sm:block md:block lg:hidden hover:border-white p-20 hover:shadow-lg text-gray-300  hover:text-indigo-500" @click="$emit('create-clicked')">
+                    <div class="flex-shrink rounded-lg text-center text-xl "> Create New Trust</div>
+                </div>
             </div>
+
+            <EditTrust :show="showEditDialog"
+                        :reason="reason"
+                        :canWithdraw="canWithdraw" 
+                        v-model="selectedTrust" 
+                        @save="onSave" 
+                        @cancel="onCancelEdit" 
+                        @delete="onDelete" 
+                        @withdraw="onWithdraw" 
+                        @deposit="onDeposit">
+                <template v-slot:title>Trust Fund: {{ selectedTrust.name }}</template>
+            </EditTrust>
         </div>
-
-        <EditTrust :show="showEditDialog"
-                    :reason="reason"
-                    :canWithdraw="canWithdraw" 
-                    v-model="selectedTrust" 
-                    @save="onSave" 
-                    @cancel="onCancelEdit" 
-                    @delete="onDelete" 
-                    @withdraw="onWithdraw" 
-                    @deposit="onDeposit">
-            <template v-slot:title>Trust Fund: {{ selectedTrust.name }}</template>
-        </EditTrust>
-    </div>
-    <div v-else-if="!trusts.length">
-        <h1 class="text-2xl mt-10 ml-5 tracking-tight font-thin text-gray-900 sm:text-3xl md:text-4xl">
-            <div class="inline">Let's make your first Trust fund </div>
-            <div class="flex text-center items-center space-x-3 mt-10 ml-5 ">
-                <span class="block text-xl sm:text-3xl  text-indigo-600">Click </span>
-                <button class="btn btn-rounded flex-shrink-0 text-xl sm:text-3xl btn-primary" @click="$emit('create-clicked')">Create New</button>
-                <span class="block text-xl sm:text-3xl flex-shrink-0 text-indigo-600">to begin</span>
-            </div>
-        </h1>
-    </div>
+        <div v-else-if="!trusts.length">
+            <h1 class="text-2xl mt-10 ml-5 tracking-tight font-thin text-gray-900 sm:text-3xl md:text-4xl">
+                <div class="inline">Let's make your first Trust fund </div>
+                <div class="flex text-center items-center space-x-3 mt-10 ml-5 ">
+                    <span class="block text-xl sm:text-3xl  text-indigo-600">Click </span>
+                    <button class="btn btn-rounded flex-shrink-0 text-xl sm:text-3xl btn-primary" @click="$emit('create-clicked')">Create New</button>
+                    <span class="block text-xl sm:text-3xl flex-shrink-0 text-indigo-600">to begin</span>
+                </div>
+            </h1>
+        </div>
+    </div>    
 </div>
-
 </template>
 
 <script setup="props" lang="ts">
 import { computed, ref, inject } from 'vue';
 import { ethers } from 'ethers';
 
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import TrustList from '../services/TrustList';
-import CurrencyExchange from '../services/CurrencyExchange';
-
+// components
 import Stats from './Stats.vue';
 import EditTrust from './EditTrust.vue';
 import TrustCard from './TrustCard.vue';
 import ConnectBlock from './ConnectBlock.vue';
 
-import { Trust } from "../services/Trust";
+// services
+import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import TrustList from '../services/TrustList';
+import CurrencyExchange from '../services/CurrencyExchange';
+import Trust from "../services/Trust";
 
 // BLOCKCHAIN connection and prep
 const exchange = <CurrencyExchange> inject('exchange');

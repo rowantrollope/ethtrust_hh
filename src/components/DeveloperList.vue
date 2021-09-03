@@ -1,6 +1,5 @@
 <template>
-<div v-if="bc.connectionState.value === bcState.Connected">
-<div class="text-center ">
+<div v-if="bc.connectionState.value === bcState.Connected" class="text-center ">
     <div class="flex mt-5 justify-center">
         <button class="text-base mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
         <button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</button>        <button class="btn btn-danger" :onClick="testMethod">TEST</button>
@@ -76,8 +75,6 @@
     </EditTrust>
 
 </div>
-</div>
-
 </template>
 
 <script setup="props" lang="ts">
@@ -85,16 +82,17 @@ import { ref, inject } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import TrustList from '../services/TrustList';
-import CurrencyExchange from '../services/CurrencyExchange';
-
+// components
 import AddressField from './AddressField.vue';
 import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
 
-import { Trust, TypeStrings, TrustType } from "../services/Trust";
-import * as utils from '../services/Utils';
+// services
+import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import TrustList from '../services/TrustList';
+import CurrencyExchange from '../services/CurrencyExchange';
+import Trust, { TypeStrings, TrustType } from "../services/Trust";
+import { utils } from '../services/Utils';
 
 // BLOCKCHAIN connection and prep
 const bcState = ConnectionState;

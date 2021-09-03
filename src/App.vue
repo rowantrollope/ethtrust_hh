@@ -17,7 +17,7 @@ import Nav from './components/Nav.vue';
 
 import { BlockchainConnect } from './services/BlockchainConnect';
 import TrustList from './services/TrustList';
-import { Trust } from './services/Trust';
+import Trust from './services/Trust';
 
 import CurrencyExchange from './services/CurrencyExchange';
 
@@ -33,14 +33,17 @@ provide('exchange', exchange)
 const contractAddress = ref("");
 provide ('contractAddress', contractAddress);
 
-const beforeMount = onBeforeMount(() => {
-    connect();
-});
+const autoConnect = true;
+
+onBeforeMount(() => connect() );
 
 const connect = async () => {
   
     await exchange.init();
 
+    if(!autoConnect)
+        return;
+        
     await bc.connect();
 
     if(bc!.signer) {

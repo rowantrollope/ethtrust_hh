@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import { Signer } from 'ethers';
 import { BigNumber} from "@ethersproject/bignumber";
 
-import { Trust } from "./Trust";
+import Trust from "./Trust";
 import { TrustContract, ChangeType, FilterCallback } from './TrustContract';
-import * as utils from './Utils';
+import { utils } from './Utils';
 
 enum TrustState {
     None = 0,
@@ -108,7 +108,7 @@ export default class TrustList extends TrustContract {
                     this.trusts.value?.push(trust);
                 }
                 else
-                    console.error("TRUST_CREATED Called again", shortenAddress(key));
+                    console.error("TRUST_CREATED Called again", utils.shortenAddress(key));
                 break;
             case ChangeType.TRUST_DELETED:
                 if(idx != -1) {
@@ -116,7 +116,7 @@ export default class TrustList extends TrustContract {
                     this.updateMap.value.delete(key);               
                 }
                 else
-                    console.error("BC.vue::onTrustChange() - TRUST_DELETE Can't Find trust: ", shortenAddress(key));
+                    console.error("BC.vue::onTrustChange() - TRUST_DELETE Can't Find trust: ", utils.shortenAddress(key));
                 break;
 
             case ChangeType.TRUST_WITHDRAW:

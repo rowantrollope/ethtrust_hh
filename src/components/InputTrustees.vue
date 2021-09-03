@@ -30,12 +30,18 @@
 
 <script setup="props, {emit}" lang="ts">
 import { ref, computed, watch } from 'vue'
+
+// 3rd party Components
 import { XIcon } from '@heroicons/vue/solid';
 
-import { Trust } from '../services/Trust'
+// components
+import Trust from '../services/Trust'
 
-const props = defineProps({
-    modelValue: { type: Trust, required: true },
+const props = defineProps({ modelValue: { type: Trust, required: true } });
+
+const trust = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value),
 });
 
 const newTrustee = ref('');
@@ -60,14 +66,7 @@ const isError = watch(newTrustee, (val, newVal) => {
         errorText.value=result.reason;
 });
 
-const trust = computed({
-    get: () => props.modelValue,
-    set: (value) => emit('update:modelValue', value),
-});
-
-const deleteTrustee = (address: string) => {
-    trust.value.removeTrustee(address);
-}
+const deleteTrustee = (address: string) => trust.value.removeTrustee(address);
 
 const addTrustee = () => {
     console.log("AddTrustee", newTrustee.value);

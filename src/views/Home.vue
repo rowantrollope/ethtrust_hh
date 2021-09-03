@@ -73,7 +73,7 @@ import router from '../router';
 
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
-import { Trust } from '../services/Trust';
+import Trust from '../services/Trust';
 import TopAlert from '../components/TopAlert.vue';
 
 const state = ConnectionState;
