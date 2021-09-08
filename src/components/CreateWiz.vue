@@ -18,37 +18,42 @@
     <!-- DIALOGS --> 
     <div class="slider">
         <transition :name="panelClass">
-            <CreateWizWelcome class="window" v-model="trust" v-show="currentPanel === 0">
+            <CreateWizWelcome class="window" v-model="trust" v-show="currentPanel === wizPanels.Welcome">
                 Getting Started
             </CreateWizWelcome> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizName class="window" v-model="trust" v-show="currentPanel === 1">
+            <CreateWizName class="window" v-model="trust" v-show="currentPanel === wizPanels.Type">
                 Define the trust type
             </CreateWizName> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === 2">
+            <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === wizPanels.Beneficiary">
                 Who is this for?
             </CreateWizBeneficiaryNew> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === 3">
+            <CreateWizGRAT class="window" v-model="trust" v-show="currentPanel === wizPanels.GRAT">
+                Configure Trust
+            </CreateWizGRAT> 
+        </transition>
+        <transition :name="panelClass">
+            <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === wizPanels.Maturity">
                 When should they get it?
             </CreateWizMaturity> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === 4">
+            <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === wizPanels.Trustees">
                 Add Trustees
             </CreateWizTrustees> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === 5">
+            <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === wizPanels.Fund">
                 How much should they get?
             </CreateWizFund> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === 6">
+            <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === wizPanels.Confirm">
                 Confirm the details
             </CreateWizConfirm> 
         </transition>
@@ -82,6 +87,7 @@ import Modal from './Modal.vue';
 import CreateWizWelcome from './CreateWizWelcome.vue';
 import CreateWizName from './CreateWizType.vue';
 import CreateWizBeneficiaryNew from './CreateWizBeneficiaryNew.vue';
+import CreateWizGRAT from './CreateWizGRAT.vue';
 import CreateWizMaturity from './CreateWizMaturity.vue';
 import CreateWizTrustees from './CreateWizTrustees.vue';
 import CreateWizFund from './CreateWizFund.vue';
@@ -90,7 +96,7 @@ import Progress from './Progress.vue';
 
 // services
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import Trust from '../services/Trust';
+import Trust, { TrustType } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
 const panels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
@@ -134,15 +140,40 @@ const onCreate = async () => {
     emit('close');
 }
 
+enum wizPanels {
+    Welcome = 0,
+    Type,
+    GRAT,
+    Beneficiary,
+    Maturity,
+    Trustees,
+    Fund,
+    Confirm,
+    PanelCount,
+}
+
 const next = () => {
     panelClass.value = "slide-left";
-    if(currentPanel.value < panelCount.value)
+
+    if(currentPanel.value === wizPanels.Type) {
+        if(trust.value.trustType === TrustType.GRAT)
+            currentPanel.value = wizPanels.GRAT;
+        else
+            currentPanel.value = wizPanels.Beneficiary;
+        
+    } else if(currentPanel.value < panelCount.value)
         currentPanel.value++;
 }
 
 const prev = () => {
     panelClass.value = "slide-right";
-    if(currentPanel.value > 0)
+    if(currentPanel.value === wizPanels.Beneficiary) {
+        if(trust.value.trustType === TrustType.GRAT)
+            currentPanel.value = wizPanels.GRAT;
+        else
+            currentPanel.value = wizPanels.Type;
+        
+    } else if(currentPanel.value > 0)
         currentPanel.value--;
 }
 
