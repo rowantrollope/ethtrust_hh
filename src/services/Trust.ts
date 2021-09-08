@@ -16,7 +16,7 @@ export const TypeStrings: Array<string> = [
     "Revokable",
     "Irrevokable",
     "QTIP",
-    "GRAT",
+    "Grantor Retained Annuity Trust",
     "Special Needs",
     "Spendthrift",
 ];

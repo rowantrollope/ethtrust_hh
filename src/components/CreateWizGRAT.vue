@@ -9,7 +9,33 @@
         </h3>
     </div>
     <div class="text-base sm:ml-5 sm:px-4 sm:py-2">
-        <p class="mb-5 mt-2">Configure GRAT.</p>
+        <div class="flex flex-col space-y-2">
+            <div class="mt-2 mb-5">
+                Configure your Grantor Retained Annuity Trust.
+            </div>
+            <div>
+                <label for="years">
+                    Number of years to pay you back?
+                </label>
+                <input type="number" id="years" name="years">
+            </div>
+            <div>
+                <label for="payout_period">
+                    Payout Period? 
+                </label>
+                <select id="payout_period">
+                    <option value="Yearly">
+                        Yearly                                                                                                                                                                               
+                    </option>
+                    <option value="Quarterly">
+                        Quarterly
+                    </option>
+                    <option value="Monthly">
+                        Monthly
+                    </option>
+                </select>
+            </div>
+        </div>
     </div>
 </div>
 </template>
