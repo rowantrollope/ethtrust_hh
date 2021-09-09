@@ -24,7 +24,7 @@
         </transition>
         <transition :name="panelClass">
             <CreateWizName class="window" v-model="trust" v-show="currentPanel === wizPanels.Type">
-                Define the trust type
+                Select trust type
             </CreateWizName> 
         </transition>
         <transition :name="panelClass">
@@ -34,7 +34,7 @@
         </transition>
         <transition :name="panelClass">
             <CreateWizGRAT class="window" v-model="trust" v-show="currentPanel === wizPanels.GRAT">
-                Configure Trust
+                Setup Grantor Retained Annuity Trust 
             </CreateWizGRAT> 
         </transition>
         <transition :name="panelClass">
@@ -100,6 +100,36 @@ import Trust, { TrustType } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
 const panels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const Normalpanels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const GRATpanels = ref();
+
+class flow {
+    
+    public panels: Array<string>;
+    public currentPanel: number;
+
+    constructor(panels: Array<string>) {
+        this.panels = panels;
+        this.currentPanel = 0;
+    }
+    public nextPanel = (): number => this.currentPanel++;
+    public prevPanel = (): number => this.currentPanel--;
+    public isPanelActive = (panel: string): boolean => this.panels[this.currentPanel] === panel;
+    public isFirstPanel = (panel: string): boolean => this.panels[0] === panel;
+    public isLastPanel = (panel: string): boolean => this.panels[this.panels.length-1] === panel;
+    public setNextPanel = (_panel: string) => {
+        let idx = this.panels.findIndex((panel) => panel === _panel) 
+        if(idx != -1)
+            this.currentPanel = idx;
+    }
+}
+
+let flow_start = new flow(["Welcome", "Trust Type"]);
+
+let flow_normal = new flow(["Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+let flow_GRAT = new flow(["Payments", "Beneficiary", "Trustees", "Confirmation"]);
+
+const activeFlow = ref(flow_start);
 
 const trust = ref<Trust>(new Trust());
 
@@ -111,7 +141,7 @@ const emit = defineEmits(['close']);
 
 const currentPanel = ref(0);
 const isFirstPanel = computed(() => currentPanel.value === 0 );
-const isLastPanel = computed(() => currentPanel.value === panelCount.value-1 )
+const isLastPanel = computed(() => currentPanel.value === wizPanels.Confirm )
 const panelCount = computed(() => panels.value.length );
 const panelClass = ref('slide-left');
 
@@ -156,13 +186,33 @@ const next = () => {
     panelClass.value = "slide-left";
 
     if(currentPanel.value === wizPanels.Type) {
-        if(trust.value.trustType === TrustType.GRAT)
+
+        if(trust.value.trustType === TrustType.GRAT) {
+            panels.value = GRATpanels.value;
             currentPanel.value = wizPanels.GRAT;
-        else
+        }
+        else {
+            panels.value = Normalpanels.value;
             currentPanel.value = wizPanels.Beneficiary;
+        }
         
-    } else if(currentPanel.value < panelCount.value)
+    } else if (currentPanel.value == wizPanels.Trustees) {
+        // SKIP funding for GRAT
+        if(trust.value.trustType === TrustType.GRAT)
+            currentPanel.value = wizPanels.Confirm;
+        else
+            currentPanel.value = wizPanels.Fund;
+
+    } else if (currentPanel.value == wizPanels.Beneficiary) {
+        if(trust.value.trustType == TrustType.GRAT)
+            currentPanel.value = wizPanels.Trustees;
+        else
+            currentPanel.value = wizPanels.Maturity;
+    }
+    else if(currentPanel.value < panelCount.value)
+    {
         currentPanel.value++;
+    }
 }
 
 const prev = () => {
@@ -173,7 +223,14 @@ const prev = () => {
         else
             currentPanel.value = wizPanels.Type;
         
-    } else if(currentPanel.value > 0)
+    } else if (currentPanel.value == wizPanels.Confirm) {
+        // SKIP funding for GRAT
+        if(trust.value.trustType === TrustType.GRAT)
+            currentPanel.value = wizPanels.Trustees;
+        else
+            currentPanel.value = wizPanels.Fund;
+
+    }else if(currentPanel.value > 0)
         currentPanel.value--;
 }
 
