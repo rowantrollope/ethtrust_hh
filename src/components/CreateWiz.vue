@@ -18,42 +18,42 @@
     <!-- DIALOGS --> 
     <div class="slider">
         <transition :name="panelClass">
-            <CreateWizWelcome class="window" v-model="trust" v-show="currentPanel === wizPanels.Welcome">
+            <CreateWizWelcome class="window" v-model="trust" v-show="isPanelActive('Welcome')">
                 Getting Started
             </CreateWizWelcome> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizName class="window" v-model="trust" v-show="currentPanel === wizPanels.Type">
+            <CreateWizName class="window" v-model="trust" v-show="isPanelActive('Trust Type')">
                 Select trust type
             </CreateWizName> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="currentPanel === wizPanels.Beneficiary">
+            <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="isPanelActive('Beneficiary')">
                 Who is this for?
             </CreateWizBeneficiaryNew> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizGRAT class="window" v-model="trust" v-show="currentPanel === wizPanels.GRAT">
+            <CreateWizGRAT class="window" v-model="trust" v-show="isPanelActive('Payments')">
                 Setup Grantor Retained Annuity Trust 
             </CreateWizGRAT> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizMaturity class="window" v-model="trust" v-show="currentPanel === wizPanels.Maturity">
+            <CreateWizMaturity class="window" v-model="trust" v-show="isPanelActive('Maturity Date')">
                 When should they get it?
             </CreateWizMaturity> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizTrustees class="window" v-model="trust" v-show="currentPanel === wizPanels.Trustees">
+            <CreateWizTrustees class="window" v-model="trust" v-show="isPanelActive('Trustees')">
                 Add Trustees
             </CreateWizTrustees> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizFund class="window"  v-model="trust" v-show="currentPanel === wizPanels.Fund">
+            <CreateWizFund class="window"  v-model="trust" v-show="isPanelActive('Funding')">
                 How much should they get?
             </CreateWizFund> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizConfirm class="window"  v-model="trust" v-show="currentPanel === wizPanels.Confirm">
+            <CreateWizConfirm class="window"  v-model="trust" v-show="isPanelActive('Confirmation')">
                 Confirm the details
             </CreateWizConfirm> 
         </transition>
@@ -65,14 +65,14 @@
             <button class="flex-1 btn btn-danger-outline" :onClick="onClose">
                 Cancel
             </button>
-            <button v-if="!isFirstPanel" class="flex-1 btn btn-primary-outline" :onClick="prev">
+            <button v-if="!isFirstPanel()" class="flex-1 btn btn-primary-outline" :onClick="prev">
                 Back
             </button>
-            <button v-if="isLastPanel" class="flex-1 btn btn-success" :onClick="onCreate">
+            <button v-if="isLastPanel()" class="flex-1 btn btn-success" :onClick="onCreate">
                 Create Now 
             </button>
-            <button v-else-if="!isLastPanel" class="flex-1 btn btn-primary" :onClick="next">
-                Next >
+            <button v-else-if="!isLastPanel()" class="flex-1 btn btn-primary" :onClick="next">
+                Next > {{ currentPanel }}
             </button>
         </div>
     </template>
@@ -99,12 +99,7 @@ import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnec
 import Trust, { TrustType } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
-const panels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
-const Normalpanels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
-const GRATpanels = ref();
-
-class flow {
-    
+class wizardFlow {
     public panels: Array<string>;
     public currentPanel: number;
 
@@ -112,11 +107,11 @@ class flow {
         this.panels = panels;
         this.currentPanel = 0;
     }
-    public nextPanel = (): number => this.currentPanel++;
-    public prevPanel = (): number => this.currentPanel--;
+    public nextPanel = (): number => this.currentPanel < this.panels.length ? this.currentPanel++ : this.currentPanel; 
+    public prevPanel = (): number => this.currentPanel > 0 ? this.currentPanel-- : this.currentPanel;
     public isPanelActive = (panel: string): boolean => this.panels[this.currentPanel] === panel;
-    public isFirstPanel = (panel: string): boolean => this.panels[0] === panel;
-    public isLastPanel = (panel: string): boolean => this.panels[this.panels.length-1] === panel;
+    public isFirstPanel = (): boolean => this.currentPanel === 0;
+    public isLastPanel = (): boolean => this.currentPanel === this.panels.length;
     public setNextPanel = (_panel: string) => {
         let idx = this.panels.findIndex((panel) => panel === _panel) 
         if(idx != -1)
@@ -124,12 +119,27 @@ class flow {
     }
 }
 
-let flow_start = new flow(["Welcome", "Trust Type"]);
+let flow_normal = ref(new wizardFlow(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]));
+let flow_GRAT = ref(new wizardFlow(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]));
+let flow = ref(new wizardFlow(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]));
 
-let flow_normal = new flow(["Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
-let flow_GRAT = new flow(["Payments", "Beneficiary", "Trustees", "Confirmation"]);
-
-const activeFlow = ref(flow_start);
+const panels_GRAT = ref(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]);
+const panels_normal = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const panels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const currentPanel = ref(0);
+const nextPanel = (): number => currentPanel.value < panels.value.length ? currentPanel.value++ : currentPanel.value; 
+const prevPanel = (): number => currentPanel.value > 0 ? currentPanel.value-- : currentPanel.value;
+const isPanelActive = (panel: string): boolean => panels.value[currentPanel.value] === panel;
+const isFirstPanel = (): boolean => currentPanel.value === 0;
+const isLastPanel = (): boolean => currentPanel.value === panels.value.length;
+const setNextPanel = (_panel: string) => {
+    let idx = panels.value.findIndex((panel) => panel === _panel) 
+    if(idx != -1) {
+        console.log("FOUND", idx);
+        currentPanel.value = idx;
+    } else
+        console.log("Can't find: ", _panel);
+}
 
 const trust = ref<Trust>(new Trust());
 
@@ -138,18 +148,19 @@ const list = <TrustList> inject("TrustList");
 
 const open = ref(false);
 const emit = defineEmits(['close']);
-
+/*
 const currentPanel = ref(0);
 const isFirstPanel = computed(() => currentPanel.value === 0 );
 const isLastPanel = computed(() => currentPanel.value === wizPanels.Confirm )
 const panelCount = computed(() => panels.value.length );
+*/
 const panelClass = ref('slide-left');
-
 onUpdated(() => init() );
 
 const init = () => {
     trust.value = new Trust(); 
     currentPanel.value = 0;
+
     if(bc.connectionState.value === ConnectionState.Connected) {
         trust.value.grantor = bc.account.value; 
         console.log("CreateWiz::init() - ", bc.account.value, trust.value.grantor);
@@ -185,53 +196,35 @@ enum wizPanels {
 const next = () => {
     panelClass.value = "slide-left";
 
-    if(currentPanel.value === wizPanels.Type) {
+    if(isPanelActive("Trust Type")) {
 
         if(trust.value.trustType === TrustType.GRAT) {
-            panels.value = GRATpanels.value;
-            currentPanel.value = wizPanels.GRAT;
+            panels.value = panels_GRAT.value;
+            setNextPanel("Payments");
+            console.log(`Switching to GRAT flow : PANEL: ${panels.value}`)
         }
         else {
-            panels.value = Normalpanels.value;
-            currentPanel.value = wizPanels.Beneficiary;
+            panels.value = panels_normal.value;
+            setNextPanel("Beneficiary");
+            console.log(`Switching to NORMAL flow : PANEL: ${panels.value}`)
         }
-        
-    } else if (currentPanel.value == wizPanels.Trustees) {
-        // SKIP funding for GRAT
-        if(trust.value.trustType === TrustType.GRAT)
-            currentPanel.value = wizPanels.Confirm;
-        else
-            currentPanel.value = wizPanels.Fund;
+    } 
+    else
+        nextPanel();
+    console.log("Current Panel: " , currentPanel.value);
+    console.log(isPanelActive("Welcome"));
+    console.log(isPanelActive("Trust Type"));
 
-    } else if (currentPanel.value == wizPanels.Beneficiary) {
-        if(trust.value.trustType == TrustType.GRAT)
-            currentPanel.value = wizPanels.Trustees;
-        else
-            currentPanel.value = wizPanels.Maturity;
-    }
-    else if(currentPanel.value < panelCount.value)
-    {
-        currentPanel.value++;
-    }
 }
 
 const prev = () => {
     panelClass.value = "slide-right";
-    if(currentPanel.value === wizPanels.Beneficiary) {
-        if(trust.value.trustType === TrustType.GRAT)
-            currentPanel.value = wizPanels.GRAT;
-        else
-            currentPanel.value = wizPanels.Type;
-        
-    } else if (currentPanel.value == wizPanels.Confirm) {
-        // SKIP funding for GRAT
-        if(trust.value.trustType === TrustType.GRAT)
-            currentPanel.value = wizPanels.Trustees;
-        else
-            currentPanel.value = wizPanels.Fund;
 
-    }else if(currentPanel.value > 0)
-        currentPanel.value--;
+    prevPanel();
+    console.log("Current Panel: " , currentPanel.value);
+    console.log(isPanelActive("Welcome"));
+    console.log(isPanelActive("Trust Type"));
+
 }
 
 </script>

@@ -98,13 +98,13 @@ contract Trust_CRT {
         
         validateAddresses(beneficiary, trustees, msg.sender);
 
-        // Apply changes for REVOKABLE trust type only
-        // IF trying to change one of these fields on NON-revokable trust type, throw an error
-        if(t.trustType != TrustType.REVOKABLE && (t.beneficiary != beneficiary || t.maturityDate != maturityDate)) {
+        // Apply changes for REVOCABLE trust type only
+        // IF trying to change one of these fields on NON-revocable trust type, throw an error
+        if(t.trustType != TrustType.REVOCABLE && (t.beneficiary != beneficiary || t.maturityDate != maturityDate)) {
         
-            revert("Beneficiary, Trustees and Maturity date can only be updated in a REVOKABLE trust");
+            revert("Beneficiary, Trustees and Maturity date can only be updated in a REVOCABLE trust");
         
-        } else if(t.trustType == TrustType.REVOKABLE) {
+        } else if(t.trustType == TrustType.REVOCABLE) {
 
             t.beneficiary = beneficiary;
             t.trustees = trustees;
@@ -194,7 +194,7 @@ contract Trust_CRT {
     
     /**
      * Get the number of trusts
-     * @param none
+     * @param count count of trusts
      */
     function getTrustCount() public view returns(uint count) {
         return trustSet.count();
@@ -225,15 +225,15 @@ contract Trust_CRT {
 
         Trust storage t = trusts[key];
 
-        if(t.trustType == TrustType.REVOKABLE) {
+        if(t.trustType == TrustType.REVOCABLE) {
             if(sender == t.grantor || 
                sender == t.beneficiary || 
                exists(sender, t.trustees))
                 result = true;
             else 
-                reason = "REVOKABLE type trust may be withdrawn only by grantor, beneficiary or trustee";
+                reason = "REVOCABLE type trust may be withdrawn only by grantor, beneficiary or trustee";
 
-        } else if (t.trustType == TrustType.IRREVOKABLE ||
+        } else if (t.trustType == TrustType.IRREVOCABLE ||
                     t.trustType == TrustType.QTIP ||
                     t.trustType == TrustType.GRAT ||
                     t.trustType == TrustType.SPECIAL_NEEDS ||
@@ -241,7 +241,7 @@ contract Trust_CRT {
             if(sender == t.beneficiary || exists(sender, t.trustees))
                 result = true;
             else 
-                reason = "IRREVOKABLE type trust may be withdrawn only by beneficiary or trustee";
+                reason = "IRREVOCABLE type trust may be withdrawn only by beneficiary or trustee";
 
         } else { 
             if(sender == t.grantor || exists(sender, t.trustees))
@@ -309,7 +309,7 @@ contract Trust_CRT {
     
     /**
      * return a hash for the key for a trust
-     * @param name of trust
+     * @param _name of trust
      * @param _num Trust number?
      * @param _sender Sender address
      * @param _beneficiary Beneficiary address

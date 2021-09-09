@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 type Account = string;
 
 export enum TrustType {
-    REVOKABLE, 
-    IRREVOKABLE,
+    REVOCABLE, 
+    IRREVOCABLE,
     QTIP, 
     GRAT, 
     SPECIAL_NEEDS,
@@ -13,8 +13,8 @@ export enum TrustType {
 };
 
 export const TypeStrings: Array<string> = [
-    "Revokable",
-    "Irrevokable",
+    "Revocable",
+    "Irrevocable",
     "QTIP",
     "Grantor Retained Annuity Trust",
     "Special Needs",
@@ -42,7 +42,7 @@ export default class Trust {
         this.etherAmount = trust && trust.etherAmount || BigNumber.from(0);
         this.createdDate = trust && trust.createdDate || BigNumber.from(0);
         this.maturityDate = trust && trust.maturityDate || BigNumber.from(0);
-        this.trustType = trust && trust.trustType || TrustType.REVOKABLE;
+        this.trustType = trust && trust.trustType || TrustType.REVOCABLE;
     }
 
     //

@@ -30,7 +30,7 @@
                 <span class="block text-indigo-600 xl:inline">your family</span>
             </h1>
             <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">
-                Safely transfer your crypto assets to your family and loved ones taking advantage of the tax advantages of irrevokable trust funds.
+                Safely transfer your crypto assets to your family and loved ones taking advantage of the tax advantages of irrevocable trust funds.
             </p>
             <p class="hidden mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">                
                 All crypto assets placed into trust can be invested in one of three DeFi funds so your assets grow over time. 
@@ -39,7 +39,7 @@
                 Trusted.eth uses SmartContracts on the Ethereum blockchain to provide your family a simple and automated way to setup and maintain trust funds for your family.  
             </p>
             <p class="mt-3 font-black text-base text-gray-500 sm:mt-5 sm:text-lg  md:mt-5 md:text-xl xl:mx-0">
-                No paperwork.  No Banks.  No middlemen.
+                Protect your crypto NOW
             </p>
             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center xl:justify-center">
                 <div class="rounded-md shadow">

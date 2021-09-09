@@ -57,41 +57,41 @@ const trust = computed({
 
 const trustDescriptions = [
 
-    { title: TypeStrings[TrustType.REVOKABLE], 
+    { title: TypeStrings[TrustType.REVOCABLE], 
       description: 'Grantor continues to have access to the trust once created.', 
-      type: TrustType.REVOKABLE, 
+      type: TrustType.REVOCABLE, 
       current: false, 
-      revokable: true },
+      revocable: true },
 
-    { title: TypeStrings[TrustType.IRREVOKABLE], 
+    { title: TypeStrings[TrustType.IRREVOCABLE], 
       description: 'Once created, only trustee and beneficiary will have access.', 
-      type: TrustType.IRREVOKABLE, 
+      type: TrustType.IRREVOCABLE, 
       current: true, 
-      revokable: false },
+      revocable: false },
 
     { title: TypeStrings[TrustType.QTIP], 
       description: 'Qualified Terminal Interest Property. The beneficiary receives interest income but not principle.', 
       type: TrustType.QTIP, 
       current: false, 
-      revokable: false },
+      revocable: false },
     
     { title: TypeStrings[TrustType.GRAT], 
       description: 'Grantor Retained Annuity Trust. Grantor receives an annuity and remaining principle is transferred to beneficiaries.', 
       type: TrustType.GRAT, 
       current: false, 
-      revokable: false },
+      revocable: false },
 
     { title: TypeStrings[TrustType.SPECIAL_NEEDS], 
-      description: 'An irrevokable trust established to benefit a child with special needs.', 
+      description: 'An irrevocable trust established to benefit a child with special needs.', 
       type: TrustType.SPECIAL_NEEDS, 
       current: false, 
-      revokable: false},
+      revocable: false},
 
     { title: TypeStrings[TrustType.SPENDTHRIFT], 
-      description: 'An irrevokable trust where trustees are required to distribute funds to beneficiaries.', 
+      description: 'An irrevocable trust where trustees are required to distribute funds to beneficiaries.', 
       type: TrustType.SPENDTHRIFT, 
       current: false, 
-      revokable: false },
+      revocable: false },
 
 ];
 

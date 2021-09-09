@@ -196,18 +196,18 @@ const createTrust = async () => {
     newTrust.addTrustee(hh_accounts[2]);
     newTrust.addTrustee(hh_accounts[3]);
     newTrust.etherAmount = ethers.utils.parseEther("1");
-    newTrust.trustType = TrustType.REVOKABLE;
+    newTrust.trustType = TrustType.REVOCABLE;
     let now = new Date("8/16/2022");
     let timestamp = Math.round(now.getTime() / 1000)
     console.log(now.getTime(), timestamp);
     newTrust.maturityDate = BigNumber.from(timestamp);
-    newTrust.name = "Revokable Trust";
+    newTrust.name = "Revocable Trust";
     console.log("Creating Trust: ")
     await list.createTrust(newTrust);
 
     newTrust.key = "0x0";
-    newTrust.trustType = TrustType.IRREVOKABLE;
-    newTrust.name = "Irrevokable";
+    newTrust.trustType = TrustType.IRREVOCABLE;
+    newTrust.name = "Irrevocable";
 
     await list.createTrust(newTrust);
 

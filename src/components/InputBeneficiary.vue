@@ -34,7 +34,7 @@ const beneficiary = ref('');
 
 onMounted(() => beneficiary.value = props.modelValue.beneficiary );
 
-const revokable = computed(() => trust.value.trustType === TrustType.REVOKABLE);
+const revocable = computed(() => trust.value.trustType === TrustType.REVOCABLE);
 
 const validate = (e: EventTarget | null) => {
     if(e === null) return;

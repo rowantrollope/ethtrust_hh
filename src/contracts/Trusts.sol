@@ -11,17 +11,17 @@ contract Trusts {
     Bytes32Set.Set trustSet;
 
     /*
-    REVOKABLE: grantor can change or modify trust at will
-    IRREVOKABLE: grantor cannot change or modify trust
-    CHARITABLE: IRREVOKABLE - Benefits GRANTOR, beneficiary AND a qualified CHARITY
+    REVOCABLE: grantor can change or modify trust at will
+    IRREVOCABLE: grantor cannot change or modify trust
+    CHARITABLE: IRREVOCABLE - Benefits GRANTOR, beneficiary AND a qualified CHARITY
     CHARITABLE LEAD: (CLAT) Provides support to a charity through an annuity for a period of time. Remaining assets eventually go to beneficiary
     CHARITABLE REMAINDER: (CRAT) Opposite of CLAT: Benefits accrue to grantor and beneficiary for a period of time, with remainder going to charity
     QTIP: Qualified Terminable Interest Property Trust: Provide income for surviving spouse. Grantor controls assets after the death of the spouse.
-    GRAT: Grantor Retained Annuity Trust: IRREVOKABLE - setup for certain period of time to minimize taxes on large financial gifts to beneficiary. 
+    GRAT: Grantor Retained Annuity Trust: IRREVOCABLE - setup for certain period of time to minimize taxes on large financial gifts to beneficiary. 
         Trustor pays taxes on the assets when the trust is establiehd and received an annual annuity payment for the term of the GRAT.
         When the term ends, the beneficiary reveive the remaining assets.
-    ILIT: IRREVOKABLE LIFE INSURANCE TRUST -  LIFE INSURNACE ONLY - NOT APPLICABLE
-    FUNDERAL: IRREVOKABLE - Set aside money to cover burial and funeral costs. Funeral homes often serve as the trustee
+    ILIT: IRREVOCABLE LIFE INSURANCE TRUST -  LIFE INSURNACE ONLY - NOT APPLICABLE
+    FUNDERAL: IRREVOCABLE - Set aside money to cover burial and funeral costs. Funeral homes often serve as the trustee
     SPENDTHRIFT: Protects inherited assets from the potential of financial irresponsibility of the beneficiary.
         The assets belong to the trust, the beneficiary and their creditors do not have direct access or control.
         The trustee has sole discretion to decide how the trust assets will be distributed.
@@ -35,22 +35,22 @@ contract Trusts {
     */
 
     /*
-    TODO: Support "Grantor death event" - which switches the trust to irrevokable and activates the trustee
+    TODO: Support "Grantor death event" - which switches the trust to irrevocable and activates the trustee
             (Also support DUAL trustors (Spouses) such that one death transfers to the living trustor)
     TODO: Rules: beneficiary to receive income from trust until a certain age, at which point the property will distrubute to them
-    TODO: ADD Support for Successor trustee. 1) Grantor = Trustee until death.  ONLY For REVOKABLE TRUST
+    TODO: ADD Support for Successor trustee. 1) Grantor = Trustee until death.  ONLY For REVOCABLE TRUST
     */
     
     enum TrustType { 
-        REVOKABLE,
-        IRREVOKABLE,
+        REVOCABLE,
+        IRREVOCABLE,
         QTIP,          
         GRAT,       
         SPECIAL_NEEDS,
         SPENDTHRIFT
     }
 
-    TrustType constant DEFAULT_TYPE = TrustType.REVOKABLE;
+    TrustType constant DEFAULT_TYPE = TrustType.REVOCABLE;
     
     // data structure that stores a trust
     struct Trust {
@@ -145,13 +145,13 @@ contract Trusts {
         
         validateAddresses(beneficiary, trustees, msg.sender);
 
-        // Apply changes for REVOKABLE trust type only
-        // IF trying to change one of these fields on NON-revokable trust type, throw an error
-        if(t.trustType != TrustType.REVOKABLE && (t.beneficiary != beneficiary || t.maturityDate != maturityDate)) {
+        // Apply changes for REVOCABLE trust type only
+        // IF trying to change one of these fields on NON-revocable trust type, throw an error
+        if(t.trustType != TrustType.REVOCABLE && (t.beneficiary != beneficiary || t.maturityDate != maturityDate)) {
         
-            revert("Beneficiary, Trustees and Maturity date can only be updated in a REVOKABLE trust");
+            revert("Beneficiary, Trustees and Maturity date can only be updated in a REVOCABLE trust");
         
-        } else if(t.trustType == TrustType.REVOKABLE) {
+        } else if(t.trustType == TrustType.REVOCABLE) {
 
             t.beneficiary = beneficiary;
             t.trustees = trustees;
@@ -241,7 +241,7 @@ contract Trusts {
     
     /**
      * Get the number of trusts
-     * @param none
+     * @param count of trusts
      */
     function getTrustCount() public view returns(uint count) {
         return trustSet.count();
@@ -272,15 +272,15 @@ contract Trusts {
 
         Trust storage t = trusts[key];
 
-        if(t.trustType == TrustType.REVOKABLE) {
+        if(t.trustType == TrustType.REVOCABLE) {
             if(sender == t.grantor || 
                sender == t.beneficiary || 
                exists(sender, t.trustees))
                 result = true;
             else 
-                reason = "REVOKABLE type trust may be withdrawn only by grantor, beneficiary or trustee";
+                reason = "REVOCABLE type trust may be withdrawn only by grantor, beneficiary or trustee";
 
-        } else if (t.trustType == TrustType.IRREVOKABLE ||
+        } else if (t.trustType == TrustType.IRREVOCABLE ||
                     t.trustType == TrustType.QTIP ||
                     t.trustType == TrustType.GRAT ||
                     t.trustType == TrustType.SPECIAL_NEEDS ||
@@ -288,7 +288,7 @@ contract Trusts {
             if(sender == t.beneficiary || exists(sender, t.trustees))
                 result = true;
             else 
-                reason = "IRREVOKABLE type trust may be withdrawn only by beneficiary or trustee";
+                reason = "IRREVOCABLE type trust may be withdrawn only by beneficiary or trustee";
 
         } else { 
             if(sender == t.grantor || exists(sender, t.trustees))
@@ -356,7 +356,7 @@ contract Trusts {
     
     /**
      * return a hash for the key for a trust
-     * @param name of trust
+     * @param _name of trust
      * @param _num Trust number?
      * @param _sender Sender address
      * @param _beneficiary Beneficiary address

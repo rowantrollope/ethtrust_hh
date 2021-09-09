@@ -33,8 +33,8 @@
         <p class="mt-1 text-gray-500"> Trust Type: 
             <span class="text-gray-900"> {{ trust.getTypeString() }} </span> 
         </p>
-        <p class="mt-1 text-gray-500">Revokable? 
-            <span class="text-gray-900">{{ revokable ? "YES" : "NO" }} </span>
+        <p class="mt-1 text-gray-500">Revocable? 
+            <span class="text-gray-900">{{ revocable ? "YES" : "NO" }} </span>
         </p>
 
     </div>
@@ -78,9 +78,9 @@
                     <label for="maturity_date" class="label-text">Maturity Date</label>
                 </div>
                 <div class="col-span-12 sm:col-span-8">     
-                    <div class="mt-2" v-if="!revokable">
+                    <div class="mt-2" v-if="!revocable">
                         {{ trust.getMaturityDate().toLocaleDateString() }} 
-                        <span class="text-gray-500 text-sm">(Can't change maturity date on IRREVOKABLE trust)</span>
+                        <span class="text-gray-500 text-sm">(Can't change maturity date on IRREVOCABLE trust)</span>
                     </div>
                     <div v-else>
                         <DatePicker v-model="maturityDate" mode="date" class="flex-grow">
@@ -96,14 +96,14 @@
             TAB: Beneficiary
         -->
         <div v-show="activeTab===1">
-            <div v-if="revokable">
+            <div v-if="revocable">
             <p class="text-sm mb-5 ml-5">Note: The beneficiary is who will receive this ETH after the maturity date. Trustees can also access funds.</p>
             <InputBeneficiary v-model="trust"
                 @valid="validEntry = true" 
                 @invalid="validEntry = false"></InputBeneficiary>
             </div>
             <div v-else>
-                <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOKABLE and you cannot edit or change the BENEFICIARY.  The beneficiary will receive this ETH after the maturity date. Trustees can also access funds.</p>
+                <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOCABLE and you cannot edit or change the BENEFICIARY.  The beneficiary will receive this ETH after the maturity date. Trustees can also access funds.</p>
                 <p class="text-center">{{ trust.beneficiary }}</p>
             </div>
         </div>      
@@ -111,12 +111,12 @@
             TAB: Trustees
         -->
         <div v-show="activeTab===2">                    
-            <div v-if="revokable">
+            <div v-if="revocable">
                 <p class="text-sm mb-5 ml-5">Note: Each trustee will have full access to transfer or manage the funds in this trust.</p>
                 <InputTrustees v-model="trust"></InputTrustees>
             </div>
             <div v-else>
-                <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOKABLE and you cannot edit or change the TRUSTEES.</p>
+                <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOCABLE and you cannot edit or change the TRUSTEES.</p>
                 <div class="text-lg"><u>Trustees</u>
                     <div v-for="trustee in trust.trustees" class="text-center" :key="trustee"><p>{{ trustee }}</p></div>
                 </div>
@@ -165,8 +165,8 @@
             TAB: Delete
         -->
         <div v-show="activeTab===5">
-            <div v-if="!revokable" class="ml-5">
-                <p>This trust is IRREVOKABLE and cannot be deleted.</p>
+            <div v-if="!revocable" class="ml-5">
+                <p>This trust is IRREVOCABLE and cannot be deleted.</p>
             </div>
             <div v-else-if="!canWithdraw"
                 class="mb-5 space-y-2 text-base">
@@ -265,7 +265,7 @@ const trust = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 });
-const revokable = computed(() => trust.value.trustType === TrustType.REVOKABLE);
+const revocable = computed(() => trust.value.trustType === TrustType.REVOCABLE);
 
 const maturityDate = computed({
     get: () => trust.value.getMaturityDate(),
