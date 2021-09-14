@@ -6,15 +6,13 @@ import path from 'path';
 export default defineConfig({
   plugins: [vue()],
   resolve: {
-    alias: [
-      {
-        find: '@',
-        replacement: path.resolve(__dirname, 'src')
-      }
-    ]
-  },
-  build: {
-    chunkSizeWarningLimit: 800,
-    cssCodeSplit: false
-  }
+        alias: {
+            find: '@',
+            replacement: path.resolve(__dirname, 'src'),
+        },
+    },
+    build: {
+        chunkSizeWarningLimit: 800,
+        cssCodeSplit: false
+    }
 })
