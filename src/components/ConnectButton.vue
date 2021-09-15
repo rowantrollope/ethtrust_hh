@@ -67,7 +67,7 @@
                         Network ID:<span class=""> &nbsp;{{ bc.chainId }} </span>
                     </div>
                     <div class="flex">
-                        Network Name:<span class=""> &nbsp;{{ bc.chainName }} </span>
+                        Network Name:<span class=""> &nbsp;{{ bc.walletName }} </span>
                     </div>
                     <p class="flex">
                         Trust Contract: <span class=""> &nbsp; {{ list.address.value }} </span> 

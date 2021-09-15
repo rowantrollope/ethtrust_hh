@@ -1,8 +1,6 @@
 
 import { ref, Ref } from 'vue';
 import { ethers, Signer } from 'ethers';
-import Onboard from 'bnc-onboard';
-
 import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -18,91 +16,68 @@ export enum ConnectionState {
     Error,
 };
 
-const API_KEY = "aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
-const NETWORK_RINKEBY = 4;
-
 export class BlockchainConnect {
-
-    private onboard_options = {
-        dappId: API_KEY,       // [String] The API key created by step one above
-        networkId: NETWORK_RINKEBY,  // [Integer] The Ethereum network ID your Dapp uses.
-        subscriptions: {
-            balance: (balance: string) => {
-                this.balance = balance;
-            },
-            network: (network: number) => { this.chainId = network; },
-            address: (address: string) => { 
-                this.account.value = address; 
-                this.accountsChanged(address);
-            },
-            wallet: wallet => {
-    
-                if (wallet.provider) {
-                    this.provider = new ethers.providers.Web3Provider(wallet.provider);
-    
-                    if (wallet.name) {
-                        this.walletName.value = wallet.name ? wallet.name : "";
-                        window.localStorage.setItem('selectedWallet', wallet.name);
-                    }
-                }
-                else {
-                    // reset to zeros
-                }
-            }
-        }
-    };
-    
-    private onboard;
-    private lastWallet: string|null;
-    public balance: string;
     public provider: Provider|null;
     public signer: Signer|null;
     public chainId: number;
+    public chainName: string;
     private _onChange: changeCallback|null;
 
     // Reactive members
-    public walletName: Ref<string>;
     public account: Ref<string>;
     public connectionState: Ref<ConnectionState>;
     public connectionError: Ref<string>;
 
     constructor() {
-        this.onboard = Onboard(this.onboard_options);
-
         this.provider = null;
         this.signer = null;
         this._onChange = null;
         this.chainId = 0;
+        this.chainName = "";
 
         this.connectionState = ref(ConnectionState.Unknown);
         this.connectionError = ref("");
         this.account = ref("");
-        this.walletName = ref("");
-        this.balance = "";
-        this.lastWallet = window.localStorage.getItem('selectedWallet');
     }
 
     async connect(): Promise<void> {
         try {
             this.connectionState.value = ConnectionState.Connecting;
 
-            if(this.lastWallet)
-                await this.onboard.walletSelect(this.lastWallet);
-            else
-                await this.onboard.walletSelect();
+            // Connect MetaMask
+            this.provider = <Provider> await detectEthereumProvider();
+            //console.log("detectEthereumProvider(): ", this.provider);
+            
+            if(this.provider) {
+                // Connect Ethers to Metamask instance
+                this.provider = new ethers.providers.Web3Provider((window.ethereum as ethers.providers.ExternalProvider))
+    
+                await (this.provider as ethers.providers.Web3Provider).send("eth_requestAccounts", []);
+                
+                this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
+    
+                if(this.signer === null || this.signer === undefined)
+                {
+                    this.connectionState.value = ConnectionState.Error;
+                    this.connectionError.value = "BlockchainConnect::connect() Signer returned null";
+                    console.error(this.connectionError.value);
+                    return;
+                }
+            
+            } else {
+                console.log("METAMASK not loaded, calling getDefaultProvider()");
 
-            const readyToTransact = await this.onboard.walletCheck();
-    
-            this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
-    
-            if(this.signer === null || this.signer === undefined)
-            {
-                this.connectionState.value = ConnectionState.Error;
-                this.connectionError.value = "BlockchainConnect::connect() Signer returned null";
-                console.error(this.connectionError.value);
-                return;
+                this.provider = <Provider> ethers.providers.getDefaultProvider();
+
+                if(!this.provider) {
+                    this.connectionState.value = ConnectionState.Error;
+                    this.connectionError.value = "Error getting default provider, please install Metamask";
+                    console.error(this.connectionError.value)
+                    return;
+                }
+                
+                this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
             }
-        
         } catch(e) {
             this.connectionState.value = ConnectionState.Error;
             this.connectionError.value = "Error loading blockchain: " + e;
@@ -110,11 +85,22 @@ export class BlockchainConnect {
             return;
         }
     
+        this.chainId = (await this.provider.getNetwork()).chainId;
+        this.chainName = (await this.provider.getNetwork()).name;
+
+        // Setup change notification2
+        // TODO: Figure out why I can't call this by passing func reference... odd
+        (window.ethereum as Provider).on('accountsChanged', (accounts: Array<string>) => {
+            this.accountsChanged(accounts);
+        });
+
         (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
+            console.log()
             console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
             window.location.reload();
         });
 
+        this.account.value = await this.signer!.getAddress();
         this.connectionState.value = ConnectionState.Connected;
         this.connectionError.value = "";
 
@@ -138,9 +124,16 @@ export class BlockchainConnect {
      * @param accounts list of accounts - currently MetaMask only sets account[0]
      */
 
-    accountsChanged(account: string) {
+    accountsChanged(accounts: Array<string>) {
 
-        console.log("BlockchainConnect::accountsChanged()", this.account.value);
+        if(accounts.length) {
+            this.account.value = accounts[0];
+            console.log("BlockchainConnect::accountsChanged()", this.account.value);
+        } 
+        else if (accounts.length === 0) {
+            console.log('BlockchainConnect::accountsChanged() - Please connect to MetaMask.');
+            this.account.value = "";    
+        }
 
         // call user supplied change notification callback
         if(this._onChange != null) {
@@ -165,8 +158,7 @@ export class BlockchainConnect {
      */
     async getBalance() : Promise<BigNumber> {
         if(this.provider) {
-            return BigNumber.from(this.balance);
-            //return await this.provider.getBalance(this.account.value);
+            return await this.provider.getBalance(this.account.value);
         } else {
             console.error("BlockchainConnect::balanceOf() - not loaded yet - call connect first")
             return BigNumber.from(0);
