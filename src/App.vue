@@ -33,20 +33,17 @@ provide('exchange', exchange)
 const contractAddress = ref("");
 provide ('contractAddress', contractAddress);
 
-const autoConnect = true;
+const autoConnect = false;
 
-onBeforeMount(() => connect() );
+onBeforeMount(() => {
+    exchange.init();
 
-const connect = async () => {
+    if(autoConnect)
+        connectBlockchain() 
+});
+
+const connectBlockchain = async () => {
   
-    await exchange.init();
-
-    if(!autoConnect)
-        return;
-        
-    bc.setOnNetworkChange(async (chainId: number) => {
-    });
-
     await bc.connect();
 
     if(bc!.signer) {
@@ -56,6 +53,7 @@ const connect = async () => {
     }
 
 }
+provide ('connectBlockchain', connectBlockchain);
 
 </script>
 

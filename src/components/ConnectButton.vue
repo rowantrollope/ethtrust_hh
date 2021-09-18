@@ -13,17 +13,16 @@
         class="text-white p-2 space-x-1 rounded-lg font-thin items-center flex text-xs hover:bg-black hover:text-white focus:outline-none " @click="onClicked()">
 
         <div v-if="bc.connectionState.value === state.Unknown">
-            <div class="flex items-center space-x-1">
-                <StatusOfflineIcon class="text-gray-300 ml-1 h-5 w-5" aria-hidden="true" />
+            <button class="flex items-center font-bold space-x-1">
                 <span>Connect Wallet</span>
-            </div>
+            </button>
         </div>
 
         <div v-else-if="bc.connectionState.value === state.Connected">
             <div class="flex items-center space-x-1">
                 <!-- <Jazzicon class="-ml-1 mt-1" :address="0x012314151351395359153891359818351385893" :diameter="24"/> -->
                 <StatusOnlineIcon class="text-green-400 h-5 w-5" aria-hidden="true" />
-                <span>Connected</span>
+                <span>{{bc.walletName.value + ' @ ' + networkNameShort}}</span>
             </div>
         </div>
 
@@ -47,28 +46,46 @@
     <transition name="fadeslide">
         <PopoverPanel class="origin-top-right absolute w-screen bg-white text-black  sm:w-max opacity-100 p-5 text-sm -right-2 sm:-right-1 mt-2 sm:mt-3 h-screen sm:h-auto sm:rounded-md shadow-md z-50">
             <div v-if="bc.connectionState.value === state.Unknown" class="flex items-center space-x-2">
-                <div class="text-xl font-thin">
-                    Connect your wallet
+                <div class="space-y-2 w-full">
+                    <div class="text-xl font-thin justify-center flex">
+                        Let's get started!
+                    </div>
+                    <div class="flex justify-center">
+                        <PopoverButton class="w-full btn btn-primary" @click="connectBlockchain">Connect Wallet</PopoverButton>
+                    </div>
                 </div>
-                <button class="btn btn-primary">Connect Now</button>
             </div>
             <div v-else-if="bc.connectionState.value === state.Connected">
                 <div class="flex-col text-left vertical space-y-3">
                     <div class="flex items-center space-y-3 text-lg ">
                         <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Connected to {{ networkName }}
                     </div>
-                    <div class="flex">
-                        Account #: <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
+                    <div class="border border-gray-300 rounded-md p-3">
+                        <div class="items-center flex space-x-2 text-lg font-black">
+
+                            <img style="height: 22px " :src="bc.walletIcon.value"/>
+                            <div>{{bc.walletName.value}}</div>
+                        </div>
+                        <div class="flex mt-2 ml-8">
+                            <span class="text-gray-500">Account #:</span> 
+                            <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
+                        </div>
+                        <div class="flex mt-2 ml-8">
+                            <span class="text-gray-500">Balance:</span> 
+                            <span class=""> &nbsp;{{ balance }} ETH </span>
+                        </div>
+                        <PopoverButton class="flex w-full mt-2 btn btn-danger-outline" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
                     </div>
-                    <div class="flex">
-                        Balance: <span class=""> &nbsp;{{ balance }} ETH </span>
+
+                    <div class="border border-gray-300 rounded-md p-3">
+                        <div class="items-center flex space-x-2 text-lg font-black">
+                        SmartContract
+                        </div>
+                        <p class="flex ml-5 mt-2">
+                            <span class="text-gray-500">Address:</span> 
+                            <AddressField :address="list.address.value"/>
+                        </p>
                     </div>
-                    <div class="flex">
-                        Wallet Type:<span class=""> &nbsp;{{ bc.walletName }} </span>
-                    </div>
-                    <p class="flex">
-                        Trust Contract: <AddressField :address="list.address.value"/>
-                    </p>
                     <p class="flex-grow">
                     </p>
                 </div>
@@ -112,17 +129,26 @@ import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnec
 import TrustList from '../services/TrustList';
 
 let networkStrings = new Map([
-    [1, "Ethereum Mainnet"],
-    [3, "Ropsten Test Network"],
-    [4, "Rinkeby Test Network"],
-    [42, "Kovan Test Network"],
-    [1337, "Hardhat"]
+    [1, { short: "Mainnet", long: "Ethereum Mainnet" }],
+    [3, { short: "Mainnet", long: "Ropsten Test Network"}],
+    [4, { short: "Mainnet", long: "Rinkeby Test Network"}],
+    [42, {short: "Kovan", long: "Kovan Test Network"}],
+    [1337, { short: "Hardhat", long: "Hardhat Localhost"}],
 ]);
 const networkName = computed(() => {
-    if(networkStrings.has(bc.chainId))
-        return networkStrings.get(bc.chainId);
+    if(networkStrings.has(bc.chainId)) {
+        const item = networkStrings.get(bc.chainId);
+        return item ? item.long : "";
+    }
     else
         return "Unknown Network";
+});
+const networkNameShort = computed(() => {
+    if(networkStrings.has(bc.chainId)) {
+        const item = networkStrings.get(bc.chainId);
+        return item ? item.short : "";
+    } else
+        return "Unknown";
 });
 
 const state = ConnectionState;
@@ -141,11 +167,10 @@ const onClicked = () => {
         balance.value = val 
     );
 }
-const onConnectNewWallet = () => {
-    
-    bc.connectNewWallet();
+const onDisconnect = () => window.location.reload();
+const onConnectNewWallet = () => bc.connectNewWallet();
+const connectBlockchain = inject('connectBlockchain');
 
-}
 const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(Number(balance.value)) : "" );
 
 </script>

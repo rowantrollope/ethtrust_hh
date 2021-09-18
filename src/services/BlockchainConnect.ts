@@ -37,6 +37,7 @@ export class BlockchainConnect {
 
     // Reactive members
     public walletName: Ref<string>;
+    public walletIcon: Ref<string>;
     public account: Ref<string>;
     public connectionState: Ref<ConnectionState>;
     public connectionError: Ref<string>;
@@ -54,11 +55,12 @@ export class BlockchainConnect {
         this._onNetworkChange = null;
         this._onAddressChange = null;
         this.chainId = 0;
-
+        
         this.connectionState = ref(ConnectionState.Unknown);
         this.connectionError = ref("");
         this.account = ref("");
         this.walletName = ref("");
+        this.walletIcon = ref("");
         this.balance = "";
         this.lastWallet = window.localStorage.getItem('selectedWallet');
     }
@@ -68,7 +70,7 @@ export class BlockchainConnect {
         if (wallet.provider) {
             this.provider = new ethers.providers.Web3Provider(wallet.provider);
             this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
-
+            this.walletIcon.value = wallet.icons.iconSrc;
             if (wallet.name) {
                 this.walletName.value = wallet.name ? wallet.name : "";
                 window.localStorage.setItem('selectedWallet', wallet.name);
@@ -78,6 +80,7 @@ export class BlockchainConnect {
             this.provider = null;
             this.signer = null;
             this.walletName.value = ""; 
+
             this.connectionState.value = ConnectionState.Error;
         }
     }
@@ -141,6 +144,9 @@ export class BlockchainConnect {
         console.log("HI");
         await this.onboard.walletSelect();
     }
+    async walletReset(): Promise<void> {
+        await this.onboard.walletReset();
+    }
 
     async connect(): Promise<void> {
         try {
@@ -159,11 +165,14 @@ export class BlockchainConnect {
             console.error(this.connectionError.value);
             return;
         }
-    
-        (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
-            console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
-            window.location.reload();
-        });
+        // Permit typescript to allow window.ethereum
+        let window: any;
+        if(window.ethereum) {
+            (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
+                console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
+                window.location.reload();
+            });    
+        }
 
         this.connectionState.value = ConnectionState.Connected;
         this.connectionError.value = "";

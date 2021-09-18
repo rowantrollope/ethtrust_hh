@@ -241,7 +241,7 @@ export class TrustContract extends ContractWrapper {
         }
         catch(error) {
             if(error) {
-                console.log("TrustContract::withdraw failed with: ", error.data.message);
+                console.log("TrustContract::withdraw failed with: ", error);
             }
             return false;
         }
@@ -274,7 +274,7 @@ export class TrustContract extends ContractWrapper {
         catch(error) {
 
             if(error) {
-                console.error("TrustContract::withdrawAll failed with: ", error.data.message);
+                console.error("TrustContract::withdrawAll failed with: ", error);
             }
             return false;
         }

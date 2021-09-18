@@ -31,7 +31,7 @@
                     Pay me every
                 </dt>
                 <dd class=" text-gray-900 sm:col-span-2">
-                    <select id="payout_period" value="Year" v-model="payoutPeriod" class="rounded-md border border-gray-300">
+                    <select id="payout_period" v-model="payoutPeriod" class="rounded-md border border-gray-300">
                         <option value="Year"> Year  </option>
                         <option value="Quarter"> Quarter </option>
                         <option value="Month">  Month </option>

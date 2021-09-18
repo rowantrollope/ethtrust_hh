@@ -7,7 +7,7 @@
     <!-- 
         When empty, display some helpful text
     --> 
-    <PageTitle >
+    <PageTitle v-if="bc.connectionState.value === state.Connected">
         <template v-slot:title>Create & Manage Trusts</template>
         <template v-slot:buttons>           
             <button class="btn btn-rounded btn-primary text-sm" :onClick="onCreateNew">
