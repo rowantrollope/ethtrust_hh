@@ -4,7 +4,7 @@ import ContractWrapper from "./ContractWrapper"
 
 import { ref } from 'vue';
 
-import Trust  from "./Trust";
+import Trust from "./Trust";
 import Trusts_localhost from '../../deployments/localhost/Trusts.json';
 import Trusts_rinkeby from '../../deployments/rinkeby/Trusts.json';
 import Trusts_mainnet from '../../deployments/mainnet/Trusts.json';
@@ -58,7 +58,7 @@ export class TrustContract extends ContractWrapper {
 
         await super.connect(signer, Trusts.address, Trusts.abi);
         
-        console.log("TrustContract::connect() Address: ", this.address);
+        console.log("TrustContract::connect() Address: ", this.address.value);
 
         this.onChange = null;
         

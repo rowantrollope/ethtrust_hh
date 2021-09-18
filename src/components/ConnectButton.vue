@@ -55,24 +55,24 @@
             <div v-else-if="bc.connectionState.value === state.Connected">
                 <div class="flex-col text-left vertical space-y-3">
                     <div class="flex items-center space-y-3 text-lg ">
-                        <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Blockchain Connected
+                        <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Connected to {{ networkName }}
                     </div>
                     <div class="flex">
-                        Account: <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
+                        Account #: <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
                     </div>
                     <div class="flex">
                         Balance: <span class=""> &nbsp;{{ balance }} ETH </span>
                     </div>
                     <div class="flex">
-                        Network ID:<span class=""> &nbsp;{{ bc.chainId }} </span>
-                    </div>
-                    <div class="flex">
-                        Network Name:<span class=""> &nbsp;{{ bc.walletName }} </span>
+                        Wallet Type:<span class=""> &nbsp;{{ bc.walletName }} </span>
                     </div>
                     <p class="flex">
-                        Trust Contract: <span class=""> &nbsp; {{ list.address.value }} </span> 
+                        Trust Contract: <AddressField :address="list.address.value"/>
+                    </p>
+                    <p class="flex-grow">
                     </p>
                 </div>
+                <PopoverButton class="mt-5 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton>
             </div>
             <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">
                 <p class="flex text-xl border text-red-500 border-red-500 p-2 rounded-md ">
@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, computed } from 'vue';
+import { ref, inject, onBeforeMount, computed } from 'vue';
 
 // 3rd party Components
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
@@ -111,6 +111,20 @@ import CurrencyExchange from '../services/CurrencyExchange';
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
 
+let networkStrings = new Map([
+    [1, "Ethereum Mainnet"],
+    [3, "Ropsten Test Network"],
+    [4, "Rinkeby Test Network"],
+    [42, "Kovan Test Network"],
+    [1337, "Hardhat"]
+]);
+const networkName = computed(() => {
+    if(networkStrings.has(bc.chainId))
+        return networkStrings.get(bc.chainId);
+    else
+        return "Unknown Network";
+});
+
 const state = ConnectionState;
 
 const bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
@@ -119,12 +133,19 @@ const list: TrustList = <TrustList> inject('TrustList');
 const exchange = <CurrencyExchange> inject('exchange');
 const balance = ref('0');
 
+onBeforeMount(() => {
+})
+
 const onClicked = () => {
     bc.getBalanceString(4).then(val => 
         balance.value = val 
     );
 }
+const onConnectNewWallet = () => {
+    
+    bc.connectNewWallet();
 
+}
 const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(Number(balance.value)) : "" );
 
 </script>

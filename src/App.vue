@@ -44,17 +44,17 @@ const connect = async () => {
     if(!autoConnect)
         return;
         
+    bc.setOnNetworkChange(async (chainId: number) => {
+    });
+
     await bc.connect();
 
     if(bc!.signer) {
-                
         await list.connect(bc!.signer);
-
-        await list.getTrusts((trust: Trust) => true );
-        console.log(list.address.value);
+        await list.getTrusts((trust: Trust) => true ); 
         contractAddress.value = list.address.value;
     }
-    
+
 }
 
 </script>
