@@ -166,13 +166,12 @@ export class BlockchainConnect {
             return;
         }
         // Permit typescript to allow window.ethereum
-        let window: any;
-        if(window.ethereum) {
-            (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
-                console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
-                window.location.reload();
-            });    
-        }
+        //let window: any;
+        //@ts-ignore
+        (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
+            console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
+            window.location.reload();
+        });    
 
         this.connectionState.value = ConnectionState.Connected;
         this.connectionError.value = "";
