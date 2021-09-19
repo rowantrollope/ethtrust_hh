@@ -7,6 +7,9 @@
 
 <script setup lang="ts">
 
+// services
+
+// components
 import ForBeneficiary from '../components/ForBeneficiary.vue';
 
 </script>

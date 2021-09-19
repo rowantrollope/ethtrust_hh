@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 
+// components
 import ForTrustee from '../components/ForTrustee.vue';
 
 </script>

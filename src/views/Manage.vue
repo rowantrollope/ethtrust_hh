@@ -3,7 +3,6 @@
 -->
 <template>
 <div>
-
     <!-- 
         When empty, display some helpful text
     --> 
@@ -19,19 +18,19 @@
         <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
     </div>
     <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
-    
-    
 </div>
 </template>
 
 <script setup lang="ts">
 import { inject, ref } from 'vue';
 
+// components
 import PageTitle from '../components/PageTitle.vue';
 import ManageTrusts from '../components/ManageTrusts.vue';
 import CreateWiz from '../components/CreateWiz.vue';
-
 import ConnectBlock from '../components/ConnectBlock.vue';
+
+// services
 import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 
 let bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
