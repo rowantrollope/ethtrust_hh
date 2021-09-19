@@ -1,6 +1,7 @@
 
 import { ref, Ref } from 'vue';
 import { ethers, Signer } from 'ethers';
+
 import Onboard from 'bnc-onboard';
 
 import type {Provider} from '@ethersproject/abstract-provider';
