@@ -72,7 +72,7 @@
                 Create Now 
             </button>
             <button v-else-if="!isLastPanel()" class="flex-1 btn btn-primary" :onClick="next">
-                Next > {{ currentPanel }}
+                Next
             </button>
         </div>
     </template>

@@ -57,11 +57,11 @@
             </div>
             <div v-else-if="bc.connectionState.value === state.Connected">
                 <div class="flex-col text-left vertical space-y-3">
-                    <div class="flex items-center space-y-3 text-lg ">
+                    <div class="flex items-center space-y-3 text-sm">
                         <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Connected to {{ networkName }}
                     </div>
                     <div class="border border-gray-300 rounded-md p-3">
-                        <div class="items-center flex space-x-2 text-lg font-black">
+                        <div class="items-center flex space-x-2 text-base font-black">
 
                             <img style="height: 22px " :src="bc.walletIcon.value"/>
                             <div>{{bc.walletName.value}}</div>
@@ -74,12 +74,15 @@
                             <span class="text-gray-500">Balance:</span> 
                             <span class=""> &nbsp;{{ balance }} ETH </span>
                         </div>
-                        <PopoverButton class="flex w-full mt-2 btn btn-danger-outline" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
+                        <div class="mt-3 text-gray-500 items-center flex ml-2">
+                            <input type="checkbox" v-model="autoConnect" class=""/>
+                            <span class="ml-2 text-xs">Automatically connect this wallet </span>
+                        </div>
                     </div>
-
+                    
                     <div class="border border-gray-300 rounded-md p-3">
-                        <div class="items-center flex space-x-2 text-lg font-black">
-                        SmartContract
+                        <div class="items-center flex space-x-2 text-base font-black">
+                            SmartContract
                         </div>
                         <p class="flex ml-5 mt-2">
                             <span class="text-gray-500">Address:</span> 
@@ -89,6 +92,7 @@
                     <p class="flex-grow">
                     </p>
                 </div>
+                <PopoverButton class="flex w-full mt-2 btn btn-danger-outline" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
                 <PopoverButton class="mt-5 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton>
             </div>
             <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">
@@ -114,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, onBeforeMount, computed } from 'vue';
+import { ref, inject, watch, computed, onUpdated } from 'vue';
 
 // 3rd party Components
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
@@ -130,8 +134,8 @@ import TrustList from '../services/TrustList';
 
 let networkStrings = new Map([
     [1, { short: "Mainnet", long: "Ethereum Mainnet" }],
-    [3, { short: "Mainnet", long: "Ropsten Test Network"}],
-    [4, { short: "Mainnet", long: "Rinkeby Test Network"}],
+    [3, { short: "Ropsten", long: "Ropsten Test Network"}],
+    [4, { short: "Rinkeby", long: "Rinkeby Test Network"}],
     [42, {short: "Kovan", long: "Kovan Test Network"}],
     [1337, { short: "Hardhat", long: "Hardhat Localhost"}],
 ]);
@@ -155,19 +159,31 @@ const state = ConnectionState;
 
 const bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
 const list: TrustList = <TrustList> inject('TrustList');
+const autoConnect = ref(inject('autoConnect'));
 
 const exchange = <CurrencyExchange> inject('exchange');
 const balance = ref('0');
 
-onBeforeMount(() => {
+onUpdated(() => {
+    console.log("setting autoconnect to: ", autoConnect.value);
 })
 
+watch(autoConnect, () => {
+    console.log("autoConnect changed", autoConnect.value);
+    window.localStorage.setItem('autoConnect', autoConnect.value ? "true" : "false");
+})
 const onClicked = () => {
     bc.getBalanceString(4).then(val => 
         balance.value = val 
     );
 }
-const onDisconnect = () => window.location.reload();
+const onDisconnect = () => {
+    window.localStorage.setItem('autoConnect', "false");
+    window.localStorage.setItem('selectedWallet', "");
+    window.localStorage.setItem('lastNetworkId', "");
+
+    window.location.reload();
+}
 const onConnectNewWallet = () => bc.connectNewWallet();
 const connectBlockchain = inject('connectBlockchain');
 

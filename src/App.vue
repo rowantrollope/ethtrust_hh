@@ -33,17 +33,21 @@ provide('exchange', exchange)
 const contractAddress = ref("");
 provide ('contractAddress', contractAddress);
 
-const autoConnect = false;
+let autoConnect = false;
 
 onBeforeMount(() => {
     exchange.init();
+
+    let ac = window.localStorage.getItem('autoConnect');
+    autoConnect = ac ? ac === "true" : false;
+    provide ('autoConnect', autoConnect);
 
     if(autoConnect)
         connectBlockchain() 
 });
 
 const connectBlockchain = async () => {
-  
+    
     await bc.connect();
 
     if(bc!.signer) {
