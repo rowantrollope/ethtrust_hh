@@ -33,29 +33,27 @@ provide('exchange', exchange)
 const contractAddress = ref("");
 provide ('contractAddress', contractAddress);
 
-const autoConnect = true;
+const autoConnect = false;
 
-onBeforeMount(() => connect() );
+onBeforeMount(() => {
+    exchange.init();
 
-const connect = async () => {
+    if(autoConnect)
+        connectBlockchain() 
+});
+
+const connectBlockchain = async () => {
   
-    await exchange.init();
-
-    if(!autoConnect)
-        return;
-        
     await bc.connect();
 
     if(bc!.signer) {
-                
         await list.connect(bc!.signer);
-
-        await list.getTrusts((trust: Trust) => true );
-        console.log(list.address.value);
+        await list.getTrusts((trust: Trust) => true ); 
         contractAddress.value = list.address.value;
     }
-    
+
 }
+provide ('connectBlockchain', connectBlockchain);
 
 </script>
 

@@ -11,7 +11,7 @@
     "@heroicons/vue": "^1.0.3",
     "@types/chai": "^4.2.21",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.4.0",
+    "@types/node": "^16.9.2",
     "@vuedx/typescript-plugin-vue": "^0.7.4",
     "bnc-notify": "^1.9.1",
     "bnc-onboard": "^1.34.1",

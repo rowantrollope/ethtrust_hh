@@ -5,10 +5,11 @@ import Onboard from 'bnc-onboard';
 
 import type {Provider} from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
-import detectEthereumProvider from "@metamask/detect-provider";
+
 import { utils } from './Utils';
 
-interface changeCallback { (myArgument: string): void }
+interface changeNetworkCallback { (chainId: number): void }
+interface changeAddressCallback { (address: string): void }
 
 export enum ConnectionState {
     Unknown = 0,
@@ -20,66 +21,131 @@ export enum ConnectionState {
 
 const API_KEY = "aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
 const NETWORK_RINKEBY = 4;
+const NETWORK_MAINNET = 1;
 
 export class BlockchainConnect {
 
-    private onboard_options = {
-        dappId: API_KEY,       // [String] The API key created by step one above
-        networkId: NETWORK_RINKEBY,  // [Integer] The Ethereum network ID your Dapp uses.
-        subscriptions: {
-            balance: (balance: string) => {
-                this.balance = balance;
-            },
-            network: (network: number) => { this.chainId = network; },
-            address: (address: string) => { 
-                this.account.value = address; 
-                this.accountsChanged(address);
-            },
-            wallet: wallet => {
-    
-                if (wallet.provider) {
-                    this.provider = new ethers.providers.Web3Provider(wallet.provider);
-    
-                    if (wallet.name) {
-                        this.walletName.value = wallet.name ? wallet.name : "";
-                        window.localStorage.setItem('selectedWallet', wallet.name);
-                    }
-                }
-                else {
-                    // reset to zeros
-                }
-            }
-        }
-    };
-    
-    private onboard;
+    private onboard;    
     private lastWallet: string|null;
+    private _onNetworkChange: changeNetworkCallback|null;
+    private _onAddressChange: changeAddressCallback|null;
+
     public balance: string;
     public provider: Provider|null;
     public signer: Signer|null;
     public chainId: number;
-    private _onChange: changeCallback|null;
 
     // Reactive members
     public walletName: Ref<string>;
+    public walletIcon: Ref<string>;
     public account: Ref<string>;
     public connectionState: Ref<ConnectionState>;
     public connectionError: Ref<string>;
-
+    
     constructor() {
+        const lastNetwork = window.localStorage.getItem('lastNetworkId');
+        const networkId = lastNetwork ? Number(lastNetwork) : NETWORK_MAINNET; // DEFAULT
+
+        this.onboard_options.networkId = networkId;
+
         this.onboard = Onboard(this.onboard_options);
 
         this.provider = null;
         this.signer = null;
-        this._onChange = null;
+        this._onNetworkChange = null;
+        this._onAddressChange = null;
         this.chainId = 0;
-
+        
         this.connectionState = ref(ConnectionState.Unknown);
         this.connectionError = ref("");
         this.account = ref("");
         this.walletName = ref("");
+        this.walletIcon = ref("");
         this.balance = "";
         this.lastWallet = window.localStorage.getItem('selectedWallet');
+    }
+
+    private setWallet = async (wallet: any) => {
+    
+        if (wallet.provider) {
+            this.provider = new ethers.providers.Web3Provider(wallet.provider);
+            this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
+            this.walletIcon.value = wallet.icons.iconSrc;
+            if (wallet.name) {
+                this.walletName.value = wallet.name ? wallet.name : "";
+                window.localStorage.setItem('selectedWallet', wallet.name);
+            }
+        }
+        else {
+            this.provider = null;
+            this.signer = null;
+            this.walletName.value = ""; 
+
+            this.connectionState.value = ConnectionState.Error;
+        }
+    }
+    private setBalance = (balance: string) => this.balance = balance;
+
+    /**
+     * Callback handler for when user changes accounts
+     * 
+     * @param accounts list of accounts - currently MetaMask only sets account[0]
+     */
+     setNetwork = (chainId: number) => {
+        this.chainId = chainId;
+        //window.location.reload();
+        console.log(`BlockchainConnect::networkChanged ${chainId}`);
+        window.localStorage.setItem('lastNetworkId', chainId.toString());
+        
+        if(this._onNetworkChange != null)
+            this._onNetworkChange(this.chainId);
+    
+    }
+
+    /**
+     * Callback handler for when user changes accounts
+     * 
+     * @param accounts list of accounts - currently MetaMask only sets account[0]
+     */
+    setAddress = (account: string) => {
+        this.account.value = account;
+
+        console.log("BlockchainConnect::accountsChanged()", this.account.value);
+
+        // call user supplied change notification callback
+        if(this._onAddressChange != null) {
+            //console.log(this.account.value);
+            this._onAddressChange(this.account.value); 
+        }   
+    }
+    
+    /**
+     * Sets the callback to be used when the account changes
+     * @param _onChange changeCallback
+     */
+    setOnNetworkChange(onNetworkChange: changeNetworkCallback|null) {
+        this._onNetworkChange = onNetworkChange;
+    } 
+    setOnAddressChange(onAddressChange: changeAddressCallback|null) {
+        this._onAddressChange = onAddressChange;
+    }    
+    
+    private onboard_options = {
+        dappId: API_KEY,       // [String] The API key created by step one above
+        networkId: NETWORK_RINKEBY,  // [Integer] The Ethereum network ID your Dapp uses.
+        subscriptions: {
+            balance: this.setBalance,
+            network: this.setNetwork,
+            address: this.setAddress,
+            wallet: this.setWallet,
+        }
+    };
+    async connectNewWallet(): Promise<void> {
+        console.log("HI");
+        await this.onboard.walletSelect();
+    }
+    async walletReset(): Promise<void> {
+        await this.onboard.walletReset();
     }
 
     async connect(): Promise<void> {
@@ -92,28 +158,20 @@ export class BlockchainConnect {
                 await this.onboard.walletSelect();
 
             const readyToTransact = await this.onboard.walletCheck();
-    
-            this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
-    
-            if(this.signer === null || this.signer === undefined)
-            {
-                this.connectionState.value = ConnectionState.Error;
-                this.connectionError.value = "BlockchainConnect::connect() Signer returned null";
-                console.error(this.connectionError.value);
-                return;
-            }
         
         } catch(e) {
             this.connectionState.value = ConnectionState.Error;
-            this.connectionError.value = "Error loading blockchain: " + e;
+            this.connectionError.value = "Error loading wallet: " + e;
             console.error(this.connectionError.value);
             return;
         }
-    
+        // Permit typescript to allow window.ethereum
+        //let window: any;
+        //@ts-ignore
         (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
             console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
             window.location.reload();
-        });
+        });    
 
         this.connectionState.value = ConnectionState.Connected;
         this.connectionError.value = "";
@@ -121,42 +179,6 @@ export class BlockchainConnect {
         //console.log("BlockchainConnect::connect() - Complete: ", this.provider, this.signer, this.account);
     }
 
-    /**
-     * Callback handler for when user changes accounts
-     * 
-     * @param accounts list of accounts - currently MetaMask only sets account[0]
-     */
-    chainChanged(chainId: number) {
-        this.chainId = chainId;
-        if(this._onChange != null) {
-            console.log(`BlockchainConnect::networkChanged ${chainId}`);
-        }
-    }
-    /**
-     * Callback handler for when user changes accounts
-     * 
-     * @param accounts list of accounts - currently MetaMask only sets account[0]
-     */
-
-    accountsChanged(account: string) {
-
-        console.log("BlockchainConnect::accountsChanged()", this.account.value);
-
-        // call user supplied change notification callback
-        if(this._onChange != null) {
-            console.log(this.account.value);
-            this._onChange(this.account.value); 
-        }
-        
-    }
-    
-    /**
-     * Sets the callback to be used when the account changes
-     * @param _onChange changeCallback
-     */
-    setOnChange(onChange: changeCallback) {
-        this._onChange = onChange;
-    }    
     
     /**
      * Gets the ETHER balance of an account 

@@ -23,12 +23,11 @@
             
         </div>
     </div>
-    <div v-else-if="bc.connectionState.value === state.NotConnected" 
-        class="ml-20 text-2xl mt-10 tracking-tight font-extrabold text-gray-900">
-        <div class="flex items-center space-x-5 mt-10">
-            <span class="block text-indigo-600">Click </span>
-            <button class="btn btn-rounded btn-success" @click="onConnect">Start</button>
-            <span class="block text-indigo-600">to connect your wallet</span>
+    <div v-else-if="bc.connectionState.value === state.Unknown" 
+        class="text-2xl mt-10 tracking-tight text-gray-900">
+        <div class="flex justify-center">Connect your wallet to get started </div>
+        <div class="flex justify-center items-center space-x-5 mt-10">
+            <button class="btn btn-rounded btn-primary" @click="connectBlockchain">Connect Wallet</button>
         </div>
     </div>
 </template>
@@ -42,10 +41,6 @@ import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnec
 let bc: BlockchainConnect = <BlockchainConnect> inject("BlockchainConnect");
 
 const state = ConnectionState;
-
-const onConnect = async () => {
-    console.log("onConnect");
-    bc.connect();
-}
+const connectBlockchain = inject("connectBlockchain");
 
 </script>

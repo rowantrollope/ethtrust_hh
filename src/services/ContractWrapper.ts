@@ -15,7 +15,7 @@ export default class ContractWrapper {
             this.contract = new Contract(contractAddress, abi, signer);
         } catch (err) {
             console.error("ContractWrapper::constructor() - Error Connecting to contract: ", err);
-            this.connectionError = err;
+            this.connectionError = <string> err;
         }
         //console.log("ContractWrapper::connect() - signer, contract", signer, this.contract);
     }

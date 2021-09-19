@@ -68,7 +68,8 @@ const trustDescriptions = [
       type: TrustType.IRREVOCABLE, 
       current: true, 
       revocable: false },
-
+];
+/*
     { title: TypeStrings[TrustType.QTIP], 
       description: 'Qualified Terminal Interest Property. The beneficiary receives interest income but not principle.', 
       type: TrustType.QTIP, 
@@ -94,6 +95,7 @@ const trustDescriptions = [
       revocable: false },
 
 ];
+*/
 
 onUpdated(() => trust.value.trustType = selected.value.type );
 
