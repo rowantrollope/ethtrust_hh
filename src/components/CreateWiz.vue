@@ -28,7 +28,7 @@
             </CreateWizName> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="isPanelActive('Beneficiary')">
+            <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="isPanelActive('Beneficiary')" @validEntry="validEntry = true" @invalidEntry="validEntry = false">
                 Who is this for?
             </CreateWizBeneficiaryNew> 
         </transition>
@@ -71,7 +71,8 @@
             <button v-if="isLastPanel()" class="flex-1 btn btn-success" :onClick="onCreate">
                 Create Now 
             </button>
-            <button v-else-if="!isLastPanel()" class="flex-1 btn btn-primary" :onClick="next">
+            <button v-else-if="!isLastPanel()" class="flex-1" 
+                    :class="[enableNextButton ? 'btn btn-primary' : 'btn btn-disabled']" :onClick="next">
                 Next
             </button>
         </div>
@@ -111,7 +112,7 @@ class wizardFlow {
     public prevPanel = (): number => this.currentPanel > 0 ? this.currentPanel-- : this.currentPanel;
     public isPanelActive = (panel: string): boolean => this.panels[this.currentPanel] === panel;
     public isFirstPanel = (): boolean => this.currentPanel === 0;
-    public isLastPanel = (): boolean => this.currentPanel === this.panels.length;
+    public isLastPanel = (): boolean => this.currentPanel === this.panels.length -1;
     public setNextPanel = (_panel: string) => {
         let idx = this.panels.findIndex((panel) => panel === _panel) 
         if(idx != -1)
@@ -123,15 +124,15 @@ let flow_normal = ref(new wizardFlow(["Welcome", "Trust Type", "Beneficiary", "M
 let flow_GRAT = ref(new wizardFlow(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]));
 let flow = ref(new wizardFlow(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]));
 
-const panels_GRAT = ref(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]);
 const panels_normal = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
+const panels_GRAT = ref(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]);
 const panels = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
 const currentPanel = ref(0);
 const nextPanel = (): number => currentPanel.value < panels.value.length ? currentPanel.value++ : currentPanel.value; 
 const prevPanel = (): number => currentPanel.value > 0 ? currentPanel.value-- : currentPanel.value;
 const isPanelActive = (panel: string): boolean => panels.value[currentPanel.value] === panel;
 const isFirstPanel = (): boolean => currentPanel.value === 0;
-const isLastPanel = (): boolean => currentPanel.value === panels.value.length;
+const isLastPanel = (): boolean => currentPanel.value === panels.value.length -1;
 const setNextPanel = (_panel: string) => {
     let idx = panels.value.findIndex((panel) => panel === _panel) 
     if(idx != -1) {
@@ -156,6 +157,9 @@ const panelCount = computed(() => panels.value.length );
 */
 const panelClass = ref('slide-left');
 onUpdated(() => init() );
+
+const enableNextButton = ref(true);
+const validEntry = ref(true);
 
 const init = () => {
     trust.value = new Trust(); 
@@ -194,6 +198,13 @@ enum wizPanels {
 }
 
 const next = () => {
+
+    if(isPanelActive("Beneficiary")) {
+        if(trust.value.beneficiary === '' || !validEntry.value) {
+            window.alert("You must enter a valid beneficiary address");
+            return;``
+        }
+    }
     panelClass.value = "slide-left";
 
     if(isPanelActive("Trust Type")) {
@@ -218,6 +229,7 @@ const next = () => {
 }
 
 const prev = () => {
+    
     panelClass.value = "slide-right";
 
     prevPanel();

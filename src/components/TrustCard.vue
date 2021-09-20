@@ -1,9 +1,9 @@
 
 <template>
 <div class="card" 
-    :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4 filter contrast-75' : 'border-gray-300',
-            list.updating(trust.key) ? 'animate-pulse border-blue-300 border-4 filter contrast-75' : 'border-gray-300',
-            list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4 filter contrast-75' : 'border-gray-300`']" 
+    :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4' : 'border-gray-300',
+            list.updating(trust.key) ? 'animate-pulse border-blue-300 border-4' : 'border-gray-300',
+            list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4' : 'border-gray-300`']" 
         >
     <h2 class="sr-only" id="profile-overview-title">Profile Overview</h2>
     <div class="p-4">
@@ -30,8 +30,11 @@
                     </p>
                 </div>
             </div>
-            <div v-if="updatingText != ''" class="badge mt-2 sm:mt-0" :class="updatingClass">
-                {{ updatingText }}
+            <div v-if="updatingText != ''" class="bg-white border items-center rounded-full p-2 text-sm z-50; mt-2 sm:mt-0 flex space-x-2" 
+                    :class="updatingClass">
+                <div class="rounded animate-spin ease duration-300 w-4 h-4 border-2"
+                    :class="updatingClass"></div>
+                <span>{{ updatingText }}</span>
             </div>
             <div v-else class="flex hover:text-blue-500 text-base font-light justify-center items-center sm:mt-0">
                 Edit <ChevronRightIcon class="h-6 w-6" aria-hidden="true" />
@@ -128,9 +131,6 @@ const updatingClass = computed(() => updatingInfo[list.trustState(props.trust.ke
         left: 50%;
         transform: translate(-50%, -50%);
         @apply text-base font-serif font-thin leading-tight uppercase;
-    }
-    .badge {
-        @apply bg-white border rounded-full px-2 py-1 text-sm z-50;
     }
     .badge-updating {
         @apply  border-blue-500 text-blue-500;

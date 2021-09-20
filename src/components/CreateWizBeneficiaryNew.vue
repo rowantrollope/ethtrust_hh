@@ -56,15 +56,12 @@
             <div v-if="selected.ID === 1" class="mt-10 text-center">
                 <span class="text-blue-500 cursor-pointer underline" @click="$router.push('./About')">Click here to learn more about creating an account</span>
             </div>
-
-
         </div>
-
 </div>
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch, onUpdated } from 'vue';
 
 // 3rd party Components
 import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
@@ -79,9 +76,17 @@ const props = defineProps({
     modelValue: { type: Trust, required: true },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'validEntry', 'invalidEntry']);
 
 const validEntry = ref(true);
+
+watch(validEntry, () => {
+    if(validEntry.value && trust.value.beneficiary != '')
+        emit('validEntry');
+    else
+        emit('invalidEntry');
+    console.log(validEntry.value);
+});
 
 const trust = computed({
     get: () => props.modelValue,

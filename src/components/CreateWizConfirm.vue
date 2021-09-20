@@ -8,10 +8,10 @@
             <slot></slot>
         </h3>
     </div>
-    <div class="text-sm px-6 py-6 grid gap-3 grid-cols-10">
+    <div class="text-base px-6 py-6 grid gap-3 grid-cols-10">
         <!-- <TrustCardEx :trust="trust"></TrustCardEx> -->
         <div class="item-label">Name:</div> 
-            <div class="item-text">{{ trust.name }}</div>
+            <div class="item-text">{{ trust.name ? trust.name : "Not set" }}</div>
 
         <div class="item-label">Beneficiary:</div>
             <div class="item-text"><AddressField :address="trust.beneficiary"/></div>
@@ -33,7 +33,7 @@
             <div class="item-text">{{ utils.toEther(trust.etherAmount) }}</div>
         </div>
 
-        <div class="text-red-500 leading-tight sm:ml-12 text-sm sm:text-base">
+        <div class="text-gray-800 leading-tight ml-5 sm:ml-12 text-base sm:text-base">
             Reminder: Once you create this fund and transfer your money, 
             you will no longer have access until the trust fund maturity date
             releases the funds to your beneficiary.
