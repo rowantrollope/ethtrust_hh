@@ -1,8 +1,8 @@
+import { ref } from 'vue';
 import { Signer } from 'ethers';
 import { BigNumber} from "@ethersproject/bignumber";
-import ContractWrapper from "./ContractWrapper"
 
-import { ref } from 'vue';
+import ContractWrapper from "./ContractWrapper"
 
 import Trust from "./Trust";
 import Trusts_localhost from '../../deployments/localhost/Trusts.json';
@@ -147,14 +147,14 @@ export class TrustContract extends ContractWrapper {
      * Create a new Trust
      * @param trust new Trust
      * @returns void
-     */
+     */      
     async createTrust(trust: Trust) {
  
         console.log(`CreateTrust: Beneficiary: ${trust.beneficiary}, trustee: ${trust.trustees}, Amount: ${trust.etherAmount.toString()}, Grantor: ${trust.grantor}, Date: ${trust.maturityDate}`);
         
         const overflow = { value: trust.etherAmount.toString(), }
         
-        await this.contract!.createTrust(trust.beneficiary, trust.trustees, trust.name, trust.maturityDate, trust.trustType, overflow);
+        return await this.contract!.createTrust(trust.beneficiary, trust.trustees, trust.name, trust.maturityDate, trust.trustType, overflow);
 
     }
 
@@ -185,17 +185,15 @@ export class TrustContract extends ContractWrapper {
      * @param key key of trust to delete
      * @returns 
      */
-    async deleteTrust(key: string): Promise<boolean> {
+    async deleteTrust(key: string) {
         // Validate balance is 0 first
         let trust: Trust = await this.contract!.getTrust(key);
 
         if(trust.etherAmount.toNumber() != 0) {
-            console.error("TrustContract::deleteTrust() - Can't delete a trust with > 0 etherBalance, withdraw first");
-            return false;
-        }
-
-        await this.contract!.deleteTrust(key);
-        return true;
+            const err = "TrustContract::deleteTrust() - Can't delete a trust with > 0 etherBalance, withdraw first";
+            throw err;
+        } else 
+            return await this.contract!.deleteTrust(key);
     }
     
     /**
@@ -212,7 +210,7 @@ export class TrustContract extends ContractWrapper {
 
         console.log(`UpdateTrust ${trust.key}: Name: ${trust.name}, maturityDate: ${trust.maturityDate}, Beneficiary: ${trust.beneficiary}`);
         
-        await this.contract!.updateTrust(trust.key, trust.beneficiary, trust.trustees, trust.name, trust.maturityDate);
+        return await this.contract!.updateTrust(trust.key, trust.beneficiary, trust.trustees, trust.name, trust.maturityDate);
     }
     
     /**
@@ -230,20 +228,18 @@ export class TrustContract extends ContractWrapper {
      * @param amount amount to withdraw
      * @returns whether withdrawal was successful
      */
-    async withdraw(key: string, amount: BigNumber): Promise<boolean> {
-
+    async withdraw(key: string, amount: BigNumber) {
+    
         console.log(`withdraw() ${key}: ${amount.toString()}`);
 
         try {
-            await this.contract!.withdraw(key, amount);
+            return await this.contract!.withdraw(key, amount);
             console.log("TrustContract::withdraw() - Success")  
-            return true;          
         }
         catch(error) {
             if(error) {
                 console.log("TrustContract::withdraw failed with: ", error);
             }
-            return false;
         }
     }
 
@@ -259,40 +255,14 @@ export class TrustContract extends ContractWrapper {
 
     /**
      * 
-     * @param key trust to withdraw
-     * @returns success or failure on withdraw
-     */
-    async withdrawAll(key: string): Promise<boolean> {
-
-        console.log(`withdraw() ${key}`);
-
-        try {
-            await this.contract!.withdrawAll(key);    
-            console.log("TrustContract::withdrawAll() - Success")
-            return true;            
-        }
-        catch(error) {
-
-            if(error) {
-                console.error("TrustContract::withdrawAll failed with: ", error);
-            }
-            return false;
-        }
-    }
-
-    /**
-     * 
      * @param key trust to deposit to
      * @param amount amount to deposit
      */
-    async deposit(key: string, amount: BigNumber) {
+    async deposit(key: string, amount: BigNumber): Promise<any> {
 
         console.log(`deposit() ${key}: ${amount.toString()}`);
     
-        const overflow = {
-            value: amount.toString(),
-        }
-        await this.contract!.depositTrust(key, overflow);
+        return await this.contract!.depositTrust(key, { value: amount.toString() });
     }
     
 }

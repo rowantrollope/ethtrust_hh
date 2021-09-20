@@ -1,9 +1,9 @@
 
 <template>
 <div class="card" 
-    :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4' : 'border-gray-300',
-            list.updating(trust.key)  ? 'animate-pulse border-blue-300 border-4' : 'border-gray-300',
-            list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4' : 'border-gray-300`']" 
+    :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4 filter contrast-75' : 'border-gray-300',
+            list.updating(trust.key) ? 'animate-pulse border-blue-300 border-4 filter contrast-75' : 'border-gray-300',
+            list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4 filter contrast-75' : 'border-gray-300`']" 
         >
     <h2 class="sr-only" id="profile-overview-title">Profile Overview</h2>
     <div class="p-4">
@@ -30,12 +30,11 @@
                     </p>
                 </div>
             </div>
-            <div v-if="updatingText != ''" class="badge" :class="updatingClass">
+            <div v-if="updatingText != ''" class="badge mt-2 sm:mt-0" :class="updatingClass">
                 {{ updatingText }}
             </div>
             <div v-else class="flex hover:text-blue-500 text-base font-light justify-center items-center sm:mt-0">
                 Edit <ChevronRightIcon class="h-6 w-6" aria-hidden="true" />
-                <!-- <Button class="btn-white" :click="emit('onclick')">Edit</Button> -->
             </div>
         </div>
     </div>

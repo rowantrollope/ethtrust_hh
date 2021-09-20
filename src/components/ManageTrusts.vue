@@ -125,7 +125,7 @@ const onCancelEdit = () => closeEditDialog();
 const onWithdraw = async (amount: number) => {
     closeEditDialog();
     await list.withdraw(selectedTrust.value.key, ethers.utils.parseEther(amount.toString()));    
-    await list.updateTrust(selectedTrust.value);
+    //await list.updateTrust(selectedTrust.value);
 }
 
 const onDelete = async () => { 
@@ -136,7 +136,7 @@ const onDelete = async () => {
 const onDeposit = async (amount: number) => {
     closeEditDialog();    
     await list.deposit(selectedTrust.value.key, ethers.utils.parseEther(amount.toString()));
-    await list.updateTrust(selectedTrust.value);
+    //await list.updateTrust(selectedTrust.value);
 }  
 
 </script>

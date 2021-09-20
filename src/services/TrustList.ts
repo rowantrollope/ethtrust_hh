@@ -2,6 +2,7 @@ import { ref } from 'vue';
 
 import { Signer } from 'ethers';
 import { BigNumber} from "@ethersproject/bignumber";
+import Notify from "bnc-notify";
 
 import Trust from "./Trust";
 import { TrustContract, ChangeType, FilterCallback } from './TrustContract';
@@ -13,6 +14,10 @@ enum TrustState {
     Deleting,
     Creating,
 };
+const API_KEY = "aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
+const NETWORK_RINKEBY = 4;
+const NETWORK_MAINNET = 1;
+const USE_BNC_NOTIFY = true;
 
 export default class TrustList extends TrustContract {
 
@@ -23,8 +28,12 @@ export default class TrustList extends TrustContract {
     // These maps show which items are awaiting updates 
     // from the blockchain
     public updateMap = ref(new Map());
-
+    
     private manualTimer: NodeJS.Timeout | undefined;
+    private notify = Notify({
+        dappId: API_KEY,
+        networkId: NETWORK_MAINNET,
+    });
 
     /**
      * Constructor 
@@ -40,10 +49,14 @@ export default class TrustList extends TrustContract {
     async connect(signer: Signer) {
         await super.connect(signer);
 
-        //console.log("TrustList::connect()");
-
-        // Quick-update support
-        super.setOnChange(this.changeHandler);
+        if(USE_BNC_NOTIFY) {
+            const networkId = await signer.getChainId();
+            this.notify.config({
+                networkId: networkId,
+                desktopPosition: "topRight",
+            });    
+        } else 
+            super.setOnChange(this.changeHandler);
 
     }
 
@@ -105,6 +118,7 @@ export default class TrustList extends TrustContract {
                         this.trusts.value?.splice(temp, 1);
                     }
                     let trust: Trust = await super.getTrust(key);
+
                     this.trusts.value?.push(trust);
                 }
                 else
@@ -113,6 +127,7 @@ export default class TrustList extends TrustContract {
             case ChangeType.TRUST_DELETED:
                 if(idx != -1) {
                     this.trusts.value?.splice(idx, 1)
+
                     this.updateMap.value.delete(key);               
                 }
                 else
@@ -124,7 +139,10 @@ export default class TrustList extends TrustContract {
             case ChangeType.TRUST_UPDATED:
                 // IF WE FOUND A TRUST TO UPDATe
                 if(idx != -1) {
+                    // test
                     let newTrust: Trust = await super.getTrust(key);
+                    console.log("NEW TRUST ", utils.formatEtherString(newTrust.etherAmount));
+
                     this.trusts.value![idx] = newTrust;
                     if(this.updateMap.value.get(key)) {
                         this.updateMap.value.delete(key);
@@ -155,14 +173,35 @@ export default class TrustList extends TrustContract {
     
 
     /**
+     * uses Notify to watch transaction state and notify user
+     * @param hash Transaction to watch
+     * @param key trust
+     * @param type change type
+     */
+    private _notifyChange(hash: any, key: string, type: ChangeType, refreshDelay: number = 20000) {
+
+        if(USE_BNC_NOTIFY) {
+            const { emitter } = this.notify.hash(hash);
+            emitter.on('txConfirmed', transaction => { 
+                setTimeout(() => { this.changeHandler(key, type); }, refreshDelay) 
+            });
+        }
+    }
+
+    /**
      * Creates a new trust and deposits ETH to it
      * @param newTrust trust to create
      */
      createTrust = async (newTrust: Trust) => {
         // Quick Update Support 
         newTrust.key = "0x0";
+
         this.trusts.value?.push(newTrust);
-        await super.createTrust(newTrust);
+
+        const { hash } = await super.createTrust(newTrust);
+
+        this._notifyChange(hash, "none", ChangeType.TRUST_CREATED, 0);
+
     }
 
     /**
@@ -180,28 +219,25 @@ export default class TrustList extends TrustContract {
             this.setUpdateState(trust.key, TrustState.Updating);
         }
         // call base
-        await super.updateTrust(trust);
-    }
+        const { hash } = await super.updateTrust(trust);
 
+        this._notifyChange(hash, trust.key, ChangeType.TRUST_UPDATED);
+
+    }
     /**
      * Withdraw eth from a trust
      * @param key trust to withdraw from
      * @param amount amount to withdraw in wei
      * @returns success or failure
      */
-    withdraw = async (key: string, amount: BigNumber): Promise<boolean> => {
+    withdraw = async (key: string, amount: BigNumber) => {
 
         this.setUpdateState(key, TrustState.Updating);
 
-        let success = await super.withdraw(key, amount);
+        const { hash } = await super.withdraw(key, amount);
 
-        if(success == true) {
-            console.log("set update flag")
-        }
-        else
-            window.alert("An error occured withdrawing funds");
-        
-        return success;
+        this._notifyChange(hash, key, ChangeType.TRUST_WITHDRAW);
+
     }
 
     /**
@@ -211,7 +247,10 @@ export default class TrustList extends TrustContract {
      */
     deposit = async (key: string, amount: BigNumber) => {
         this.setUpdateState(key, TrustState.Updating);
-        super.deposit(key, amount);
+
+        const { hash } = await super.deposit(key, amount);
+        
+        this._notifyChange(hash, key, ChangeType.TRUST_DEPOSIT);
     }
 
     /**
@@ -219,9 +258,17 @@ export default class TrustList extends TrustContract {
      * @param key Trust t0 delete - must have 0 balance
      * @returns success or failure
      */
-    deleteTrust = async (key: string): Promise<boolean> => {
+    deleteTrust = async (key: string) => {
         this.setUpdateState(key, TrustState.Deleting);
-        return await super.deleteTrust(key);
+        try {
+            const { hash } = await super.deleteTrust(key);
+
+            this._notifyChange(hash, key, ChangeType.TRUST_DELETED, 0);
+
+        } catch (err) {
+            window.alert(err);
+        }
+
     }
 
     /**
@@ -231,8 +278,11 @@ export default class TrustList extends TrustContract {
      */
     private setUpdateState = (key: string, state: TrustState) => {
         this.updateMap.value.set(key, state);
-        clearTimeout((this.manualTimer as NodeJS.Timeout));
-        this.manualTimer = setTimeout(() => this.manualRefresh(), 60000);
+
+        if(!USE_BNC_NOTIFY) {
+            clearTimeout((this.manualTimer as NodeJS.Timeout));
+            this.manualTimer = setTimeout(() => this.manualRefresh(), 30000);    
+        }
     }
 
     /**
