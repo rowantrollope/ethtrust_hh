@@ -43,7 +43,7 @@
                                         About
                                     </router-link>
                                 </MenuItem>
-                                <MenuItem>
+                                <MenuItem v-if="developerMode" >
                                     <router-link class="mobile-router-link" tag="li" to="/Developer">
                                         Developer
                                     </router-link>
@@ -58,7 +58,7 @@
             <!-- Brand name --> 
             <div class="flex mr-3">
                 <div class="sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased uppercase">
-                    <span class="nowrap">Safe <span class="font-thin -ml-1">Trust</span></span>
+                    Safe<span class="font-thin">Trust</span>
                 </div>
             </div>
             
@@ -79,7 +79,7 @@
                 <router-link class="router-link" tag="li" to="/About">
                     About
                 </router-link>
-                <router-link class="router-link" tag="li" to="/Developer">
+                <router-link v-if="developerMode" class="router-link" tag="li" to="/Developer">
                     Developer
                 </router-link>
             </div>
@@ -103,6 +103,8 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 // components
 import Hamburger from './Hamburger.vue'
 import ConnectButton from './ConnectButton.vue'
+
+const developerMode = inject('developerMode');
 
 </script>
 

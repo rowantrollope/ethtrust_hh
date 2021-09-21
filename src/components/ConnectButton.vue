@@ -74,15 +74,21 @@
                             <span class="text-gray-500">Balance:</span> 
                             <span class=""> &nbsp;{{ balance }} ETH </span>
                         </div>
-                        <div class="mt-3 text-gray-500 items-center flex ml-2">
-                            <input type="checkbox" v-model="autoConnect" class=""/>
-                            <span class="ml-2 text-xs">Automatically connect this wallet </span>
-                        </div>
+                            <SwitchGroup as="div" class=" cursor-pointer mt-3 text-gray-500 items-center flex ml-2">
+                                <Switch v-model="autoConnect" class="ml-5 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <span aria-hidden="true" class="pointer-events-none absolute bg-white w-full h-full rounded-md" />
+                                <span aria-hidden="true" :class="[autoConnect ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
+                                <span aria-hidden="true" :class="[autoConnect ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />
+                            </Switch>  
+                            <SwitchLabel as="span" class="ml-2 text-xs">
+                                Remember this wallet
+                            </SwitchLabel>                 
+                            </SwitchGroup>
                     </div>
                     
                     <div class="border border-gray-300 rounded-md p-3">
                         <div class="items-center flex space-x-2 text-base font-black">
-                            SmartContract
+                            SafeTrust SmartContract
                         </div>
                         <p class="flex ml-5 mt-2">
                             <span class="text-gray-500">Address:</span> 
@@ -94,6 +100,14 @@
                 </div>
                 <PopoverButton class="flex w-full mt-4 btn btn-danger-outline" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
                 <PopoverButton class="mt-2 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton>
+                <div class="mt-5 text-gray-500 justify-center border-t pt-5 items-center flex ml-2">
+                    <Switch v-model="developerMode" class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span aria-hidden="true" class="pointer-events-none absolute bg-white w-full h-full rounded-md" />
+                        <span aria-hidden="true" :class="[developerMode ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
+                        <span aria-hidden="true" :class="[developerMode ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />
+                    </Switch>                   
+                    <span class="ml-2 text-sm">Enable Developer Mode</span>
+                </div>
             </div>
             <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">
                 <p class="flex text-xl border text-red-500 border-red-500 p-2 rounded-md ">
@@ -121,7 +135,7 @@
 import { ref, Ref, inject, watch, computed, onUpdated } from 'vue';
 
 // 3rd party Components
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
+import { Popover, PopoverButton, PopoverPanel, Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import { StatusOnlineIcon, StatusOfflineIcon, ChevronDownIcon, ChevronUpIcon, ShieldCheckIcon } from '@heroicons/vue/outline';
 
 // components
@@ -163,9 +177,9 @@ const autoConnect = ref(inject('autoConnect') as boolean);
 
 const exchange = <CurrencyExchange> inject('exchange');
 const balance = ref('0');
+const developerMode = inject('developerMode');
 
 onUpdated(() => {
-    
     console.log("setting autoconnect to: ", autoConnect.value);
 })
 

@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 
-import { provide, ref, onBeforeMount } from 'vue';
+import { provide, ref, watch, onBeforeMount } from 'vue';
 import Nav from './components/Nav.vue';
 
 import { BlockchainConnect } from './services/BlockchainConnect';
@@ -33,10 +33,19 @@ provide('exchange', exchange)
 const contractAddress = ref("");
 provide ('contractAddress', contractAddress);
 
+const developerMode = ref(false);
+provide ('developerMode', developerMode);
+
 let autoConnect = false;
+watch(developerMode, () => {
+    window.localStorage.setItem('developerMode',developerMode.value ? "true" : "false");
+});
 
 onBeforeMount(() => {
     exchange.init();
+
+    let dm = window.localStorage.getItem('developerMode');
+    developerMode.value = dm ? dm === "true" : false;
 
     let ac = window.localStorage.getItem('autoConnect');
     autoConnect = ac ? ac === "true" : false;
