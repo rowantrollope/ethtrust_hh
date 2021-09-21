@@ -69,7 +69,7 @@ const trust = computed({
 });
 
 onUpdated(() => {
-    console.log("Ether Amount", etherAmount.value);
+    //console.log("Ether Amount", etherAmount.value);
     if(etherAmount.value > 0)
         trust.value.etherAmount = ethers.utils.parseEther(etherAmount.value.toString())
 });

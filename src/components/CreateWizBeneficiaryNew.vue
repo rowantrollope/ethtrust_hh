@@ -49,8 +49,8 @@
                 </dt>
                 <dd class="input-col">
                     <InputBeneficiary v-model="trust"
-                        @valid="validEntry = true" 
-                        @invalid="validEntry = false"></InputBeneficiary>
+                        @valid="onValidateEntry(true)" 
+                        @invalid="onValidateEntry(false)"></InputBeneficiary>
                 </dd>
             </div>
             <div v-if="selected.ID === 1" class="mt-10 text-center">
@@ -76,18 +76,18 @@ const props = defineProps({
     modelValue: { type: Trust, required: true },
 });
 
-const emit = defineEmits(['update:modelValue', 'validEntry', 'invalidEntry']);
+const emit = defineEmits(['update:modelValue', 'validEntry']);
 
 const validEntry = ref(true);
 
-watch(validEntry, () => {
-    if(validEntry.value && trust.value.beneficiary != '')
-        emit('validEntry');
-    else
-        emit('invalidEntry');
-    console.log(validEntry.value);
-});
+const onValidateEntry = (valid: boolean) => {
+    validEntry.value = valid && trust.value.beneficiary != '';
 
+    console.log("VALID ENTRY", validEntry.value);        
+    
+    emit('validEntry', validEntry.value);
+
+}
 const trust = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
