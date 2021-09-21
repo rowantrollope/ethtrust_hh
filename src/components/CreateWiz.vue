@@ -13,7 +13,7 @@
         </div>
     </template>
     <!-- PROGRESS INDICATOR  
-    <Progress class="hidden sm:block" :panels="panels" :currentPanel="currentPanel"></Progress>
+    <Progress class="hidden sm:block" :panels="panels" :panelIndex="panelIndex"></Progress>
     -->
 
     <!-- DIALOGS --> 
@@ -105,25 +105,54 @@ const panels_normal = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Dat
 const panels_GRAT = ref(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]);
 
 const panels = ref([
-    { name: "Welcome", nextButtonEnabled: (): boolean => true, },
-    { name: "Trust Type", nextButtonEnabled: (): boolean => true, },
-    { name: "Beneficiary", nextButtonEnabled: (): boolean => validEntry.value, },
-    { name: "Maturity Date", nextButtonEnabled: (): boolean => true, },
-    { name: "Trustees", nextButtonEnabled: (): boolean => true, },
-    { name: "Funding", nextButtonEnabled: (): boolean => validEntry.value, },
-    { name: "Confirmation", nextButtonEnabled: (): boolean => true, }, 
+    { 
+        name: "Welcome", 
+        init: (): void => {}, 
+        validEntry: true,
+    },
+    { 
+        name: "Trust Type", 
+        init: (): void => {},
+        validEntry: true, 
+    },
+    { 
+        name: "Beneficiary", 
+        init: (): void => {},
+        validEntry: false, 
+    },
+    { 
+        name: "Maturity Date", 
+        init: (): void => {},
+        validEntry: true, 
+    },
+    { 
+        name: "Trustees", 
+        init: (): void => {},
+        validEntry: true, 
+    },
+    { 
+        name: "Funding", 
+        init: (): void => {},
+        validEntry: false, 
+    },
+    { 
+        name: "Confirmation", 
+        init: (): void => {},
+        validEntry: true, 
+    }, 
 ]);
 
-const currentPanel = ref(0);
-const nextPanel = (): number => currentPanel.value < panels.value.length ? currentPanel.value++ : currentPanel.value; 
-const prevPanel = (): number => currentPanel.value > 0 ? currentPanel.value-- : currentPanel.value;
-const isPanelActive = (panel: string): boolean => panels.value[currentPanel.value].name === panel;
-const isFirstPanel = (): boolean => currentPanel.value === 0;
-const isLastPanel = (): boolean => currentPanel.value === panels.value.length -1;
+const panelIndex = ref(0);
+const activePanel = () => panels.value[panelIndex.value];
+const nextPanel = (): number => panelIndex.value < panels.value.length ? panelIndex.value++ : panelIndex.value; 
+const prevPanel = (): number => panelIndex.value > 0 ? panelIndex.value-- : panelIndex.value;
+const isPanelActive = (panel: string): boolean => panels.value[panelIndex.value].name === panel;
+const isFirstPanel = (): boolean => panelIndex.value === 0;
+const isLastPanel = (): boolean => panelIndex.value === panels.value.length -1;
 const setNextPanel = (_panel: string) => {
     let idx = panels.value.findIndex((panel) => panel.name === _panel) 
     if(idx != -1) {
-        currentPanel.value = idx;
+        panelIndex.value = idx;
     } else
         console.log("Can't find: ", _panel);
 }
@@ -140,25 +169,20 @@ const panelClass = ref('slide-left');
 onUpdated(() => init() );
 
 const enableNextButton = ref(true);
-const validEntry = ref(false);
-
-watch(validEntry, () => {
-    console.log("VALID ENTRY CHANGED: ", validEntry.value);
-    enableNextButton.value = validEntry.value;
-});
 
 const onValidEntry = (isValid: boolean) => {
-    validEntry.value = isValid;
+    activePanel().validEntry = isValid;
+    enableNextButton.value = isValid;
 } 
 
 const init = () => {
     trust.value = new Trust(); 
-    currentPanel.value = 0;
+    panelIndex.value = 0;
 
-    if(bc.connectionState.value === ConnectionState.Connected) {
+    if(bc.connectionState.value === ConnectionState.Connected)
         trust.value.grantor = bc.account.value; 
-        console.log("CreateWiz::init() - ", bc.account.value, trust.value.grantor);
-    } else console.error("Blockchain not loaded");
+    else 
+        console.error("Blockchain not loaded");
 }
 
 const onClose = () => { open.value = false; init(); emit('close'); }
@@ -176,30 +200,14 @@ const onCreate = async () => {
 }
 
 const next = () => {
+
     if(!enableNextButton.value) return;
 
     panelClass.value = "slide-left";
 
-    if(isPanelActive("Trust Type")) {
+    nextPanel();
 
-        if(trust.value.trustType === TrustType.GRAT) {
-            //panels.value = panels_GRAT.value;
-            setNextPanel("Payments");
-            console.log(`Switching to GRAT flow : PANEL: ${panels.value}`)
-        }
-        else {
-            //panels.value = panels_normal.value;
-            setNextPanel("Beneficiary");
-            console.log(`Switching to NORMAL flow : PANEL: ${panels.value}`)
-        }
-    } 
-    else
-        nextPanel();
-
-    enableNextButton.value = panels.value[currentPanel.value].nextButtonEnabled();
-
-    console.log("Current Panel: " , currentPanel.value);
-
+    enableNextButton.value = activePanel().validEntry;
 }
 
 const prev = () => {
@@ -207,11 +215,8 @@ const prev = () => {
     panelClass.value = "slide-right";
 
     prevPanel();
-    console.log("Current Panel: " , currentPanel.value);
-    console.log(isPanelActive("Welcome"));
-    console.log(isPanelActive("Trust Type"));
 
-    enableNextButton.value = panels.value[currentPanel.value].nextButtonEnabled();
+    enableNextButton.value = activePanel().validEntry;
 
 }
 

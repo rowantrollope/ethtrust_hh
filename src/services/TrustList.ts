@@ -55,8 +55,8 @@ export default class TrustList extends TrustContract {
                 networkId: networkId,
                 desktopPosition: "topRight",
             });    
-        } else 
-            super.setOnChange(this.changeHandler);
+        }
+        super.setOnChange(this.changeHandler);
 
     }
 
@@ -183,7 +183,9 @@ export default class TrustList extends TrustContract {
         if(USE_BNC_NOTIFY) {
             const { emitter } = this.notify.hash(hash);
             emitter.on('txConfirmed', transaction => { 
-                setTimeout(() => { this.changeHandler(key, type); }, refreshDelay) 
+                console.log("TXCONFIRMED: ", transaction);
+                if(key.length)
+                    setTimeout(() => { this.changeHandler(key, type); }, refreshDelay) 
             });
         }
     }
@@ -200,7 +202,7 @@ export default class TrustList extends TrustContract {
 
         const { hash } = await super.createTrust(newTrust);
 
-        this._notifyChange(hash, "none", ChangeType.TRUST_CREATED, 0);
+        this._notifyChange(hash, "", ChangeType.TRUST_CREATED);
 
     }
 

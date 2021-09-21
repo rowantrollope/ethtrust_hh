@@ -63,7 +63,6 @@ watch(etherAmount, () => {
 });
 
 onUpdated(() => {
-    //console.log("Ether Amount", etherAmount.value);
     if(etherAmount.value > 0)
         trust.value.etherAmount = ethers.utils.parseEther(etherAmount.value.toString())
 });

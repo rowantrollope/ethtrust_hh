@@ -30,12 +30,12 @@
                                 </MenuItem>
                                 <MenuItem>
                                     <router-link class="mobile-router-link" tag="li" to="/Beneficiaries">
-                                        For you (as Beneficiary)
+                                        Beneficiaries - Trusts created for you
                                     </router-link>
                                 </MenuItem>
                                 <MenuItem>
                                     <router-link class="mobile-router-link" tag="li" to="/Trustees">
-                                        For Trustees
+                                        Trustees - Manage Trusts as Trustee
                                     </router-link>
                                 </MenuItem>
                                 <MenuItem>
@@ -58,7 +58,7 @@
             <!-- Brand name --> 
             <div class="flex mr-3">
                 <div class="sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased uppercase">
-                    Safe <span class="font-thin -ml-1">Trust</span>
+                    <span class="nowrap">Safe <span class="font-thin -ml-1">Trust</span></span>
                 </div>
             </div>
             
@@ -68,13 +68,13 @@
                     Home
                 </router-link>
                 <router-link class="router-link" tag="li" to="/Manage">
-                    Manage Trusts
+                    Manage & Create
                 </router-link>
                 <router-link class="router-link" tag="li" to="/Beneficiaries">
-                        Trusts for you
+                    Beneficiaries
                 </router-link>
                 <router-link class="router-link" tag="li" to="/Trustees">
-                        Trustees
+                    Trustees
                 </router-link>
                 <router-link class="router-link" tag="li" to="/About">
                     About

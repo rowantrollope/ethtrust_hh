@@ -92,8 +92,8 @@
                     <p class="flex-grow">
                     </p>
                 </div>
-                <PopoverButton class="flex w-full mt-2 btn btn-danger-outline" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
-                <PopoverButton class="mt-5 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton>
+                <PopoverButton class="flex w-full mt-4 btn btn-danger-outline" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
+                <PopoverButton class="mt-2 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton>
             </div>
             <div v-else-if="bc.connectionState.value === state.Error" class="flex-col vertical space-y-5">
                 <p class="flex text-xl border text-red-500 border-red-500 p-2 rounded-md ">
@@ -118,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, watch, computed, onUpdated } from 'vue';
+import { ref, Ref, inject, watch, computed, onUpdated } from 'vue';
 
 // 3rd party Components
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
@@ -159,12 +159,13 @@ const state = ConnectionState;
 
 const bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
 const list: TrustList = <TrustList> inject('TrustList');
-const autoConnect = ref(inject('autoConnect'));
+const autoConnect = ref(inject('autoConnect') as boolean);
 
 const exchange = <CurrencyExchange> inject('exchange');
 const balance = ref('0');
 
 onUpdated(() => {
+    
     console.log("setting autoconnect to: ", autoConnect.value);
 })
 
