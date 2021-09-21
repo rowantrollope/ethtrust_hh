@@ -107,7 +107,15 @@ const options = [
 ]
 
 const selected = ref(options[0])
-  
+
+watch(selected, () => {
+    if(selected.value.ID === 1)
+        emit('validEntry', false);
+    else if (selected.value.ID === 0 && validEntry.value && trust.value.beneficiary != '')
+        emit('validEntry', true);
+});
+
+
 </script>
 
 <style scoped>

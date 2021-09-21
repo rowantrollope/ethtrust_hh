@@ -49,7 +49,7 @@
             </CreateWizTrustees> 
         </transition>
         <transition :name="panelClass">
-            <CreateWizFund class="window"  v-model="trust" v-show="isPanelActive('Funding')">
+            <CreateWizFund class="window"  v-model="trust" v-show="isPanelActive('Funding')" @validEntry="onValidEntry">
                 How much should they get?
             </CreateWizFund> 
         </transition>
@@ -110,7 +110,7 @@ const panels = ref([
     { name: "Beneficiary", nextButtonEnabled: (): boolean => validEntry.value, },
     { name: "Maturity Date", nextButtonEnabled: (): boolean => true, },
     { name: "Trustees", nextButtonEnabled: (): boolean => true, },
-    { name: "Funding", nextButtonEnabled: (): boolean => true, },
+    { name: "Funding", nextButtonEnabled: (): boolean => validEntry.value, },
     { name: "Confirmation", nextButtonEnabled: (): boolean => true, }, 
 ]);
 
@@ -177,7 +177,7 @@ const onCreate = async () => {
 
 const next = () => {
     if(!enableNextButton.value) return;
-    
+
     panelClass.value = "slide-left";
 
     if(isPanelActive("Trust Type")) {

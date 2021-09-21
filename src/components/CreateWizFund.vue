@@ -32,7 +32,7 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { onUpdated, computed, inject, ref } from 'vue';
+import { onUpdated, computed, inject, watch, ref } from 'vue';
 import { ethers } from 'ethers';
 
 // components
@@ -46,11 +46,20 @@ const etherAmount = ref(0);
 const bc = <BlockchainConnect> inject("BlockchainConnect");
 
 const props = defineProps({ modelValue: { type: Trust, required: true } });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'validEntry']);
 
 const trust = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
+});
+
+watch(etherAmount, () => {
+    if(etherAmount.value > 0) {
+        emit('validEntry', true)
+    }
+    else 
+        emit('validEntry', false);
+
 });
 
 onUpdated(() => {
