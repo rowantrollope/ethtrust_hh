@@ -40,14 +40,14 @@ import { computed, inject } from 'vue'
 import { ethers } from 'ethers';
 
 // services
-import CurrencyExchange from '../services/CurrencyExchange';
+import { useCurrencyExchange } from '../services/CurrencyExchange';
 import Trust from "../services/Trust"
 
 const props = defineProps({
     trusts: { type: Array, required: true },
 });
 
-const exchange = <CurrencyExchange> inject("exchange");
+const exchange = useCurrencyExchange();
 
 const totalValueUSD = computed(() => exchange ? exchange.eth2usdFormatted(Number(totalValue.value)) : "" );
 

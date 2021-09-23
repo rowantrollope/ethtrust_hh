@@ -74,13 +74,14 @@ import router from '../router';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import TrustList from '../services/TrustList';
+import { useTrustList } from '../services/TrustList';
 import Trust from '../services/Trust';
 import TopAlert from '../components/TopAlert.vue';
 
 const state = ConnectionState;
 const bc = useBlockchainConnect();
-const list: TrustList | undefined = inject("TrustList");
+const list = useTrustList();
+
 const showPopup = ref(true);
 const bgClass = ref("bg-blue-500");
 const buttonClass = ref("btn-black");

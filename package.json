@@ -1,13 +1,13 @@
 {
-  "name": "hhnew",
-  "version": "0.0.0",
+  "name": "safetrust",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.4.0",
+    "@headlessui/vue": "^1.4.1",
     "@heroicons/vue": "^1.0.3",
     "@types/chai": "^4.2.21",
     "@types/mocha": "^9.0.0",
@@ -24,15 +24,15 @@
     "mocha": "^9.0.3",
     "ts-node": "^10.1.0",
     "v-calendar": "^3.0.0-alpha.5",
-    "vue": "^3.2.11",
+    "vue": "^3.2.16",
     "vue-router": "^4.0.11"
   },
   "devDependencies": {
     "@metamask/detect-provider": "^1.2.0",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
-    "@vitejs/plugin-vue": "^1.8.0",
-    "@vue/compiler-sfc": "^3.2.14",
+    "@vitejs/plugin-vue": "^1.9.0",
+    "@vue/compiler-sfc": "^3.2.16",
     "autoprefixer": "^10.3.1",
     "ethers": "^5.4.2",
     "postcss": "^8.3.6",

@@ -1,4 +1,4 @@
-import { ref, inject, Ref } from 'vue';
+import { ref, provide, inject, Ref } from 'vue';
 import { ethers, Signer } from 'ethers';
 
 import Onboard from 'bnc-onboard';
@@ -20,18 +20,24 @@ export enum ConnectionState {
     Error,
 };
 
-const API_KEY = "aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
+const API_KEY = import.meta.env.VITE_ONBOARD_API_KEY;
+
 const NETWORK_RINKEBY = 4;
 const NETWORK_MAINNET = 1;
 const DEFAULT_NETWORK = NETWORK_MAINNET; // DEFAULT
 
 export const bcSymbol = Symbol('BlockchainConnect');
 export const useBlockchainConnect = (): BlockchainConnect => <BlockchainConnect> inject(bcSymbol);
-export const createBlockchainConnect = (): BlockchainConnect => new BlockchainConnect();
+export const provideBlockchainConnect = (): BlockchainConnect => {
+    const bc = new BlockchainConnect();
+    provide(bcSymbol, bc);
+    return bc;
+}
 
 export class BlockchainConnect {
 
-    private onboard;    
+
+    private onboard; 
     private _onNetworkChange: changeNetworkCallback|null;
     private _onWalletChange: changeWalletCallback|null;
     private _onAddressChange: changeAddressCallback|null;
@@ -49,9 +55,7 @@ export class BlockchainConnect {
     public connectionError: Ref<string>;
     
     constructor() {
-
-        this.onboard_options.networkId = DEFAULT_NETWORK;
-
+        
         this.onboard = Onboard(this.onboard_options);
 
         this.provider = null;
@@ -121,17 +125,9 @@ export class BlockchainConnect {
             this._onAddressChange(this.account.value); 
         }   
     }
-    
-    /**
-     * Sets the callback to be used when the account changes
-     * @param _onChange changeCallback
-     */
-    setOnNetworkChange = (onNetworkChange: changeNetworkCallback|null) => this._onNetworkChange = onNetworkChange;
-    setOnAddressChange = (onAddressChange: changeAddressCallback|null) => this._onAddressChange = onAddressChange;
-    setOnWalletChange = (onWalletChange: changeWalletCallback|null) => this._onWalletChange = onWalletChange;
-    
+
     private onboard_options = {
-        dappId: API_KEY,       // [String] The API key created by step one above
+        dappId: <string> API_KEY,       // [String] The API key created by step one above
         networkId: DEFAULT_NETWORK,  // [Integer] The Ethereum network ID your Dapp uses.
         subscriptions: {
             balance: this.setBalance,
@@ -141,6 +137,14 @@ export class BlockchainConnect {
         }
     };
 
+    /**
+     * Sets the callback to be used when the account changes
+     * @param _onChange changeCallback
+     */
+    setOnNetworkChange = (onNetworkChange: changeNetworkCallback|null) => this._onNetworkChange = onNetworkChange;
+    setOnAddressChange = (onAddressChange: changeAddressCallback|null) => this._onAddressChange = onAddressChange;
+    setOnWalletChange = (onWalletChange: changeWalletCallback|null) => this._onWalletChange = onWalletChange;
+    
     async connect(walletName: string | null = null, networkId: number | null = null): Promise<void> {
         try {
             this.connectionState.value = ConnectionState.Connecting;

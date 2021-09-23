@@ -1,8 +1,8 @@
-import { ref, inject } from 'vue';
+import { ref, provide, inject } from 'vue';
 
 import { Signer } from 'ethers';
 import { BigNumber} from "@ethersproject/bignumber";
-import Notify from "bnc-notify";
+import Notify, { InitOptions } from "bnc-notify";
 
 import Trust from "./Trust";
 import { TrustContract, ChangeType, FilterCallback } from './TrustContract';
@@ -14,7 +14,8 @@ enum TrustState {
     Deleting,
     Creating,
 };
-const API_KEY = "aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
+
+const API_KEY = import.meta.env.VITE_ONBOARD_API_KEY;
 const NETWORK_RINKEBY = 4;
 const NETWORK_MAINNET = 1;
 const USE_BNC_NOTIFY = true;
@@ -22,6 +23,11 @@ const USE_BNC_NOTIFY = true;
 export const tlSymbol = Symbol('TrustList');
 export const useTrustList = (): TrustList => <TrustList> inject(tlSymbol);
 export const createTrustList = (): TrustList => new TrustList();
+export const provideTrustList = (): TrustList => {
+    const tl = createTrustList();
+    provide(tlSymbol, tl);
+    return tl;
+};
 
 export default class TrustList extends TrustContract {
 
@@ -36,10 +42,11 @@ export default class TrustList extends TrustContract {
     private manualTimer: NodeJS.Timeout | undefined;
     
     // TODO: UPDATE NETWORK
-    private notify = Notify({
-        dappId: API_KEY,
+    private notify_options: InitOptions = {
+        dappId: <string> API_KEY,
         networkId: NETWORK_MAINNET,
-    });
+    }
+    private notify = Notify(this.notify_options);
 
     /**
      * Constructor 

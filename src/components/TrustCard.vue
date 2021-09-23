@@ -76,10 +76,10 @@ import AddressField from './AddressField.vue'
 // services
 import Trust from '../services/Trust';
 import { useTrustList } from '../services/TrustList';
-import CurrencyExchange from '../services/CurrencyExchange';
+import { useCurrencyExchange } from '../services/CurrencyExchange';
 import { utils } from '../services/Utils';
 
-const exchange = <CurrencyExchange> inject('exchange');
+const exchange = useCurrencyExchange();
 
 const props = defineProps({
     trust: { type: Trust, required: true },

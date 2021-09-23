@@ -1,5 +1,5 @@
 // We import Chai to use its assertion functions here.
-import {expect} from "./chai-setup";
+import expect from "./chai-setup";
 
 // we import our utilities
 import { setupUsers, setupUser } from './utils';
