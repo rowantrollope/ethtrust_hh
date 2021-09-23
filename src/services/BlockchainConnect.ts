@@ -132,7 +132,7 @@ export class BlockchainConnect {
     
     private onboard_options = {
         dappId: API_KEY,       // [String] The API key created by step one above
-        networkId: this.networkId,  // [Integer] The Ethereum network ID your Dapp uses.
+        networkId: DEFAULT_NETWORK,  // [Integer] The Ethereum network ID your Dapp uses.
         subscriptions: {
             balance: this.setBalance,
             network: this.setNetwork,
