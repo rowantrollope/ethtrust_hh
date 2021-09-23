@@ -58,8 +58,8 @@ import TrustCard from './TrustCard.vue';
 import ConnectBlock from './ConnectBlock.vue';
 
 // services
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import TrustList from '../services/TrustList';
+import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import { useTrustList } from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 import Trust from "../services/Trust";
 
@@ -69,8 +69,8 @@ const exchange = <CurrencyExchange> inject('exchange');
 /**
  * LOAD BC DATA
  */
-let bc = <BlockchainConnect> inject("BlockchainConnect");
-const list = <TrustList> inject("TrustList");
+const bc = useBlockchainConnect();
+const list = useTrustList();
 const trusts = computed(() => list.trusts.value?.filter(trust => trust.grantor.toUpperCase() === bc.account.value.toUpperCase() ));
 const state = ConnectionState;
 

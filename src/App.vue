@@ -16,7 +16,7 @@ import { provide, ref, watch, inject, onBeforeMount } from 'vue';
 import Nav from './components/Nav.vue';
 
 import { bcSymbol, createBlockchainConnect } from './services/BlockchainConnect';
-import TrustList from './services/TrustList';
+import { tlSymbol, createTrustList } from './services/TrustList';
 import Trust from './services/Trust';
 import { createStore, storeSymbol } from './store';
 
@@ -25,8 +25,8 @@ import CurrencyExchange from './services/CurrencyExchange';
 const bc = createBlockchainConnect();
 provide(bcSymbol, bc);
 
-const list: TrustList = new TrustList();
-provide('TrustList', list);
+const list = createTrustList();
+provide(tlSymbol, list);
 
 const exchange = new CurrencyExchange();
 provide('exchange', exchange)

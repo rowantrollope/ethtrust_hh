@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
 
 // components
 import PageTitle from '../components/PageTitle.vue';
@@ -31,9 +31,9 @@ import CreateWiz from '../components/CreateWiz.vue';
 import ConnectBlock from '../components/ConnectBlock.vue';
 
 // services
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 
-let bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
+const bc = useBlockchainConnect();
 const state = ConnectionState;
 
 //

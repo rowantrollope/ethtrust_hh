@@ -36,10 +36,9 @@
 import { inject } from 'vue';
 
 // services
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 
-let bc: BlockchainConnect = <BlockchainConnect> inject("BlockchainConnect");
-
+const bc = useBlockchainConnect();
 const state = ConnectionState;
 const connectBlockchain = inject("connectBlockchain");
 

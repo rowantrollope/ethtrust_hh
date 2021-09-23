@@ -16,18 +16,17 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { inject } from 'vue';
 
 // services
 import Trust from '../services/Trust';
-import TrustList from '../services/TrustList';
+import { useTrustList } from '../services/TrustList';
 import { utils } from '../services/Utils';
 
 const props = defineProps({
     trust: { type: Trust, required: true },
 });
 
-const list = <TrustList> inject("TrustList");
+const list = useTrustList();
 
 </script>
 

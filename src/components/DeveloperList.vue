@@ -88,8 +88,8 @@ import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
 
 // services
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import TrustList from '../services/TrustList';
+import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import { useTrustList } from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 import Trust, { TypeStrings, TrustType } from "../services/Trust";
 import { utils } from '../services/Utils';
@@ -99,8 +99,8 @@ const bcState = ConnectionState;
 /**
  * LOAD BC DATA
  */
-let bc = <BlockchainConnect> inject("BlockchainConnect");
-const list = <TrustList> inject("TrustList");
+const bc = useBlockchainConnect();
+const list = useTrustList();
 
 /**
  * List select handlers

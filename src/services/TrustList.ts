@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
 import { Signer } from 'ethers';
 import { BigNumber} from "@ethersproject/bignumber";
@@ -19,6 +19,10 @@ const NETWORK_RINKEBY = 4;
 const NETWORK_MAINNET = 1;
 const USE_BNC_NOTIFY = true;
 
+export const tlSymbol = Symbol('TrustList');
+export const useTrustList = (): TrustList => <TrustList> inject(tlSymbol);
+export const createTrustList = (): TrustList => new TrustList();
+
 export default class TrustList extends TrustContract {
 
     // refs
@@ -30,6 +34,8 @@ export default class TrustList extends TrustContract {
     public updateMap = ref(new Map());
     
     private manualTimer: NodeJS.Timeout | undefined;
+    
+    // TODO: UPDATE NETWORK
     private notify = Notify({
         dappId: API_KEY,
         networkId: NETWORK_MAINNET,

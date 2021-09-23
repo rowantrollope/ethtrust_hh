@@ -99,7 +99,7 @@ import Progress from './Progress.vue';
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import Trust, { TrustType } from '../services/Trust';
-import TrustList from '../services/TrustList';
+import { useTrustList } from '../services/TrustList';
 
 const panels_normal = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
 const panels_GRAT = ref(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]);
@@ -160,7 +160,7 @@ const setNextPanel = (_panel: string) => {
 const trust = ref<Trust>(new Trust());
 
 const bc = useBlockchainConnect();
-const list = <TrustList> inject("TrustList");
+const list = useTrustList();
 
 const open = ref(false);
 const emit = defineEmits(['close']);

@@ -75,7 +75,7 @@ import AddressField from './AddressField.vue'
 
 // services
 import Trust from '../services/Trust';
-import TrustList from '../services/TrustList';
+import { useTrustList } from '../services/TrustList';
 import CurrencyExchange from '../services/CurrencyExchange';
 import { utils } from '../services/Utils';
 
@@ -86,7 +86,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['onclick']);
 
-const list = <TrustList> inject("TrustList");
+const list = useTrustList();
+
 const usd = computed(() => exchange.wei2usd(props.trust.etherAmount));
 const etherAmount = computed(() => {
     return utils.toEtherStringRounded(props.trust.etherAmount) + " ETH (" + usd.value + ")";
