@@ -39,11 +39,11 @@ import { ethers } from 'ethers';
 import InputEther from './InputEther.vue';
 
 // services
-import { BlockchainConnect } from '../services/BlockchainConnect';
+import { useBlockchainConnect } from '../services/BlockchainConnect';
 import Trust from '../services/Trust';
 
 const etherAmount = ref(0);
-const bc = <BlockchainConnect> inject("BlockchainConnect");
+const bc = useBlockchainConnect();
 
 const props = defineProps({ modelValue: { type: Trust, required: true } });
 const emit = defineEmits(['update:modelValue', 'validEntry']);

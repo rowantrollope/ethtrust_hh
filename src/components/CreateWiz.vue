@@ -97,7 +97,7 @@ import CreateWizConfirm from './CreateWizConfirm.vue';
 import Progress from './Progress.vue';
 
 // services
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import Trust, { TrustType } from '../services/Trust';
 import TrustList from '../services/TrustList';
 
@@ -159,7 +159,7 @@ const setNextPanel = (_panel: string) => {
 
 const trust = ref<Trust>(new Trust());
 
-const bc = <BlockchainConnect> inject("BlockchainConnect");
+const bc = useBlockchainConnect();
 const list = <TrustList> inject("TrustList");
 
 const open = ref(false);

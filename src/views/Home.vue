@@ -4,17 +4,17 @@
 <template>
 <div>
 
-<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && isGrantor"
+<TopAlert :show="bc.connectionState.value === state.Connected && list && list.trusts.value && isGrantor"
     @click="$router.push('/Manage')">
     We found {{ grantorTrusts }} trust funds created by your account. <a class="btn btn-success" @click="$router.push('/Manage')">Show me!</a>
 </TopAlert>
 
-<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && isBeneficiary"
+<TopAlert :show="bc.connectionState.value === state.Connected && list && list.trusts.value && isBeneficiary"
     @click="$router.push('/Beneficiaries')">
     We found {{ beneficiaryTrusts }} trust funds in your name as Beneficiary. <a @click="$router.push('/Beneficiaries')" class="btn btn-success">Show me!</a>
 </TopAlert>
 
-<TopAlert :show="bc?.connectionState.value === state.Connected && list && list.trusts.value && isTrustee"
+<TopAlert :show="bc.connectionState.value === state.Connected && list && list.trusts.value && isTrustee"
 @click="$router.push('/Trustees')">
     We found {{ trusteeTrusts }} trust funds for you as a TRUSTEE.  <a @click="$router.push('/Trustees')" class="btn btn-success">Show me!</a>
 </TopAlert>
@@ -73,13 +73,13 @@ import { inject, ref, computed, } from 'vue';
 import router from '../router';
 
 // services
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
 import Trust from '../services/Trust';
 import TopAlert from '../components/TopAlert.vue';
 
 const state = ConnectionState;
-const bc: BlockchainConnect | undefined = inject ("BlockchainConnect");
+const bc = useBlockchainConnect();
 const list: TrustList | undefined = inject("TrustList");
 const showPopup = ref(true);
 const bgClass = ref("bg-blue-500");

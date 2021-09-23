@@ -12,17 +12,18 @@
 
 <script setup lang="ts">
 
-import { provide, ref, watch, onBeforeMount } from 'vue';
+import { provide, ref, watch, inject, onBeforeMount } from 'vue';
 import Nav from './components/Nav.vue';
 
-import { BlockchainConnect } from './services/BlockchainConnect';
+import { bcSymbol, createBlockchainConnect } from './services/BlockchainConnect';
 import TrustList from './services/TrustList';
 import Trust from './services/Trust';
+import { createStore, storeSymbol } from './store';
 
 import CurrencyExchange from './services/CurrencyExchange';
 
-const bc: BlockchainConnect = new BlockchainConnect();
-provide('BlockchainConnect', bc);
+const bc = createBlockchainConnect();
+provide(bcSymbol, bc);
 
 const list: TrustList = new TrustList();
 provide('TrustList', list);
@@ -33,35 +34,31 @@ provide('exchange', exchange)
 const contractAddress = ref("");
 provide ('contractAddress', contractAddress);
 
-const developerMode = ref(false);
-provide ('developerMode', developerMode);
-
-let autoConnect = false;
-watch(developerMode, () => {
-    window.localStorage.setItem('developerMode',developerMode.value ? "true" : "false");
-});
+const store = createStore();
+provide(storeSymbol, store);
 
 onBeforeMount(() => {
+
     exchange.init();
 
-    let dm = window.localStorage.getItem('developerMode');
-    developerMode.value = dm ? dm === "true" : false;
-
-    let ac = window.localStorage.getItem('autoConnect');
-    autoConnect = ac ? ac === "true" : false;
-    provide ('autoConnect', autoConnect);
-
-    if(autoConnect)
+    if(store.state.autoConnect)
         connectBlockchain() 
+    
 });
 
 const connectBlockchain = async () => {
     
-    await bc.connect();
+    bc.setOnNetworkChange((networkId) => store.state.lastNetwork = networkId );
+    bc.setOnWalletChange((wallet) => store.state.lastWallet = wallet );
+
+    if(store.state.autoConnect)
+        await bc.connect(store.state.lastWallet, store.state.lastNetwork);
+    else
+        await bc.connect(null, store.state.lastNetwork);
 
     if(bc!.signer) {
         await list.connect(bc!.signer);
-        await list.getTrusts((trust: Trust) => true ); 
+        await list.getTrusts((trust: Trust) => true); 
         contractAddress.value = list.address.value;
     }
 

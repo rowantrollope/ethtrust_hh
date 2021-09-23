@@ -75,10 +75,10 @@
                             <span class=""> &nbsp;{{ balance }} ETH </span>
                         </div>
                             <SwitchGroup as="div" class=" cursor-pointer mt-3 text-gray-500 items-center flex ml-2">
-                                <Switch v-model="autoConnect" class="ml-5 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <Switch v-model="store.state.autoConnect" class="ml-5 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <span aria-hidden="true" class="pointer-events-none absolute bg-white w-full h-full rounded-md" />
-                                <span aria-hidden="true" :class="[autoConnect ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
-                                <span aria-hidden="true" :class="[autoConnect ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />
+                                <span aria-hidden="true" :class="[store.state.autoConnect ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
+                                <span aria-hidden="true" :class="[store.state.autoConnect ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />
                             </Switch>  
                             <SwitchLabel as="span" class="ml-2 text-xs">
                                 Remember this wallet
@@ -98,13 +98,13 @@
                     <p class="flex-grow">
                     </p>
                 </div>
-                <PopoverButton class="flex w-full mt-4 btn btn-danger-outline" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
-                <PopoverButton class="mt-2 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton>
+                <PopoverButton class="flex w-full mt-4 btn btn-danger" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
+                <!-- <PopoverButton class="mt-2 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton> -->
                 <div class="mt-5 text-gray-500 justify-center border-t pt-5 items-center flex ml-2">
-                    <Switch v-model="developerMode" class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <Switch v-model="store.state.developerMode" class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <span aria-hidden="true" class="pointer-events-none absolute bg-white w-full h-full rounded-md" />
-                        <span aria-hidden="true" :class="[developerMode ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
-                        <span aria-hidden="true" :class="[developerMode ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />
+                        <span aria-hidden="true" :class="[store.state.developerMode ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
+                        <span aria-hidden="true" :class="[store.state.developerMode ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />
                     </Switch>                   
                     <span class="ml-2 text-sm">Enable Developer Mode</span>
                 </div>
@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, inject, watch, computed, onUpdated } from 'vue';
+import { ref, inject, computed } from 'vue';
 
 // 3rd party Components
 import { Popover, PopoverButton, PopoverPanel, Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue';
@@ -143,8 +143,9 @@ import AddressField from './AddressField.vue';
 
 // services
 import CurrencyExchange from '../services/CurrencyExchange';
-import { BlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
+import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import TrustList from '../services/TrustList';
+import { useStore } from '../store';
 
 let networkStrings = new Map([
     [1, { short: "Mainnet", long: "Ethereum Mainnet" }],
@@ -171,35 +172,27 @@ const networkNameShort = computed(() => {
 
 const state = ConnectionState;
 
-const bc: BlockchainConnect = <BlockchainConnect> inject('BlockchainConnect');
+const bc = useBlockchainConnect();
 const list: TrustList = <TrustList> inject('TrustList');
-const autoConnect = ref(inject('autoConnect') as boolean);
+const store = useStore();
 
 const exchange = <CurrencyExchange> inject('exchange');
 const balance = ref('0');
-const developerMode = inject('developerMode');
 
-onUpdated(() => {
-    console.log("setting autoconnect to: ", autoConnect.value);
-})
-
-watch(autoConnect, () => {
-    console.log("autoConnect changed", autoConnect.value);
-    window.localStorage.setItem('autoConnect', autoConnect.value ? "true" : "false");
-})
 const onClicked = () => {
     bc.getBalanceString(4).then(val => 
         balance.value = val 
     );
 }
+
 const onDisconnect = () => {
-    window.localStorage.setItem('autoConnect', "false");
-    window.localStorage.setItem('selectedWallet', "");
+    store!.state.autoConnect = false;
+    store!.state.lastWallet = "";
+
     window.localStorage.setItem('lastNetworkId', "");
 
     window.location.reload();
 }
-const onConnectNewWallet = () => bc.connectNewWallet();
 const connectBlockchain = inject('connectBlockchain');
 
 const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(Number(balance.value)) : "" );

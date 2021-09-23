@@ -1,5 +1,4 @@
-
-import { ref, Ref } from 'vue';
+import { ref, inject, Ref } from 'vue';
 import { ethers, Signer } from 'ethers';
 
 import Onboard from 'bnc-onboard';
@@ -10,6 +9,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { utils } from './Utils';
 
 interface changeNetworkCallback { (chainId: number): void }
+interface changeWalletCallback { (wallet: string): void }
 interface changeAddressCallback { (address: string): void }
 
 export enum ConnectionState {
@@ -23,12 +23,17 @@ export enum ConnectionState {
 const API_KEY = "aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
 const NETWORK_RINKEBY = 4;
 const NETWORK_MAINNET = 1;
+const DEFAULT_NETWORK = NETWORK_MAINNET; // DEFAULT
+
+export const bcSymbol = Symbol('BlockchainConnect');
+export const useBlockchainConnect = (): BlockchainConnect => <BlockchainConnect> inject(bcSymbol);
+export const createBlockchainConnect = (): BlockchainConnect => new BlockchainConnect();
 
 export class BlockchainConnect {
 
     private onboard;    
-    private lastWallet: string|null;
     private _onNetworkChange: changeNetworkCallback|null;
+    private _onWalletChange: changeWalletCallback|null;
     private _onAddressChange: changeAddressCallback|null;
 
     public balance: string;
@@ -44,16 +49,15 @@ export class BlockchainConnect {
     public connectionError: Ref<string>;
     
     constructor() {
-        const lastNetwork = window.localStorage.getItem('lastNetworkId');
-        const networkId = lastNetwork ? Number(lastNetwork) : NETWORK_MAINNET; // DEFAULT
 
-        this.onboard_options.networkId = networkId;
+        this.onboard_options.networkId = DEFAULT_NETWORK;
 
         this.onboard = Onboard(this.onboard_options);
 
         this.provider = null;
         this.signer = null;
         this._onNetworkChange = null;
+        this._onWalletChange = null;
         this._onAddressChange = null;
         this.chainId = 0;
         
@@ -63,7 +67,6 @@ export class BlockchainConnect {
         this.walletName = ref("");
         this.walletIcon = ref("");
         this.balance = "";
-        this.lastWallet = window.localStorage.getItem('selectedWallet');
     }
 
     private setWallet = async (wallet: any) => {
@@ -72,9 +75,11 @@ export class BlockchainConnect {
             this.provider = new ethers.providers.Web3Provider(wallet.provider);
             this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
             this.walletIcon.value = wallet.icons.iconSrc;
+
             if (wallet.name) {
-                this.walletName.value = wallet.name ? wallet.name : "";
-                window.localStorage.setItem('selectedWallet', wallet.name);
+                this.walletName.value = wallet.name;
+                if(this._onWalletChange)
+                    this._onWalletChange(wallet.name);
             }
         }
         else {
@@ -94,9 +99,6 @@ export class BlockchainConnect {
      */
      setNetwork = (chainId: number) => {
         this.chainId = chainId;
-        //window.location.reload();
-        console.log(`BlockchainConnect::networkChanged ${chainId}`);
-        window.localStorage.setItem('lastNetworkId', chainId.toString());
         
         if(this._onNetworkChange != null)
             this._onNetworkChange(this.chainId);
@@ -124,16 +126,13 @@ export class BlockchainConnect {
      * Sets the callback to be used when the account changes
      * @param _onChange changeCallback
      */
-    setOnNetworkChange(onNetworkChange: changeNetworkCallback|null) {
-        this._onNetworkChange = onNetworkChange;
-    } 
-    setOnAddressChange(onAddressChange: changeAddressCallback|null) {
-        this._onAddressChange = onAddressChange;
-    }    
+    setOnNetworkChange = (onNetworkChange: changeNetworkCallback|null) => this._onNetworkChange = onNetworkChange;
+    setOnAddressChange = (onAddressChange: changeAddressCallback|null) => this._onAddressChange = onAddressChange;
+    setOnWalletChange = (onWalletChange: changeWalletCallback|null) => this._onWalletChange = onWalletChange;
     
     private onboard_options = {
         dappId: API_KEY,       // [String] The API key created by step one above
-        networkId: NETWORK_RINKEBY,  // [Integer] The Ethereum network ID your Dapp uses.
+        networkId: this.networkId,  // [Integer] The Ethereum network ID your Dapp uses.
         subscriptions: {
             balance: this.setBalance,
             network: this.setNetwork,
@@ -141,20 +140,17 @@ export class BlockchainConnect {
             wallet: this.setWallet,
         }
     };
-    async connectNewWallet(): Promise<void> {
-        console.log("HI");
-        await this.onboard.walletSelect();
-    }
-    async walletReset(): Promise<void> {
-        await this.onboard.walletReset();
-    }
 
-    async connect(): Promise<void> {
+    async connect(walletName: string | null = null, networkId: number | null = null): Promise<void> {
         try {
             this.connectionState.value = ConnectionState.Connecting;
+           
+            this.onboard_options.networkId = networkId ? networkId : DEFAULT_NETWORK;
 
-            if(this.lastWallet)
-                await this.onboard.walletSelect(this.lastWallet);
+            this.onboard = Onboard(this.onboard_options);
+
+            if(walletName)
+                await this.onboard.walletSelect(walletName);
             else
                 await this.onboard.walletSelect();
 

@@ -43,7 +43,7 @@
                                         About
                                     </router-link>
                                 </MenuItem>
-                                <MenuItem v-if="developerMode" >
+                                <MenuItem v-if="store.state.developerMode" >
                                     <router-link class="mobile-router-link" tag="li" to="/Developer">
                                         Developer
                                     </router-link>
@@ -79,7 +79,7 @@
                 <router-link class="router-link" tag="li" to="/About">
                     About
                 </router-link>
-                <router-link v-if="developerMode" class="router-link" tag="li" to="/Developer">
+                <router-link v-if="store.state.developerMode" class="router-link" tag="li" to="/Developer">
                     Developer
                 </router-link>
             </div>
@@ -104,7 +104,10 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import Hamburger from './Hamburger.vue'
 import ConnectButton from './ConnectButton.vue'
 
-const developerMode = inject('developerMode');
+// services
+import { useStore } from '../store';
+
+const store = useStore();
 
 </script>
 
