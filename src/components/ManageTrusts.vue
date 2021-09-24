@@ -60,11 +60,11 @@ import ConnectBlock from './ConnectBlock.vue';
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import { useTrustList } from '../services/TrustList';
-import CurrencyExchange from '../services/CurrencyExchange';
+import { useCurrencyExchange } from '../services/CurrencyExchange';
 import Trust from "../services/Trust";
 
 // BLOCKCHAIN connection and prep
-const exchange = <CurrencyExchange> inject('exchange');
+const exchange = useCurrencyExchange();
 
 /**
  * LOAD BC DATA

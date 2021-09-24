@@ -231,8 +231,8 @@ import InputTrustType from './InputTrustType.vue';
 import AddressField from './AddressField.vue';
 
 // services
-import { BlockchainConnect } from '../services/BlockchainConnect';
-import CurrencyExchange from '../services/CurrencyExchange';
+import { useBlockchainConnect } from '../services/BlockchainConnect';
+import { useCurrencyExchange } from '../services/CurrencyExchange';
 import Trust, { TrustType } from '../services/Trust'
 import { utils } from '../services/Utils';
 
@@ -254,8 +254,8 @@ const tabs = ref([
     { name: "Trust Type", title: "Select Trust Type" }]
 );
 
-const exchange: CurrencyExchange | undefined = inject('exchange');
-let bc: BlockchainConnect | undefined = inject('BlockchainConnect');
+const exchange = useCurrencyExchange();
+const bc = useBlockchainConnect();
 
 const validEntry = ref(true);
 

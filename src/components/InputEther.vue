@@ -26,12 +26,12 @@
 import { computed, inject } from 'vue';
 
 // services
-import CurrencyExchange from '../services/CurrencyExchange';
+import { useCurrencyExchange } from '../services/CurrencyExchange';
 
 const props = defineProps({ modelValue: { type: Number, required: true } });
 const emit = defineEmits(['update:modelValue']);
 
-const exchange: CurrencyExchange | undefined = inject('exchange');
+const exchange = useCurrencyExchange();
 
 const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(props.modelValue) : "" );
 

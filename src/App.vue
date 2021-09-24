@@ -15,27 +15,16 @@
 import { provide, ref, watch, inject, onBeforeMount } from 'vue';
 import Nav from './components/Nav.vue';
 
-import { bcSymbol, createBlockchainConnect } from './services/BlockchainConnect';
-import { tlSymbol, createTrustList } from './services/TrustList';
+import { provideBlockchainConnect } from './services/BlockchainConnect';
+import { provideTrustList } from './services/TrustList';
+import { provideCurrencyExchange } from './services/CurrencyExchange';
+import { provideStore } from './store';
 import Trust from './services/Trust';
-import { createStore, storeSymbol } from './store';
 
-import CurrencyExchange from './services/CurrencyExchange';
-
-const bc = createBlockchainConnect();
-provide(bcSymbol, bc);
-
-const list = createTrustList();
-provide(tlSymbol, list);
-
-const exchange = new CurrencyExchange();
-provide('exchange', exchange)
-
-const contractAddress = ref("");
-provide ('contractAddress', contractAddress);
-
-const store = createStore();
-provide(storeSymbol, store);
+const bc = provideBlockchainConnect();
+const list = provideTrustList();
+const exchange = provideCurrencyExchange();
+const store = provideStore();
 
 onBeforeMount(() => {
 
@@ -59,7 +48,6 @@ const connectBlockchain = async () => {
     if(bc!.signer) {
         await list.connect(bc!.signer);
         await list.getTrusts((trust: Trust) => true); 
-        contractAddress.value = list.address.value;
     }
 
 }

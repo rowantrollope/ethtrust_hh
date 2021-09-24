@@ -1,8 +1,12 @@
-import { reactive, watch, inject } from 'vue';
+import { reactive, provide, watch, inject } from 'vue';
 
 export const storeSymbol = Symbol('Store');
 export const useStore = (): Store => <Store> inject(storeSymbol);
-export const createStore = (): Store => new Store();
+export const provideStore = (): Store => {
+    const store = new Store();
+    provide(storeSymbol, store);
+    return store;
+}
 
 export class Store {
     
@@ -18,13 +22,13 @@ export class Store {
         watch(this.state, () => this.save());
     }
 
-    public save = () => localStorage.setItem("state0.0.2", JSON.stringify(this.state));
+    public save = () => localStorage.setItem("state0.0.3", JSON.stringify(this.state));
 
     public load = () => {
-        const saved = localStorage.getItem("state0.0.2");
+        const saved = localStorage.getItem("state0.0.3");
         if(saved) 
             this.state = reactive(JSON.parse(saved));
-        console.log("Store::load()", this.state);
+        //console.log("Store::load()", this.state);
     }
 
 }

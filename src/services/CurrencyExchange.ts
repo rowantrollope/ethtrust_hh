@@ -5,6 +5,7 @@
     Component used to translate currencies, uses cryptocompare
 
 */
+import { inject, provide } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumberish } from '@ethersproject/bignumber';
 
@@ -13,7 +14,17 @@ interface Exchange {
     BTC: number,
     EUR: number,
 }
-export default class currencyExchange {
+
+export const ceSymbol = Symbol('CurrencyExchange');
+export const useCurrencyExchange = (): CurrencyExchange => <CurrencyExchange> inject(ceSymbol);
+export const createCurrencyExchange = (): CurrencyExchange => new CurrencyExchange();
+export const provideCurrencyExchange = (): CurrencyExchange => {
+    const ce = createCurrencyExchange();
+    provide(ceSymbol, ce);
+    return ce;
+};
+
+export default class CurrencyExchange {
 
     public exchange: Exchange | undefined;
     public formatter: Intl.NumberFormat;
