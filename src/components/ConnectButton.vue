@@ -154,7 +154,7 @@ let networkStrings = new Map([
     [42, {short: "Kovan", long: "Kovan Test Network"}],
     [1337, { short: "Hardhat", long: "Hardhat Localhost"}],
 ]);
-const networkName = $computed(() => {
+let networkName = $computed(() => {
     if(networkStrings.has(bc.chainId)) {
         const item = networkStrings.get(bc.chainId);
         return item ? item.long : "";
@@ -162,7 +162,7 @@ const networkName = $computed(() => {
     else
         return "Unknown Network";
 });
-const networkNameShort = $computed(() => {
+let networkNameShort = $computed(() => {
     if(networkStrings.has(bc.chainId)) {
         const item = networkStrings.get(bc.chainId);
         return item ? item.short : "";
@@ -195,7 +195,7 @@ const onDisconnect = () => {
 }
 const connectBlockchain = inject('connectBlockchain');
 
-const eth2usd = $computed(() => exchange ? exchange.eth2usdFormatted(Number(balance)) : "" );
+let eth2usd = $computed(() => exchange ? exchange.eth2usdFormatted(Number(balance)) : "" );
 
 </script>
 
