@@ -20,7 +20,7 @@
 <script setup="props, {emit}" lang="ts">
 // components
 import Trust from '../services/Trust';
-import { utils } from '../services/Utils';
+import * as utils from '../services/Utils';
 
 const props = defineProps({
     trust: { type: Trust, required: true },

@@ -40,7 +40,6 @@
 <script setup="props, {emit}" lang="ts">
 // 3rd party Components
 import { XIcon, CheckCircleIcon } from '@heroicons/vue/outline';
-import { TransitionRoot, TransitionChild } from '@headlessui/vue';
 
 const props = defineProps({
     open: Boolean,

@@ -5,6 +5,7 @@
     </span>
   </button>
 </template>
+
 <script setup="props" lang="ts">
 
 const props = defineProps({ open: Boolean });

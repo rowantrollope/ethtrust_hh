@@ -29,8 +29,6 @@ export default class CurrencyExchange {
     public exchange: Exchange | undefined;
     public formatter: Intl.NumberFormat;
 
-    //name = ref("CurrencyExchange");
-
     constructor() {
     
         this.formatter = new Intl.NumberFormat(undefined, {

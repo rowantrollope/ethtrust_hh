@@ -72,7 +72,8 @@
                         </div>
                         <div class="flex mt-2 ml-8">
                             <span class="text-gray-500">Balance:</span> 
-                            <span class=""> &nbsp;{{ balance }} ETH </span>
+                            <span class="ml-1">{{ balance }} ETH </span>
+                            <span class="text-gray-500 ml-2">({{eth2usd}} USD)</span>
                         </div>
                             <SwitchGroup as="div" class=" cursor-pointer mt-3 text-gray-500 items-center flex ml-2">
                                 <Switch v-model="store.state.autoConnect" class="ml-5 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -195,7 +196,7 @@ const onDisconnect = () => {
 }
 const connectBlockchain = inject('connectBlockchain');
 
-const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(Number(balance)) : "" );
+const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(Number(balance.value)) : "" );
 
 </script>
 

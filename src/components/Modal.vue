@@ -35,10 +35,10 @@
 
                     <div class="h-full flex flex-col">
                     <!-- Dialog Title -->
-                    <div class="text-xl mb-2 sm:mb-0 sm:text-2xl leading-6 text-gray-900">
+                    <div class="text-xl mb-2 sm:mb-0 leading-6 text-gray-900">
                             <slot name="title"></slot>
                         </div>
-                        <div class="sm:block absolute top-0 right-0 pt-4 pr-4">
+                        <div v-if="showClose" class="sm:block absolute top-0 right-0 pt-4 pr-4">
                             <button type="button" @click="emit('cancel')" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <span class="sr-only">Close</span>
                                 <XIcon class="h-6 w-6" aria-hidden="true" />
@@ -67,6 +67,7 @@ import { XIcon } from '@heroicons/vue/solid';
 
 const props = defineProps({
     open: Boolean,
+    showClose: {type: Boolean, default: true },
 });
 
 const emit = defineEmits(['cancel']);

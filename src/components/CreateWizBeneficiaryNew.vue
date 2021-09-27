@@ -44,10 +44,10 @@
             </RadioGroup>
 
             <div v-if="selected.ID === 0" class="mt-10 ml-5">
-                <dt class="input-label">
+                <dt class="font-medium text-gray-900 mt-2;">
                     Beneficiary
                 </dt>
-                <dd class="input-col">
+                <dd class="text-gray-400 sm:mt-0 sm:col-span-4">
                     <InputBeneficiary v-model="trust"
                         @valid="onValidateEntry(true)" 
                         @invalid="onValidateEntry(false)"></InputBeneficiary>
@@ -61,10 +61,10 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { computed, ref, watch, onUpdated } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 // 3rd party Components
-import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
+import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 
 // components
 import InputBeneficiary from './InputBeneficiary.vue';
@@ -119,19 +119,4 @@ watch(selected, () => {
 </script>
 
 <style scoped>
-.input-field {
-    @apply md:flex-1 text-base block border border-gray-300 rounded-md w-full min-w-0 focus:ring-indigo-500 text-black;
-}
-.input-label {
-    @apply font-medium text-gray-900 mt-2;
-}
-.input-description {
-    @apply ml-10 mb-5 text-sm text-gray-400 border-none;
-}
-.input-col {
-    @apply text-gray-400 sm:mt-0 sm:col-span-4;
-}
-.row {
-    @apply sm:py-4 sm:grid sm:grid-cols-5 sm:pl-6;
-}
 </style>

@@ -2,19 +2,18 @@
     Create New Trust Wizard
 --> 
 <template>
-<Modal :open="open" @cancel="onClose">
+<Modal :open="open" :showClose="false" @cancel="onClose">
     <template v-slot:title>
         <!-- HEADER --> 
         <div class="flex items-center space-x-2 sm:space-x-5 ">
             <img class="" alt="cert" width="60" src="../assets/money.png">
-            <h3 class="flex-1 text-base sm:text-3xl font-light sm:leading-6 text-gray-900">
+            <h3 class="flex-grow text-lg sm:text-xl font-light sm:leading-6 text-gray-900">
                 Create new trust
-            </h3>
+            </h3>            
+            <div v-if="panelIndex" class="text-base text-gray-500">Step <span class="font-bold">{{ panelIndex }}</span> of {{ panels.length-1 }}</div>
+            <div class="w-2"></div>
         </div>
     </template>
-    <!-- PROGRESS INDICATOR  
-    <Progress class="hidden sm:block" :panels="panels" :panelIndex="panelIndex"></Progress>
-    -->
 
     <!-- DIALOGS --> 
     <div class="slider">
@@ -30,7 +29,7 @@
         </transition>
         <transition :name="panelClass">
             <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="isPanelActive('Beneficiary')" @validEntry="onValidEntry">
-                Who is this for?
+                Who is this trust for? <span class="text-gray-400">(aka The Beneficiary)</span>
             </CreateWizBeneficiaryNew> 
         </transition>
         <transition :name="panelClass">
@@ -40,12 +39,12 @@
         </transition>
         <transition :name="panelClass">
             <CreateWizMaturity class="window" v-model="trust" v-show="isPanelActive('Maturity Date')">
-                When should they get it?
+                When should they get it? <span class="text-gray-400">(aka The Maturity Date)</span>
             </CreateWizMaturity> 
         </transition>
         <transition :name="panelClass">
             <CreateWizTrustees class="window" v-model="trust" v-show="isPanelActive('Trustees')">
-                Add Trustees
+                Who can manage this trust? <span class="text-gray-400">(aka The Trustees)</span>
             </CreateWizTrustees> 
         </transition>
         <transition :name="panelClass">
@@ -55,7 +54,7 @@
         </transition>
         <transition :name="panelClass">
             <CreateWizConfirm class="window"  v-model="trust" v-show="isPanelActive('Confirmation')">
-                Confirm the details
+                Confirm details
             </CreateWizConfirm> 
         </transition>
     </div>
@@ -82,7 +81,7 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { ref, computed, inject, watch, onUpdated } from 'vue';
+import { ref, onUpdated } from 'vue';
 
 // components
 import Modal from './Modal.vue';
@@ -94,15 +93,11 @@ import CreateWizMaturity from './CreateWizMaturity.vue';
 import CreateWizTrustees from './CreateWizTrustees.vue';
 import CreateWizFund from './CreateWizFund.vue';
 import CreateWizConfirm from './CreateWizConfirm.vue';
-import Progress from './Progress.vue';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import Trust, { TrustType } from '../services/Trust';
+import Trust from '../services/Trust';
 import { useTrustList } from '../services/TrustList';
-
-const panels_normal = ref(["Welcome", "Trust Type", "Beneficiary", "Maturity Date", "Trustees", "Funding", "Confirmation"]);
-const panels_GRAT = ref(["Welcome", "Trust Type", "Payments", "Beneficiary", "Trustees", "Confirmation"]);
 
 const panels = ref([
     { 

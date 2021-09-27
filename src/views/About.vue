@@ -2,6 +2,9 @@
     About the Trusted app, FAQ, etc
 -->
 <template>
+    <PageTitle>
+        <template v-slot:title>Frequently Asked Questions</template>
+    </PageTitle>
     <div class="relative bg-white mt-5 sm:mt-10 ml-5 mr-2 sm:ml-10 overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
@@ -81,7 +84,10 @@
         </div>
     </div>
 </template>
+<script setup lang="ts">
+import PageTitle from '../components/PageTitle.vue';
 
+</script>
 <style scoped>
 .question {
     @apply font-bold text-2xl;

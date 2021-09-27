@@ -32,18 +32,16 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { onUpdated, computed, inject, watch, ref } from 'vue';
+import { onUpdated, computed, watch, ref } from 'vue';
 import { ethers } from 'ethers';
 
 // components
 import InputEther from './InputEther.vue';
 
 // services
-import { useBlockchainConnect } from '../services/BlockchainConnect';
 import Trust from '../services/Trust';
 
 const etherAmount = ref(0);
-const bc = useBlockchainConnect();
 
 const props = defineProps({ modelValue: { type: Trust, required: true } });
 const emit = defineEmits(['update:modelValue', 'validEntry']);

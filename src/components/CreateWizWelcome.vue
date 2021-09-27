@@ -19,13 +19,6 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { computed } from 'vue';
-
-// services
-import Trust from '../services/Trust';
-
-const props = defineProps({ modelValue: { type: Trust, required: true } });
-const emit = defineEmits(['update:modelValue']);
 
 </script>
 

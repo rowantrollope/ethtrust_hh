@@ -77,7 +77,7 @@ import AddressField from './AddressField.vue'
 import Trust from '../services/Trust';
 import { useTrustList } from '../services/TrustList';
 import { useCurrencyExchange } from '../services/CurrencyExchange';
-import { utils } from '../services/Utils';
+import * as utils from '../services/Utils';
 
 const exchange = useCurrencyExchange();
 

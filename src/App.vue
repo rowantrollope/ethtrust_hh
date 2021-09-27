@@ -1,19 +1,20 @@
 <template>
-<div class="bg-white">
-
-    <Nav/>
-    <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-            <component :is="Component" />
-        </transition>
-    </router-view>
-</div>
+    <div class="bg-white">
+        <Nav/>
+        <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+                <component :is="Component" />
+            </transition>
+        </router-view>
+        <Footer/>
+    </div>
 </template>
 
 <script setup lang="ts">
 
-import { provide, ref, watch, inject, onBeforeMount } from 'vue';
+import { provide, onBeforeMount } from 'vue';
 import Nav from './components/Nav.vue';
+import Footer from './components/Footer.vue';
 
 import { provideBlockchainConnect } from './services/BlockchainConnect';
 import { provideTrustList } from './services/TrustList';

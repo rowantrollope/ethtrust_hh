@@ -95,7 +95,6 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
 
 // 3rd party Components
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'

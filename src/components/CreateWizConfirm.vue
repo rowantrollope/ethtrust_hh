@@ -1,6 +1,3 @@
-<!--
-    Create Wizard Confirmation
---> 
 <template>
 <div class="absolute overflow-y-auto">
     <div class="mt-4 sm:px-4 flex items-center space-x-5 ">
@@ -49,7 +46,7 @@ import AddressField from './AddressField.vue';
 
 // services
 import Trust from '../services/Trust';
-import { utils } from '../services/Utils';
+import * as utils from '../services/Utils';
 
 const props = defineProps({
     modelValue: { type: Trust, required: true },

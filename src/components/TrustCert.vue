@@ -20,7 +20,7 @@
 // services
 import Trust from '../services/Trust';
 import { useTrustList } from '../services/TrustList';
-import { utils } from '../services/Utils';
+import * as utils from '../services/Utils';
 
 const props = defineProps({
     trust: { type: Trust, required: true },

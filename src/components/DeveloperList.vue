@@ -78,7 +78,7 @@
 </template>
 
 <script setup="props" lang="ts">
-import { ref, inject } from 'vue';
+import { ref } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -90,9 +90,8 @@ import InputTrustType from './InputTrustType.vue'
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import { useTrustList } from '../services/TrustList';
-import { useCurrencyExchange } from '../services/CurrencyExchange';
 import Trust, { TypeStrings, TrustType } from "../services/Trust";
-import { utils } from '../services/Utils';
+import * as utils from '../services/Utils';
 
 // BLOCKCHAIN connection and prep
 const bcState = ConnectionState;

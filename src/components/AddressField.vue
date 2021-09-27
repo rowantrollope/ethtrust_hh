@@ -33,9 +33,8 @@
 import { ref } from 'vue';
 
 // services
-import { utils } from '../services/Utils';
+import * as utils from '../services/Utils';
 
-const displayPopup = ref(false);
 const hover = ref(false);
 
 const props = defineProps({

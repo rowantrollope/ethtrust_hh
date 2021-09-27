@@ -39,13 +39,13 @@
 
     </div>
     
-    <div class="mt-5 sm:hidden">
+    <div class="mt-5 md:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
-        <select id="tabs" name="tabs" v-model="activeTab" class="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
+        <select id="tabs" name="tabs" v-model="activeTab" class="block text-lg w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
             <option v-for="(tab, index) in tabs" :value="index" :key="index">{{ tab.name }}</option>
         </select>
     </div>
-    <div class="mt-5 hidden sm:block">
+    <div class="mt-5 hidden md:block">
         <nav class="flex space-x-2" aria-label="Tabs">
             <a v-for="(tab, index) in tabs" 
                 :key="index" 
@@ -216,7 +216,7 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { ref, inject, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { BigNumber } from "@ethersproject/bignumber";
 
 // 3rd party Components
@@ -232,9 +232,8 @@ import AddressField from './AddressField.vue';
 
 // services
 import { useBlockchainConnect } from '../services/BlockchainConnect';
-import { useCurrencyExchange } from '../services/CurrencyExchange';
 import Trust, { TrustType } from '../services/Trust'
-import { utils } from '../services/Utils';
+import * as utils from '../services/Utils';
 
 const props = defineProps({
     modelValue: { type: Trust, required: true },
@@ -254,7 +253,6 @@ const tabs = ref([
     { name: "Trust Type", title: "Select Trust Type" }]
 );
 
-const exchange = useCurrencyExchange();
 const bc = useBlockchainConnect();
 
 const validEntry = ref(true);
@@ -290,7 +288,7 @@ const onDeposit = () => emit('deposit', ethDeposit.value);
 <style scoped>
 
 .tab {
-    @apply px-3 py-2 sm:font-medium text-lg ;
+    @apply px-3 py-2 sm:font-medium text-base whitespace-nowrap;
 }
 
 .selected-tab {

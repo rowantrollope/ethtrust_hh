@@ -61,7 +61,7 @@
 </template>
 
 <script setup="props" lang="ts">
-import { ref, inject, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { ethers } from 'ethers';
 
 // components

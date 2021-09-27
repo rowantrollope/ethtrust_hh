@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ref, provide, inject, Ref } from 'vue';
 import { ethers, Signer } from 'ethers';
 
 import Onboard from 'bnc-onboard';
+import { Wallet } from 'bnc-onboard/dist/src/interfaces';
 
-import type {Provider} from '@ethersproject/abstract-provider';
+import type { Provider } from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { utils } from './Utils';
+import * as utils from './Utils';
 
 interface changeNetworkCallback { (chainId: number): void }
 interface changeWalletCallback { (wallet: string): void }
@@ -18,11 +20,11 @@ export enum ConnectionState {
     Connecting,
     Connected,
     Error,
-};
+}
 
 const API_KEY = import.meta.env.VITE_ONBOARD_API_KEY;
-
-const NETWORK_RINKEBY = 4;
+//const API_KEY ="aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
+// const NETWORK_RINKEBY = 4;
 const NETWORK_MAINNET = 1;
 const DEFAULT_NETWORK = NETWORK_MAINNET; // DEFAULT
 
@@ -35,7 +37,6 @@ export const provideBlockchainConnect = (): BlockchainConnect => {
 }
 
 export class BlockchainConnect {
-
 
     private onboard; 
     private _onNetworkChange: changeNetworkCallback|null;
@@ -57,7 +58,7 @@ export class BlockchainConnect {
     constructor() {
         
         this.onboard = Onboard(this.onboard_options);
-
+        console.log(this.onboard_options);
         this.provider = null;
         this.signer = null;
         this._onNetworkChange = null;
@@ -73,12 +74,13 @@ export class BlockchainConnect {
         this.balance = "";
     }
 
-    private setWallet = async (wallet: any) => {
+    private setWallet = async (wallet: Wallet) => {
     
         if (wallet.provider) {
             this.provider = new ethers.providers.Web3Provider(wallet.provider);
             this.signer = (this.provider as ethers.providers.Web3Provider).getSigner();
-            this.walletIcon.value = wallet.icons.iconSrc;
+            if(wallet.icons.iconSrc)
+                this.walletIcon.value = wallet.icons.iconSrc;
 
             if (wallet.name) {
                 this.walletName.value = wallet.name;
@@ -101,7 +103,7 @@ export class BlockchainConnect {
      * 
      * @param accounts list of accounts - currently MetaMask only sets account[0]
      */
-     setNetwork = (chainId: number) => {
+     setNetwork = (chainId: number): void => {
         this.chainId = chainId;
         
         if(this._onNetworkChange != null)
@@ -114,7 +116,7 @@ export class BlockchainConnect {
      * 
      * @param accounts list of accounts - currently MetaMask only sets account[0]
      */
-    setAddress = (account: string) => {
+    setAddress = (account: string): void => {
         this.account.value = account;
 
         console.log("BlockchainConnect::accountsChanged()", this.account.value);
@@ -141,9 +143,9 @@ export class BlockchainConnect {
      * Sets the callback to be used when the account changes
      * @param _onChange changeCallback
      */
-    setOnNetworkChange = (onNetworkChange: changeNetworkCallback|null) => this._onNetworkChange = onNetworkChange;
-    setOnAddressChange = (onAddressChange: changeAddressCallback|null) => this._onAddressChange = onAddressChange;
-    setOnWalletChange = (onWalletChange: changeWalletCallback|null) => this._onWalletChange = onWalletChange;
+    setOnNetworkChange = (onNetworkChange: changeNetworkCallback|null): void => { this._onNetworkChange = onNetworkChange; };
+    setOnAddressChange = (onAddressChange: changeAddressCallback|null): void => { this._onAddressChange = onAddressChange; };
+    setOnWalletChange = (onWalletChange: changeWalletCallback|null): void => { this._onWalletChange = onWalletChange; };
     
     async connect(walletName: string | null = null, networkId: number | null = null): Promise<void> {
         try {
@@ -158,7 +160,7 @@ export class BlockchainConnect {
             else
                 await this.onboard.walletSelect();
 
-            const readyToTransact = await this.onboard.walletCheck();
+            await this.onboard.walletCheck();
         
         } catch(e) {
             this.connectionState.value = ConnectionState.Error;
@@ -168,7 +170,7 @@ export class BlockchainConnect {
         }
         // Permit typescript to allow window.ethereum
         //let window: any;
-        //@ts-ignore
+        //@ts-ignore Ignore something
         (window.ethereum as Provider).on('chainChanged', (chainId: number) => {
             console.log(`BlockchainConnect::networkChanged ${chainId}... RELOADING...`);
             window.location.reload();
@@ -188,8 +190,7 @@ export class BlockchainConnect {
      */
     async getBalance() : Promise<BigNumber> {
         if(this.provider) {
-            return BigNumber.from(this.balance);
-            //return await this.provider.getBalance(this.account.value);
+            return await this.provider.getBalance(this.account.value)
         } else {
             console.error("BlockchainConnect::balanceOf() - not loaded yet - call connect first")
             return BigNumber.from(0);
@@ -201,9 +202,14 @@ export class BlockchainConnect {
      * @param precision Number of decimal places of precision. Default (-1) returns the full number
      * @returns promise to the balance in ETHER - a string
      */
-    async getBalanceString(precision: number = 2 ) : Promise<string> {
-        const weiBal = await this.getBalance();
-        return utils.toEtherStringRounded(weiBal, precision);
+    async getBalanceString(precision = 2 ) : Promise<string> {
+        if(this.provider) {
+            const weiBal = await this.provider.getBalance(this.account.value);
+            return utils.toEtherStringRounded(weiBal, precision);
+        } else {
+            console.error("BlockchainConnect::balanceOf() - not loaded yet - call connect first")
+            return "NaN";
+        }
     }
 
 }
