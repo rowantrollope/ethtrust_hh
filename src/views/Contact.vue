@@ -70,7 +70,7 @@
                     <span id="how-can-we-help-description" class="text-sm text-gray-500">Max. 500 characters</span>
                   </div>
                   <div class="mt-1">
-                    <textarea id="how-can-we-help" name="how-can-we-help" aria-describedby="how-can-we-help-description" rows="4" class="block w-full shadow-sm sm:text-sm focus:ring-grape-500 focus:border-grape-500 border border-gray-300 rounded-md" />
+                    <textarea id="how-can-we-help" name="how-can-we-help" aria-describedby="how-can-we-help-description" class="block w-full shadow-sm sm:text-sm focus:ring-grape-500 focus:border-grape-500 border border-gray-300 rounded-md" />
                   </div>
                 </div>
                 <div class="sm:col-span-2">

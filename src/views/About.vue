@@ -2,6 +2,7 @@
     About the Trusted app, FAQ, etc
 -->
 <template>
+<div>
     <PageTitle>
         <template v-slot:title>Frequently Asked Questions</template>
     </PageTitle>
@@ -83,6 +84,7 @@
             </div>
         </div>
     </div>
+</div>
 </template>
 <script setup lang="ts">
 import PageTitle from '../components/PageTitle.vue';

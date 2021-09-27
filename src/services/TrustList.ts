@@ -202,7 +202,7 @@ export default class TrustList extends TrustContract {
      */
     private _notifyChange(hash: string, key: string, type: ChangeType, refreshDelay = 20000) {
 
-        if(USE_BNC_NOTIFY) {
+        if(USE_BNC_NOTIFY && this.notify) {
             const { emitter } = this.notify.hash(hash);
             emitter.on('txConfirmed', transaction => { 
                 console.log("TXCONFIRMED: ", transaction);
