@@ -25,17 +25,26 @@
                                 </MenuItem>
                                 <MenuItem>
                                     <router-link class="mobile-router-link" tag="li" to="/Manage">
-                                        Manage & Create Trusts
+                                        <div class="relative w-min whitespace-nowrap">
+                                            Manage & Create Trusts
+                                            <NotificationBadge v-if="stats.isGrantor.value">{{stats.grantorTrusts}}</NotificationBadge>
+                                        </div>
                                     </router-link>
                                 </MenuItem>
                                 <MenuItem>
                                     <router-link class="mobile-router-link" tag="li" to="/Beneficiaries">
-                                        Beneficiaries - Trusts created for you
+                                        <div class="relative w-min whitespace-nowrap">
+                                            Beneficiaries - Trusts created for you
+                                            <NotificationBadge v-if="stats.isBeneficiary.value">{{stats.beneficiaryTrusts}}</NotificationBadge>
+                                        </div>
                                     </router-link>
                                 </MenuItem>
                                 <MenuItem>
                                     <router-link class="mobile-router-link" tag="li" to="/Trustees">
-                                        Trustees - Manage Trusts as Trustee
+                                        <div class="relative w-min whitespace-nowrap">
+                                            Trustees - Manage Trusts as Trustee
+                                            <NotificationBadge v-if="stats.isTrustee.value">{{stats.trusteeTrusts}}</NotificationBadge>
+                                        </div>
                                     </router-link>
                                 </MenuItem>
                                 <MenuItem>
@@ -65,16 +74,27 @@
             <!-- Normal desktop menu items --> 
             <div class="md:flex hidden items-center">
                 <router-link class="router-link" tag="li" to="/">
-                    Home
+                    <div>
+                        Home
+                    </div>
                 </router-link>
                 <router-link class="router-link" tag="li" to="/Manage">
-                    Manage & Create
+                    <div class="relative">
+                        Manage & Create
+                        <NotificationBadge v-if="stats.isGrantor.value">{{stats.grantorTrusts}}</NotificationBadge>
+                    </div>
                 </router-link>
                 <router-link class="router-link" tag="li" to="/Beneficiaries">
+                    <div class="relative">
                     Beneficiaries
+                        <NotificationBadge v-if="stats.isBeneficiary.value">{{stats.beneficiaryTrusts}}</NotificationBadge>
+                    </div>
                 </router-link>
                 <router-link class="router-link" tag="li" to="/Trustees">
-                    Trustees
+                    <div class="relative">
+                        Trustees
+                        <NotificationBadge v-if="stats.isTrustee.value">{{stats.trusteeTrusts}}</NotificationBadge>
+                    </div>
                 </router-link>
                 <router-link class="router-link" tag="li" to="/About">
                     About
@@ -102,11 +122,14 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 // components
 import Hamburger from './Hamburger.vue'
 import ConnectButton from './ConnectButton.vue'
+import NotificationBadge from './NotificationBadge.vue'
 
 // services
+import { useTrustStats } from '../services/TrustStats'
 import { useStore } from '../store';
 
 const store = useStore();
+const stats = useTrustStats();
 
 </script>
 

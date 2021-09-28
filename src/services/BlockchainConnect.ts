@@ -23,8 +23,6 @@ export enum ConnectionState {
 }
 
 const API_KEY = import.meta.env.VITE_ONBOARD_API_KEY;
-//const API_KEY ="aa675d4d-8d3c-44a1-aba5-a85dce42fc8c";
-// const NETWORK_RINKEBY = 4;
 const NETWORK_MAINNET = 1;
 const DEFAULT_NETWORK = NETWORK_MAINNET; // DEFAULT
 

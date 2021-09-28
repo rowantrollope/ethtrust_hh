@@ -18,6 +18,7 @@ import Footer from './components/Footer.vue';
 
 import { provideBlockchainConnect } from './services/BlockchainConnect';
 import { provideTrustList } from './services/TrustList';
+import TrustStats, { provideTrustStats } from './services/TrustStats';
 import { provideCurrencyExchange } from './services/CurrencyExchange';
 import { provideStore } from './store';
 import Trust from './services/Trust';
@@ -26,6 +27,7 @@ const bc = provideBlockchainConnect();
 const list = provideTrustList();
 const exchange = provideCurrencyExchange();
 const store = provideStore();
+const stats = provideTrustStats();
 
 onBeforeMount(() => {
 
@@ -40,6 +42,7 @@ const connectBlockchain = async () => {
     
     bc.setOnNetworkChange((networkId) => store.state.lastNetwork = networkId );
     bc.setOnWalletChange((wallet) => store.state.lastWallet = wallet );
+    bc.setOnAddressChange((address) => stats.load(list, address));
 
     if(store.state.autoConnect)
         await bc.connect(store.state.lastWallet, store.state.lastNetwork);
@@ -49,6 +52,9 @@ const connectBlockchain = async () => {
     if(bc!.signer) {
         await list.connect(bc!.signer);
         await list.getTrusts((trust: Trust) => true); 
+        
+        stats.load(list, bc.account.value);
+        console.log("STATS", stats);
     }
 
 }

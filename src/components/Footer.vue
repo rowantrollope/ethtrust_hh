@@ -1,16 +1,16 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-  <footer class="bg-gradient-to-t from-gray-200 to-white pt-24" aria-labelledby="footer-heading">
+  <footer class="bg-gradient-to-t from-gray-400 to-white mt-10 pt-24" aria-labelledby="footer-heading">
     <h2 id="footer-heading" class="sr-only">Footer</h2>
     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:py-8 lg:px-8">
       <div class="xl:grid xl:grid-cols-3 xl:gap-8">
         <div class="space-y-4 xl:col-span-1">
           <span class="flex items-center space-x-2">
-            <span class="text-gray-700 font-bold text-base uppercase">
+            <span class="text-gray-900 font-bold text-base uppercase">
                 Safe
                 <span class="-ml-1 font-light">Trust</span>
             </span>
-            <span class="text-gray-600">
+            <span class="text-gray-700">
              - Protect your crypto assets.
             </span>
           </span>
@@ -50,11 +50,11 @@
           <div class="flex w-full space-x-4">
             <a v-for="item in navigation.social" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-300">
               <span class="sr-only">{{ item.name }}</span>
-              <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
+              <component :is="item.icon" class="h-6 w-6 text-gray-700" aria-hidden="true" />
             </a>
           </div>
         
-        <p class="text-xs text-gray-400 xl:text-center whitespace-nowrap">
+        <p class="text-xs text-gray-900 xl:text-center whitespace-nowrap">
           &copy; 2021 Optserve, Inc. All rights reserved.
         </p>
       </div>

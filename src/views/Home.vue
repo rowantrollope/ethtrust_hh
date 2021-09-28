@@ -4,19 +4,19 @@
 <template>
 <div>
 
-<TopAlert :show="bc.connectionState.value === state.Connected && list && list.trusts.value && isGrantor"
+<TopAlert :show="bc.connectionState.value === state.Connected && stats.isGrantor.value"
     @click="$router.push('/Manage')">
-    We found {{ grantorTrusts }} trust funds created by your account. <a class="btn btn-success" @click="$router.push('/Manage')">Show me!</a>
+    We found {{ stats.grantorTrusts.value }} trust funds created by your account. <a class="btn btn-success" @click="$router.push('/Manage')">Show me!</a>
 </TopAlert>
 
-<TopAlert :show="bc.connectionState.value === state.Connected && list && list.trusts.value && isBeneficiary"
+<TopAlert :show="bc.connectionState.value === state.Connected && stats.isBeneficiary.value"
     @click="$router.push('/Beneficiaries')">
-    We found {{ beneficiaryTrusts }} trust funds in your name as Beneficiary. <a @click="$router.push('/Beneficiaries')" class="btn btn-success">Show me!</a>
+    We found {{ stats.beneficiaryTrusts.value }} trust funds in your name as Beneficiary. <a @click="$router.push('/Beneficiaries')" class="btn btn-success">Show me!</a>
 </TopAlert>
 
-<TopAlert :show="bc.connectionState.value === state.Connected && list && list.trusts.value && isTrustee"
+<TopAlert :show="bc.connectionState.value === state.Connected && stats.isTrustee.value"
 @click="$router.push('/Trustees')">
-    We found {{ trusteeTrusts }} trust funds for you as a TRUSTEE.  <a @click="$router.push('/Trustees')" class="btn btn-success">Show me!</a>
+    We found {{ stats.trusteeTrusts.value }} trust funds for you as a TRUSTEE.  <a @click="$router.push('/Trustees')" class="btn btn-success">Show me!</a>
 </TopAlert>
 
 <div class="relative bg-white overflow-hidden">
@@ -67,37 +67,23 @@
 
 <script setup lang="ts">
 
-import { inject, ref, computed, } from 'vue';
+import { ref } from 'vue';
 
 // components
 import router from '../router';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
-import { useTrustList } from '../services/TrustList';
-import Trust from '../services/Trust';
+import { useTrustStats } from '../services/TrustStats';
+
 import TopAlert from '../components/TopAlert.vue';
 
 const state = ConnectionState;
 const bc = useBlockchainConnect();
-const list = useTrustList();
+const stats = useTrustStats();
 
-const showPopup = ref(true);
 const bgClass = ref("bg-blue-500");
 const buttonClass = ref("btn-black");
-
-enum UserType {
-    None = 0,
-    Grantor,
-    Beneficiary,
-    Trustee,
-}
-
-const isGrantor = computed(() => user.value === UserType.Grantor )
-const isTrustee = computed(() => user.value === UserType.Trustee )
-const isBeneficiary = computed(() => user.value === UserType.Beneficiary )
-
-//const user: UserType = UserType.None;
 
 const afterEnter = () => {
     setTimeout(() => {
@@ -105,38 +91,6 @@ const afterEnter = () => {
         buttonClass.value = 'btn-primary';
     }, 1000)
 }
-
-const user = computed(() => {
-    if(grantorTrusts.value > 0)
-        return UserType.Grantor;
-    else if (beneficiaryTrusts.value > 0)
-        return UserType.Beneficiary;
-    else if (trusteeTrusts.value > 0)
-        return UserType.Trustee;
-    else
-        return UserType.None;
-})
-
-const trusteeTrusts = computed(() => {
-    if(list?.trusts.value) {
-        return list!.trusts.value?.filter(trust => 
-            -1 !== trust.trustees.findIndex(trustee => 
-                trustee.toUpperCase() === bc!.account.value.toUpperCase()
-            )).length;
-    } else return 0;   
-});
-
-const grantorTrusts = computed(() => {
-    if(list?.trusts.value) {
-        return list!.trusts.value?.filter(trust => trust.grantor.toUpperCase() === bc!.account.value.toUpperCase() ).length;
-    } else return 0; 
-});
-const beneficiaryTrusts = computed(() => {
-    if(list?.trusts.value) {
-        return list!.trusts.value?.filter(trust => trust.beneficiary.toUpperCase() === bc!.account.value.toUpperCase() ).length;
-    } else return 0; 
-});
-
 
 </script>
 
