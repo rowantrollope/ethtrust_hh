@@ -1,78 +1,64 @@
-    <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-<<<<<<< HEAD
-    <footer class="bg-gradient-to-t from-gray-100 to-white pt-24" aria-labelledby="footer-heading">
+<footer class="bg-gradient-to-t from-gray-200 to-white mt-10 pt-24" aria-labelledby="footer-heading">
     <h2 id="footer-heading" class="sr-only">Footer</h2>
     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:py-8 lg:px-8">
         <div class="xl:grid xl:grid-cols-3 xl:gap-8">
             <div class="space-y-4 xl:col-span-1">
                 <span class="flex items-center space-x-2">
-                    <span class="text-gray-700 font-bold text-base uppercase">
-                            Safe
-                            <span class="-ml-1 font-light">Trust</span>
-                    </span>
-                    <span class="text-gray-600">
-                    - Protect your crypto assets.
-                    </span>
+                <span class="text-gray-900 font-bold text-base uppercase">
+                    Safe
+                    <span class="-ml-1 font-light">Trust</span>
                 </span>
-=======
-  <footer class="bg-gradient-to-t from-gray-400 to-white mt-10 pt-24" aria-labelledby="footer-heading">
-    <h2 id="footer-heading" class="sr-only">Footer</h2>
-    <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:py-8 lg:px-8">
-      <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-        <div class="space-y-4 xl:col-span-1">
-          <span class="flex items-center space-x-2">
-            <span class="text-gray-900 font-bold text-base uppercase">
-                Safe
-                <span class="-ml-1 font-light">Trust</span>
-            </span>
-            <span class="text-gray-700">
-             - Protect your crypto assets.
-            </span>
-          </span>
+                <span class="text-gray-700">
+                    - Protect your crypto assets.
+                </span>
+                </span>
+            </div>
         </div>
         <div class="mt-4 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
-          <div class="md:grid md:grid-cols-2 md:gap-8">
-            <div class="sm:mt-0">
-              <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
-                Support
-              </h3>
-              <ul role="list" class="mt-4 space-y-2">
-                <li v-for="item in navigation.support" :key="item.name">
-                  <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
-                    {{ item.name }}
-                  </a>
-                </li>
-              </ul>
->>>>>>> 92256cc11526cb9616a10cf43eb611a61eb6260f
-            </div>
-            <div class="mt-4 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
-                <div class="md:grid md:grid-cols-2 md:gap-8">
-                    <div class="sm:mt-0">
-                        <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
-                            Support
-                        </h3>
-                        <ul role="list" class="mt-4 space-y-2">
-                            <li v-for="item in navigation.support" :key="item.name">
-                                <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
-                                    {{ item.name }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+                <div class="sm:mt-0">
+                    <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
+                    Support
+                    </h3>
+                    <ul role="list" class="mt-4 space-y-2">
+                    <li v-for="item in navigation.support" :key="item.name">
+                        <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
+                        {{ item.name }}
+                        </a>
+                    </li>
+                    </ul>
                 </div>
-                <div class="md:grid md:grid-cols-2 md:gap-8">
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
-                            Company
-                        </h3>
-                        <ul role="list" class="mt-4 space-y-2">
-                            <li v-for="item in navigation.company" :key="item.name">
-                                <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
-                                    {{ item.name }}
-                                </a>
-                            </li>
-                        </ul>
+    
+                <div class="mt-4 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div class="sm:mt-0">
+                            <h3 class="text-sm font-semiboldr text-gray-700 tracking-wider uppercase">
+                                Support
+                            </h3>
+                            <ul role="list" class="mt-4 space-y-2">
+                                <li v-for="item in navigation.support" :key="item.name">
+                                    <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
+                                        {{ item.name }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
+                                Company
+                            </h3>
+                            <ul role="list" class="mt-4 space-y-2">
+                                <li v-for="item in navigation.company" :key="item.name">
+                                    <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
+                                        {{ item.name }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
