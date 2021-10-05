@@ -4,10 +4,6 @@ import Home from '../views/Home.vue'
 import Manage from '../views/Manage.vue'
 import Beneficiaries from '../views/Beneficiaries.vue'
 import Trustees from '../views/Trustees.vue'
-import Developer from '../views/Developer.vue'
-import Contact from '../views/Contact.vue'
-
-//import ForYou from '../views/ForYou.vue'
 
 const routes = [
 {

@@ -28,7 +28,6 @@ export class Store {
         const saved = localStorage.getItem("state0.0.3");
         if(saved) 
             this.state = reactive(JSON.parse(saved));
-        //console.log("Store::load()", this.state);
     }
 
 }

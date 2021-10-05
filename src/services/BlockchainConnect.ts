@@ -39,13 +39,13 @@ export const provideBlockchainConnect = (): BlockchainConnect => {
 export class BlockchainConnect {
 
     private onboard; 
-    private _onNetworkChange: changeNetworkCallback|null;
-    private _onWalletChange: changeWalletCallback|null;
-    private _onAddressChange: changeAddressCallback|null;
+    private _onNetworkChange: changeNetworkCallback | null;
+    private _onWalletChange: changeWalletCallback | null;
+    private _onAddressChange: changeAddressCallback | null;
 
     public balance: string;
-    public provider: Provider|null;
-    public signer: Signer|null;
+    public provider: Provider | null;
+    public signer: Signer | null;
     public chainId: number;
 
     // Reactive members
@@ -58,7 +58,7 @@ export class BlockchainConnect {
     constructor() {
         
         this.onboard = Onboard(this.onboard_options);
-        console.log(this.onboard_options);
+        //console.log(this.onboard_options);
         this.provider = null;
         this.signer = null;
         this._onNetworkChange = null;

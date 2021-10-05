@@ -90,6 +90,7 @@
 import PageTitle from '../components/PageTitle.vue';
 
 </script>
+
 <style scoped>
 .question {
     @apply font-bold text-2xl;
