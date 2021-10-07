@@ -42,13 +42,14 @@
     <div class="mt-5 md:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
         <select id="tabs" name="tabs" v-model="activeTab" class="block text-lg w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
-            <option v-for="(tab, index) in tabs" :value="index" :key="index">{{ tab.name }}</option>
+            <option v-for="(tab, index) in tabs" :hidden="!tab.enabled()" :value="index" :key="index">{{ tab.name }}</option>
         </select>
     </div>
     <div class="mt-5 hidden md:block">
         <nav class="flex space-x-2" aria-label="Tabs">
             <a v-for="(tab, index) in tabs" 
                 :key="index" 
+                :hidden="!tab.enabled()"
                 :class="[activeTab===index ? 'selected-tab' : 'unselected-tab', 'tab']" 
                 :aria-current="activeTab===index ? 'page' : undefined"
                 @click="activeTab = index">
@@ -244,13 +245,13 @@ const emit = defineEmits(['update:modelValue', 'save', 'cancel', 'delete', 'with
 
 const activeTab = ref(0);
 const tabs = ref([
-    { name: "Details", title: "Edit Trust Details" },
-    { name: "Beneficiary", title: "Set Trust Beneficiary" },
-    { name: "Trustees", title: "Set Trustees" },
-    { name: "Withdraw", title: "Withdraw Funds" },
-    { name: "Deposit", title: "Deposit Funds" },
-    { name: "Delete", title: "Delete this Trust Fund" },
-    { name: "Trust Type", title: "Select Trust Type" }]
+    { name: "Details", title: "Edit Trust Details", enabled: () => true},
+    { name: "Beneficiary", title: "Set Trust Beneficiary", enabled: () => revocable.value && bc.account.value === trust.value.grantor },
+    { name: "Trustees", title: "Set Trustees", enabled: () => revocable.value && bc.account.value === trust.value.grantor },
+    { name: "Withdraw", title: "Withdraw Funds", enabled: () => props.canWithdraw },
+    { name: "Deposit", title: "Deposit Funds", enabled: () => true },
+    { name: "Delete", title: "Delete this Trust Fund", enabled: () => revocable.value && props.canWithdraw },
+    { name: "Trust Type", title: "Select Trust Type", enabled: () => false }]
 );
 
 const bc = useBlockchainConnect();

@@ -36,7 +36,6 @@
 
         <div v-else-if="trusts.length" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
             There are {{ trusts.length }} trust funds for you.
-            None of them are accessible yet.
             <transition-group name="list">
                 <NewTrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
             </transition-group>
@@ -46,7 +45,7 @@
             --> 
             <EditTrust :show="showEditDialog"
                         :reason="reason"
-                        :canWithdraw="canWithdraw" 
+                        :canWithdraw="canWithdraw"
                         v-model="selectedTrust" 
                         @save="onSave" 
                         @cancel="onCancelEdit" 
@@ -104,6 +103,8 @@ const select = (key: string) => {
         console.error("Can't find trust key: ", key);
 
     console.log("Selected", selectedTrust.value.key);
+    
+    onEdit();
 }
 /**
  * Edit Handlers
@@ -111,16 +112,32 @@ const select = (key: string) => {
 const showEditDialog = ref(false);
 const closeEditDialog = () => showEditDialog.value = false;
 const openEditDialog = () => showEditDialog.value = true;
-const canWithdraw = ref(false);
+const canWithdraw = computed(() => {
+    list.canWithdraw(selectedTrust.value.key, bc!.account.value).then((arg) => {
+        if(arg.result) {
+            reason.value = arg.reason;
+            console.log("YESYESYES");
+            return true;
+        } else {
+            console.log("NONONO");
+            return false;
+        }
+    });
+});
+
 const reason = ref("");
 let selectedTrust = ref(new Trust());
 
 const onEdit = async () => { 
     
     list.canWithdraw(selectedTrust.value.key, bc!.account.value).then((arg) => {
-        canWithdraw.value = arg.result;
-        reason.value = arg.reason;
-        openEditDialog();
+        if(arg.result) {
+            canWithdraw.value = arg.result;
+            reason.value = arg.reason;
+            openEditDialog();
+        } else {
+            window.alert(`Can't withdraw from this trust: ${arg.reason}`);
+        }
     })
 }
 
