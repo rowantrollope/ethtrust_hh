@@ -27,7 +27,7 @@ export class TrustContract extends ContractWrapper {
     
     public address = ref("");
 
-    private onChange: ChangeCallback|null;
+    private onChange: ChangeCallback | null;
 
     constructor() {
         super();

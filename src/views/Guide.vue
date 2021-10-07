@@ -1,6 +1,5 @@
 <template>
 <div>
-
     <PageTitle >
         <template v-slot:title>Guides</template>
     </PageTitle>
