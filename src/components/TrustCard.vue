@@ -45,7 +45,7 @@
     <div class="border-t rounded-b-md border-gray-200 items-center bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
         <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
             <span class="text-gray-600">Trust ID:</span>
-            <AddressField :address="trust.key" class="text-gray-900"/>
+            <AddressField :etherscan="false" :address="trust.key" class="text-gray-900"/>
         </div>
         <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
             <span class="text-gray-600">Amount:</span>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { inject, computed } from 'vue';
+import { computed } from 'vue';
 
 // 3rd party Components
 import { ChevronRightIcon } from '@heroicons/vue/outline'

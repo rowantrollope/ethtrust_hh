@@ -116,12 +116,9 @@ const canWithdraw = computed(() => {
     list.canWithdraw(selectedTrust.value.key, bc!.account.value).then((arg) => {
         if(arg.result) {
             reason.value = arg.reason;
-            console.log("YESYESYES");
             return true;
-        } else {
-            console.log("NONONO");
+        } else             
             return false;
-        }
     });
 });
 
