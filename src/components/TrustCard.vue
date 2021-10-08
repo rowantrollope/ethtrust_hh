@@ -15,10 +15,10 @@
                 <div class="mt-3 text-center space-y-0.5 sm:-mt-1 sm:text-left">
                     <p class="text-xl font-bold text-gray-900 sm:text-2xl">{{ trust.name ? trust.name : "(Unnamed)" }}</p>
                     <p class="text-sm font-medium text-gray-600">
-                        Beneficiary: <AddressField :address="trust.beneficiary"/> </p>
-                    <p class="text-sm font-medium text-gray-600">
-                        Trust Type: {{ trust.getTypeString() }}
+                        Trust Type: <span class="p-1 rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800']"> {{ trust.getTypeString() }}</span>
                     </p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Beneficiary: <AddressField :address="trust.beneficiary"/> </p>
                     <p class="text-sm font-medium text-gray-600">
                         Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}</p>
                     <p v-if="trust.trustees.length==1" class="text-sm font-medium text-gray-600"> 
