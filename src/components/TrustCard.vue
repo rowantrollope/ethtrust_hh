@@ -12,21 +12,22 @@
                 <div class="flex-shrink-0">
                     <TrustCert class="text-black" :trust="trust"/>
                 </div>
-                <div class="mt-3 text-center space-y-0.5 sm:-mt-1 sm:text-left">
+                <div class="mt-3 text-center space-y-1 sm:-mt-1 sm:text-left">
                     <p class="text-xl font-bold text-gray-900 sm:text-2xl">{{ trust.name ? trust.name : "(Unnamed)" }}</p>
                     <p class="text-sm font-medium text-gray-600">
-                        Trust Type: <span class="p-1 rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800']"> {{ trust.getTypeString() }}</span>
-                    </p>
-                    <p class="text-sm font-medium text-gray-600">
                         Beneficiary: <AddressField :address="trust.beneficiary"/> </p>
-                    <p class="text-sm font-medium text-gray-600">
-                        Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}</p>
                     <p v-if="trust.trustees.length==1" class="text-sm font-medium text-gray-600"> 
                         Trustee: <AddressField :address="trust.trustees[0]"/>
                     </p>
                     <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium text-gray-600">
                         {{ trust.trustees.length }} Trustees: 
                         <span v-for="trustee in trust.trustees"><AddressField :address="trustee"/>, </span>
+                    </p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}
+                    </p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Trust Type: <span class="p-1.5 text-xs rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600']"> {{ trust.getTypeString() }}</span>
                     </p>
                 </div>
             </div>
