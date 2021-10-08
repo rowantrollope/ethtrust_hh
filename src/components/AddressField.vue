@@ -30,7 +30,6 @@
 </template>
 
 <script setup="props, { emit, slots }" lang="ts">
-import { boolean } from 'hardhat/internal/core/params/argumentTypes';
 import { ref } from 'vue';
 
 // services
