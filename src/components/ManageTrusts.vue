@@ -16,12 +16,27 @@
                     <TrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
                 </transition-group>
 
-                <div class=" create-new-card hidden sm:block md:block lg:hidden hover:border-white p-20 hover:shadow-lg text-gray-300  hover:text-indigo-500" @click="$emit('create-clicked')">
+                <div v-if="false" class="cursor-pointer 
+                                         border-2 
+                                         border-dashed
+                                         border-gray-300 
+                                         rounded-lg 
+                                         h-48 
+                                         p-20
+                                         hover:text-indigo-500
+                                         hover:shadow-md
+                                         hover:border-white
+                                         hover:bg-gray-100
+                                         hidden 
+                                         sm:block 
+                                         md:block 
+                                         lg:hidden
+                                         text-gray-300" @click="$emit('create-clicked')">
                     <div class="flex-shrink rounded-lg text-center text-xl "> Create New Trust</div>
                 </div>
             </div>
 
-            <EditTrust :show="showEditDialog"
+            <EditTrust  :show="showEditDialog"
                         :reason="reason"
                         :canWithdraw="canWithdraw" 
                         v-model="selectedTrust" 
@@ -140,19 +155,6 @@ const onDeposit = async (amount: number) => {
 </script>
 
 <style scoped>
-   .create-new-card {
-        @apply cursor-pointer 
-            border-2 
-            border-dashed
-            border-gray-300 
-            rounded-lg 
-            h-48 
-            hover:text-indigo-500
-            hover:shadow-md
-            hover:border-white
-            hover:bg-gray-100
-    }
-
 
 .list-enter-active,
 .list-leave-active,
