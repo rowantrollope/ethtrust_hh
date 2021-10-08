@@ -47,9 +47,7 @@ const onCopy = () => {
     tooltip("Copied!", 1000);
 }
 const onLink = () => {
-    
     window.open("https://etherscan.io/address/" + props.address);
-
     setTimeout(()=> viewTip.value = false, 1000);
 }
 const viewTip = ref(false);
