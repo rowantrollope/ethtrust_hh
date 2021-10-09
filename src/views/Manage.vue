@@ -2,7 +2,7 @@
     The primary list of trusts "Manage Trusts" (this is designed for the creators )
 -->
 <template>
-<div>
+<div class="bg-gray-100">
     <!-- 
         When empty, display some helpful text
     --> 
