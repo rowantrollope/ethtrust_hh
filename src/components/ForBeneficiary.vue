@@ -113,16 +113,16 @@ const showEditDialog = ref(false);
 const closeEditDialog = () => showEditDialog.value = false;
 const openEditDialog = () => showEditDialog.value = true;
 const canWithdraw = computed(() => {
+    let success=false;
     list.canWithdraw(selectedTrust.value.key, bc!.account.value).then((arg) => {
         if(arg.result) {
             reason.value = arg.reason;
-            console.log("YESYESYES");
-            return true;
+            success = true;
         } else {
-            console.log("NONONO");
-            return false;
-        }
+            success = false;
+        }          
     });
+    return success;
 });
 
 const reason = ref("");
@@ -132,7 +132,7 @@ const onEdit = async () => {
     
     list.canWithdraw(selectedTrust.value.key, bc!.account.value).then((arg) => {
         if(arg.result) {
-            canWithdraw.value = arg.result;
+            //canWithdraw.value = arg.result;
             reason.value = arg.reason;
             openEditDialog();
         } else {

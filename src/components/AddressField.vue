@@ -4,7 +4,7 @@
 <template>
 <span @mouseover="hover=true" @mouseleave="hover=false" class="cursor-pointer">
 
-    <span class="relative border-b p-0.5 border-gray-300 hover:border-blue-400 hover:text-blue-500">
+    <span class="relative underline p-0.5 border-gray-300 hover:border-blue-400 hover:text-blue-500">
         {{ utils.shortenAddress(address) }}
         <transition name="pop" mode="out-in">
             <span v-if="viewTip" class="tooltip">
@@ -19,7 +19,7 @@
         </svg>
         </transition>
         <transition name="slide" mode="in-out">
-        <svg v-if="hover" 
+        <svg v-if="etherscan && hover" 
             @mouseover="tooltip('Open on EtherScan')" @mouseleave="tooltip()"
             @click.stop="onLink" xmlns="http://www.w3.org/2000/svg" class="inline -mt-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -39,6 +39,7 @@ const hover = ref(false);
 
 const props = defineProps({
     address: { type: String, required: true},
+    etherscan: { type: Boolean, required: false, default: true },
 });
 
 const onCopy = () => {
@@ -46,9 +47,7 @@ const onCopy = () => {
     tooltip("Copied!", 1000);
 }
 const onLink = () => {
-    
     window.open("https://etherscan.io/address/" + props.address);
-
     setTimeout(()=> viewTip.value = false, 1000);
 }
 const viewTip = ref(false);

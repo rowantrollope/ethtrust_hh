@@ -12,21 +12,22 @@
                 <div class="flex-shrink-0">
                     <TrustCert class="text-black" :trust="trust"/>
                 </div>
-                <div class="mt-3 text-center space-y-0.5 sm:-mt-1 sm:text-left">
+                <div class="mt-3 text-center space-y-1 sm:-mt-1 sm:text-left">
                     <p class="text-xl font-bold text-gray-900 sm:text-2xl">{{ trust.name ? trust.name : "(Unnamed)" }}</p>
                     <p class="text-sm font-medium text-gray-600">
                         Beneficiary: <AddressField :address="trust.beneficiary"/> </p>
-                    <p class="text-sm font-medium text-gray-600">
-                        Trust Type: {{ trust.getTypeString() }}
-                    </p>
-                    <p class="text-sm font-medium text-gray-600">
-                        Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}</p>
                     <p v-if="trust.trustees.length==1" class="text-sm font-medium text-gray-600"> 
                         Trustee: <AddressField :address="trust.trustees[0]"/>
                     </p>
                     <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium text-gray-600">
                         {{ trust.trustees.length }} Trustees: 
                         <span v-for="trustee in trust.trustees"><AddressField :address="trustee"/>, </span>
+                    </p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}
+                    </p>
+                    <p class="text-sm font-medium text-gray-600">
+                        Trust Type: <span class="p-1.5 text-xs rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600']"> {{ trust.getTypeString() }}</span>
                     </p>
                 </div>
             </div>
@@ -45,7 +46,7 @@
     <div class="border-t rounded-b-md border-gray-200 items-center bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
         <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
             <span class="text-gray-600">Trust ID:</span>
-            <AddressField :address="trust.key" class="text-gray-900"/>
+            <AddressField :etherscan="false" :address="trust.key" class="text-gray-900"/>
         </div>
         <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
             <span class="text-gray-600">Amount:</span>
@@ -64,7 +65,7 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { inject, computed } from 'vue';
+import { computed } from 'vue';
 
 // 3rd party Components
 import { ChevronRightIcon } from '@heroicons/vue/outline'

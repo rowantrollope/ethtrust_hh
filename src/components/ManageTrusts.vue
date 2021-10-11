@@ -50,11 +50,11 @@
         </div>
         <div v-else-if="!trusts.length">
             <h1 class="text-2xl mt-10 ml-5 tracking-tight font-thin text-gray-900 sm:text-3xl md:text-4xl">
-                <div class="inline">Let's make your first Trust fund </div>
+                <div class="inline">Let's make your first trust fund </div>
                 <div class="flex text-center items-center space-x-3 mt-10 ml-5 ">
-                    <span class="block text-xl sm:text-3xl  text-indigo-600">Click </span>
+                    <span class="block text-xl sm:text-3xl">Click </span>
                     <button class="btn btn-rounded flex-shrink-0 text-xl sm:text-3xl btn-primary" @click="$emit('create-clicked')">Create New</button>
-                    <span class="block text-xl sm:text-3xl flex-shrink-0 text-indigo-600">to begin</span>
+                    <span class="block text-xl sm:text-3xl flex-shrink-0">to begin</span>
                 </div>
             </h1>
         </div>
