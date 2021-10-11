@@ -13,32 +13,43 @@
         <slot class="" name="title"></slot>
     </template>
 
-    <div class="col-span-12 text-base border-gray-500 rounded-md sm:p-2">            
-        <span class="mt-1 inline text-gray-500">
-            Balance: 
-            </span>
-            <span class="inline -ml-2 text-green-500 text-base items-center">
-            <svg class="inline" xmlns="http://www.w3.org/2000/svg" height="24" width="24" preserveAspectRatio="xMidYMid" viewBox="-38.39985 -104.22675 332.7987 625.3605"><path fill="#343434" d="M125.166 285.168l2.795 2.79 127.962-75.638L127.961 0l-2.795 9.5z"/><path fill="#8C8C8C" d="M127.962 287.959V0L0 212.32z"/><path fill="#3C3C3B" d="M126.386 412.306l1.575 4.6L256 236.587l-128.038 75.6-1.575 1.92z"/><path fill="#8C8C8C" d="M0 236.585l127.962 180.32v-104.72z"/><path fill="#141414" d="M127.961 154.159v133.799l127.96-75.637z"/><path fill="#393939" d="M127.96 154.159L0 212.32l127.96 75.637z"/></svg>
-            </span>
-            <span class="inline text-green-500"> {{ utils.toEtherStringRounded(trust.etherAmount) }} ETH </span>
-        
-        <p class="mt-1 text-gray-500"> Trust Number: 
-            <span class="text-gray-900"> <AddressField :address="trust.key"/> </span>
-        </p>
-        <p class="mt-1 text-gray-500"> Created by (Grantor): 
-            <span class="text-gray-900">
-                <AddressField :address="trust.grantor"></AddressField>
-            </span>
-        </p>
-        <p class="mt-1 text-gray-500"> Trust Type: 
-            <span class="text-gray-900"> {{ trust.getTypeString() }} </span> 
-        </p>
-        <p class="mt-1 text-gray-500">Revocable? 
-            <span class="text-gray-900">{{ revocable ? "YES" : "NO" }} </span>
-        </p>
+    <!-- HEADER : Trust Info Panel -->
+    <div class="grid grid-cols-12 border bg-green-50 rounded-lg p-4 text-sm">
+        <div class="col-span-6 border-gray-500 rounded-md ">            
+            <p class="text-gray-500"> Balance: 
+                <div class="inline items-center text-black">
+                    <svg class="inline -mt-1" xmlns="http://www.w3.org/2000/svg" height="24" width="24" preserveAspectRatio="xMidYMid" viewBox="-38.39985 -104.22675 332.7987 625.3605"><path fill="#343434" d="M125.166 285.168l2.795 2.79 127.962-75.638L127.961 0l-2.795 9.5z"/><path fill="#8C8C8C" d="M127.962 287.959V0L0 212.32z"/><path fill="#3C3C3B" d="M126.386 412.306l1.575 4.6L256 236.587l-128.038 75.6-1.575 1.92z"/><path fill="#8C8C8C" d="M0 236.585l127.962 180.32v-104.72z"/><path fill="#141414" d="M127.961 154.159v133.799l127.96-75.637z"/><path fill="#393939" d="M127.96 154.159L0 212.32l127.96 75.637z"/></svg>
+                    <div class="inline"> {{ utils.toEtherStringRounded(trust.etherAmount) }} ETH </div>
+                </div>
+            </p>
+            
+            <p class="mt-2 text-gray-500"> Trust ID: 
+                <div class="inline text-black"> <AddressField :address="trust.key"/> </div>
+            </p>
+            <p class="mt-2 text-gray-500"> Trust Type: 
+                <div class="inline text-black"> {{ trust.getTypeString() }} </div> 
+            </p>
 
+        </div>
+        <div class="col-span-6">
+            <p class="text-gray-500"> Created by: 
+                <div class="inline text-black">
+                    <AddressField :address="trust.grantor"></AddressField>
+                </div>
+            </p>
+            <p class="text-gray-500 mt-2">
+                <span class="text-gray-500">Created on: </span>
+                <div class="inline text-black">{{ trust.getCreatedDate().toLocaleDateString() }}</div>
+            </p>
+            <p class="text-gray-500 mt-2">
+                <span class="text-gray-500">Available after: </span>
+                <div class="inline text-black">{{ trust.getMaturityDate().toLocaleDateString() }}</div>
+            </p>
+
+        </div>
     </div>
-    
+
+    <!-- TABS -->
     <div class="mt-5 md:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
         <select id="tabs" name="tabs" v-model="activeTab" class="block text-lg w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
@@ -59,9 +70,9 @@
     </div>
     
     <!-- tab-content> -->
-    <div class="border-gray-300 text-base border mt-2 rounded-md p-2 sm:p-5">
+    <div class="border-gray-300 text-base border rounded-b-md p-2 sm:px-4 sm:pb-5">
         <!-- tab-title -->
-        <p class="text-lg">{{tabs[activeTab].title}}</p> <br/>
+        <p class="hidden text-lg">{{tabs[activeTab].title}}</p> <br/>
 
         <!--
             Tab: Details
@@ -147,7 +158,7 @@
             TAB: Deposit
         -->
         <div v-show="activeTab===4">
-            <p class="text-sm ml-5">Note: Only ETH deposits are supported at this time.
+            <p class="text-sm sm:ml-5">Note: Only ETH deposits are supported at this time.
                 Your Wallet Balance: 
                 <span class="font-bold text-green-600"> {{ walletBalance }} ETH </span>
             </p><br/>
@@ -293,7 +304,7 @@ const onDeposit = () => emit('deposit', ethDeposit.value);
 }
 
 .selected-tab {
-    @apply cursor-pointer text-white bg-gray-500 rounded-md border-gray-300;
+    @apply cursor-pointer text-blue-500 border-b-2 border-blue-500;
 }
 .unselected-tab {
     @apply cursor-pointer border border-white text-gray-700 rounded-md hover:border-gray-500;

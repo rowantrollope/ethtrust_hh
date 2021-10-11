@@ -16,11 +16,11 @@
         </PageTitle>  
 
         <div v-if="!trusts.length" class="m-10 mt-10" >
-            <h1 class="text-2xl tracking-tight font-thin text-gray-900 sm:text-2xl md:text-3xl">
+            <h1 class="text-xl tracking-tight font-thin text-gray-900 sm:text-xl md:text-2xl">
                 <span class="block xl:inline">
-                    We can't find any trust funds with your account number: 
-                    (<AddressField class="text-lg" v-if="bc.account" :address="bc.account.value"></AddressField>) 
-                    listed as a <span class="text-indigo-500">beneficiary. </span>
+                    We can't find any trust funds for account: 
+                    <AddressField class="" v-if="bc.account" :address="bc.account.value"></AddressField>
+                    as a <span class="text-indigo-500">beneficiary. </span>
                 </span>
             </h1>
             <p class="mt-12 text-left">Need help?</p>

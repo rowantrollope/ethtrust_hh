@@ -142,7 +142,7 @@ const stats = useTrustStats();
         @apply border border-gray-400 px-3 py-2 rounded-md text-base font-normal;
     }
     .router-link {
-        @apply flex-shrink-0 text-white hover:bg-black hover:text-white px-2 py-1 rounded-md text-sm font-light;
+        @apply flex-shrink-0 text-white hover:bg-black hover:text-white px-2 ml-2 py-1 rounded-md text-sm font-light;
     }
     .mobile-router-link {
         @apply text-gray-300 hover:bg-gray-700 hover:text-white block px-2 py-2 rounded-md text-base font-thin;

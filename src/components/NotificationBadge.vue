@@ -1,6 +1,6 @@
 <template>
-    <div class="absolute -top-3 -right-4 rounded-full bg-red-500 w-4 h-4">
-        <div class="relative text-xs text-white font-bold text-center">
+    <div class="absolute -top-2 -right-3 rounded-full bg-red-500 w-4 h-4">
+        <div class="relative text-xs text-white text-center">
             <slot></slot>
         </div>
     </div>

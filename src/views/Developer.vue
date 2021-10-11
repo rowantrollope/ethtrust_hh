@@ -2,14 +2,22 @@
     TESTING goes here
 -->
 <template>
-    <Trusts class="bg-white"/>
+    <div>
+        
+        <PageTitle>
+            <template v-slot:title>Developer View 
+            </template>
+        </PageTitle>  
+        <DeveloperList class="bg-white"/>
+    </div>
 </template>
 
 <script setup lang="ts">
 
 // components
 import Test from '../components/Test.vue';
-import Trusts from '../components/DeveloperList.vue';
+import PageTitle from '../components/PageTitle.vue';
+import DeveloperList from '../components/DeveloperList.vue';
 
 </script>
 
