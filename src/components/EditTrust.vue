@@ -50,7 +50,7 @@
     </div>
 
     <!-- TABS -->
-    <div class="mt-5 md:hidden">
+    <div class="mt-5 mb-3 md:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
         <select id="tabs" name="tabs" v-model="activeTab" class="block text-lg w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
             <option v-for="(tab, index) in tabs" :hidden="!tab.enabled()" :value="index" :key="index">{{ tab.name }}</option>
@@ -257,8 +257,8 @@ const emit = defineEmits(['update:modelValue', 'save', 'cancel', 'delete', 'with
 const activeTab = ref(0);
 const tabs = ref([
     { name: "Details", title: "Edit Trust Details", enabled: () => true},
-    { name: "Beneficiary", title: "Set Trust Beneficiary", enabled: () => revocable.value && bc.account.value === trust.value.grantor },
-    { name: "Trustees", title: "Set Trustees", enabled: () => revocable.value && bc.account.value === trust.value.grantor },
+    { name: "Beneficiary", title: "Set Trust Beneficiary", enabled: () => revocable.value && bc.account.value.toUpperCase() === trust.value.grantor.toUpperCase() },
+    { name: "Trustees", title: "Set Trustees", enabled: () => revocable.value && bc.account.value.toUpperCase() === trust.value.grantor.toUpperCase() },
     { name: "Withdraw", title: "Withdraw Funds", enabled: () => props.canWithdraw },
     { name: "Deposit", title: "Deposit Funds", enabled: () => true },
     { name: "Delete", title: "Delete this Trust Fund", enabled: () => revocable.value && props.canWithdraw },
@@ -286,7 +286,10 @@ const ethWithdraw = ref(0);
 const ethDeposit = ref(0);
 const walletBalance = ref("0");
 
-onMounted(() => bc?.getBalanceString(4).then(val => walletBalance.value = val ) );
+onMounted(() => { 
+    bc?.getBalanceString(4).then(val => walletBalance.value = val ); 
+    console.log("props.canWithdraw", props.canWithdraw);
+});
 
 // Methods
 const onSave = () => emit('save');

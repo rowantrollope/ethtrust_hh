@@ -118,8 +118,10 @@ const canWithdraw = computed(() => {
         if(arg.result) {
             reason.value = arg.reason;
             success = true;
+            console.log("canWithdraw", success);
         } else {
             success = false;
+            console.log("canWithdraw", success);
         }          
     });
     return success;
