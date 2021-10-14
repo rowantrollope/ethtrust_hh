@@ -2,7 +2,7 @@
     The primary view of trusts "for you" (this is designed for the beneficiaries )
 -->
 <template>
-<div class="bg-gray-100">    
+<div class="bg-gradient-to-b from-gray-100 to-white">    
     <ForTrustee></ForTrustee>
 </div>
 </template>

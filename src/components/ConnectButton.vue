@@ -21,7 +21,7 @@
         <div v-else-if="bc.connectionState.value === state.Connected">
             <div class="flex items-center space-x-1">
                 <!-- <Jazzicon class="-ml-1 mt-1" :address="0x012314151351395359153891359818351385893" :diameter="24"/> -->
-                <StatusOnlineIcon class="text-green-400 h-5 w-5" aria-hidden="true" />
+                <UserCircleIcon class="text-blue-400 bg-white rounded-full h-4 w-4" aria-hidden="true" />
                 <span>{{bc.walletName.value + ' @ ' + networkNameShort}}</span>
             </div>
         </div>
@@ -34,7 +34,7 @@
         </div>
 
         <div v-else-if="bc.connectionState.value === state.Error">
-            <StatusOnlineIcon class="text-white hover:text-black h-5 w-5" aria-hidden="true" />
+            <UserCircleIcon class="text-white hover:text-black h-5 w-5" aria-hidden="true" />
             <span>Not Connected</span>
         </div>
 
@@ -58,12 +58,12 @@
             <div v-else-if="bc.connectionState.value === state.Connected">
                 <div class="flex-col text-left vertical space-y-3">
                     <div class="flex items-center space-y-3 text-sm">
-                        <StatusOnlineIcon class="h-6 w-6 text-green-500"/> &nbsp;Connected to {{ networkName }}
+                        <!-- <UserCircleIcon class="h-6 w-6 text-blue-500"/> &nbsp;--> Connected to {{ networkName }}
                     </div>
                     <div class="border border-gray-300 rounded-md p-3">
                         <div class="items-center flex space-x-2 text-base font-black">
 
-                            <img style="height: 22px " :src="bc.walletIcon.value"/>
+                            <img style="height: 22px" :src="bc.walletIcon.value"/>
                             <div>{{bc.walletName.value}}</div>
                         </div>
                         <div class="flex mt-2 ml-8">
@@ -93,7 +93,7 @@
                         </div>
                         <p class="flex ml-5 mt-2">
                             <span class="text-gray-500">Address:</span> 
-                            <AddressField :address="list.address.value"/>
+                            <AddressField v-if="list" :address="list.address.value"/>
                         </p>
                     </div>
                     <p class="flex-grow">
@@ -138,6 +138,7 @@ import { ref, inject, computed } from 'vue';
 // 3rd party Components
 import { Popover, PopoverButton, PopoverPanel, Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import { StatusOnlineIcon, StatusOfflineIcon, ChevronDownIcon, ChevronUpIcon, ShieldCheckIcon } from '@heroicons/vue/outline';
+import { UserCircleIcon } from '@heroicons/vue/solid';
 
 // components
 import AddressField from './AddressField.vue';
@@ -155,6 +156,7 @@ let networkStrings = new Map([
     [42, {short: "Kovan", long: "Kovan Test Network"}],
     [1337, { short: "Hardhat", long: "Hardhat Localhost"}],
 ]);
+
 const networkName = computed(() => {
     if(networkStrings.has(bc.chainId)) {
         const item = networkStrings.get(bc.chainId);
@@ -163,6 +165,7 @@ const networkName = computed(() => {
     else
         return "Unknown Network";
 });
+
 const networkNameShort = computed(() => {
     if(networkStrings.has(bc.chainId)) {
         const item = networkStrings.get(bc.chainId);
