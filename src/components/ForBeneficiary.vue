@@ -86,7 +86,9 @@ const bc = useBlockchainConnect();
 const state = ConnectionState;
 const list = useTrustList();
 
-const trusts = computed(() => list.trusts.value?.filter(trust => trust.beneficiary.toUpperCase() === bc.account.value.toUpperCase() ));
+const trusts = computed(() => {
+    return list.trusts.value?.filter(trust => trust.beneficiary.toUpperCase() === bc.account.value.toUpperCase());
+});
 
 /**
  * List select handlers
@@ -114,6 +116,9 @@ const closeEditDialog = () => showEditDialog.value = false;
 const openEditDialog = () => showEditDialog.value = true;
 const canWithdraw = computed(() => {
     let success=false;
+    if(!selectedTrust.value.key) {
+        return false;
+    }
     list.canWithdraw(selectedTrust.value.key, bc!.account.value).then((arg) => {
         if(arg.result) {
             reason.value = arg.reason;
@@ -124,6 +129,7 @@ const canWithdraw = computed(() => {
             console.log("canWithdraw", success);
         }          
     });
+    
     return success;
 });
 

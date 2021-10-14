@@ -250,7 +250,20 @@ export class TrustContract extends ContractWrapper {
      * @returns bool: can withdraw reason: why
      */
     async canWithdraw(key: string, account: string): Promise<{ result: boolean, reason: string }> {
-        return await this.contract!.canWithdraw(key, account)
+        let x={result: false, reason: "Undefined"};
+        if(!key) {
+            console.error("canWithdraw: Key is blank");
+            x.reason = "No Trust Key specified";
+            return x;
+        }
+        try {
+            x = await this.contract!.canWithdraw(key, account);
+        } catch (e) {
+            console.error(`Error calling canWithdraw: key=${key}, account=${account}, X is ${x}`);
+            console.error(e);
+        }
+        console.log("Got X", x);
+        return x;
     }
 
     /**

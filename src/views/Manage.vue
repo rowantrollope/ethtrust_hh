@@ -2,7 +2,7 @@
     The primary list of trusts "Manage Trusts" (this is designed for the creators )
 -->
 <template>
-<div class="bg-gradient-to-b from-gray-100 to-white pb-2">
+<div class="bg-gradient-to-b from-gray-100 to-white">
     <!-- 
         When empty, display some helpful text
     --> 
