@@ -21,7 +21,7 @@
         <div v-else-if="bc.connectionState.value === state.Connected">
             <div class="flex items-center space-x-1">
                 <!-- <Jazzicon class="-ml-1 mt-1" :address="0x012314151351395359153891359818351385893" :diameter="24"/> -->
-                <UserCircleIcon class="text-blue-400 bg-white rounded-full h-4 w-4" aria-hidden="true" />
+                <UserCircleIcon class="text-blue-400 h-5 w-5" aria-hidden="true" />
                 <span>{{bc.walletName.value + ' @ ' + networkNameShort}}</span>
             </div>
         </div>
@@ -204,7 +204,6 @@ const eth2usd = computed(() => exchange ? exchange.eth2usdFormatted(Number(balan
 </script>
 
 <style>
-
     .fadeslide-enter-active {
         @apply transition transform ease-out duration-300;
     }

@@ -63,7 +63,7 @@
                     </a>
                 </div>
             
-            <p class="text-xs text-gray-400 xl:text-center whitespace-nowrap">
+            <p class="hidden text-xs text-gray-400 xl:text-center whitespace-nowrap">
                 &copy; 2021 Optserve, Inc. All rights reserved.
             </p>
         </div>

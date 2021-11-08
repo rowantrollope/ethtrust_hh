@@ -1,4 +1,3 @@
-
 <template>
 <!--
     Displays a Connect now option to user (currently disabled) to allow for manual connection

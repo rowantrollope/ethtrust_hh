@@ -9,12 +9,19 @@
         "outDir": "dist",
         "jsx": "preserve",
         "sourceMap": true,
+        "allowJs": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
-        "checkJs": false,
-        "lib": ["esnext", "dom"]
+        "lib": ["esnext", "dom"],
+        "baseUrl": ".",
+        "paths": {
+            "components/*": [
+                "src/components/*",
+            ]
+        }
     },
     "include": [
+        "src/**/*",
         "src/**/*.ts", 
         "src/**/*.d.ts", 
         "src/**/*.tsx", 

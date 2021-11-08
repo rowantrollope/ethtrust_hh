@@ -13,39 +13,26 @@
                 {{tooltipText}}
             </span>
         </transition>
-        <span >
-            <transition name="slide" mode="in-out">
+        <span>
             <svg v-if="hover"
                 @mouseover="tooltip('copy address')" @mouseleave="tooltip()"
                 @click.stop="onCopy" xmlns="http://www.w3.org/2000/svg" class="inline text-blue-500 -mt-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
             </svg>
-            </transition>
-            <transition name="slide" mode="in-out">
             <svg v-if="etherscan && hover" 
                 @mouseover="tooltip('Open on EtherScan')" @mouseleave="tooltip()"
                 @click.stop="onLink" xmlns="http://www.w3.org/2000/svg" class="inline text-blue-500 -mt-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>            
-            </transition>
         </span>
-        <span v-if="hover">
-            <transition name="slide" mode="in-out">
-                <span v-if="hover && isActiveAccount" class="text-xs ml-1 text-blue-500">(Your Account)</span>
-            </transition>
-        </span>
-        <span v-else>
-            <UserCircleIcon class="h-4 w-4 -mt-1 text-blue-500 inline" v-if="!hover && isActiveAccount"/>
-            <!-- 
-                <div class="dot -mt-1" v-if="!hover && isActiveAccount" ></div>
-            -->
-        </span>
+        <span v-if="hover && isActiveAccount" class="text-xs ml-1 text-blue-500">(Your Account)</span>
+        <UserCircleIcon v-else-if="!hover && isActiveAccount" class="h-4 w-4 -mt-1 text-blue-500 inline" />
 </span>
 </template>
 
 <script setup="props, { emit, slots }" lang="ts">
 import { ref, computed } from 'vue';
-import { DotsCircleHorizontalIcon, UserCircleIcon } from '@heroicons/vue/solid';
+import { UserCircleIcon } from '@heroicons/vue/solid';
 
 // services
 import * as utils from '../services/Utils';
@@ -80,16 +67,6 @@ const tooltip = (text: string = "", timeout: number = 0) => {
 </script>
 
 <style scoped>
-.dot {
-  height: 6px;
-  width: 6px;
-  padding: 4px;
-  border-radius: 50%;
-  border: 2px solid rgb(0,0,255);
-  border-spacing: 3px;
-  display: inline-block;
-  @apply bg-blue-500;
-}
 
 .tooltip {
     @apply

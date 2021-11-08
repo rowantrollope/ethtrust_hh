@@ -2,7 +2,7 @@
     Create New Trust Wizard
 --> 
 <template>
-<Modal :open="open" :showClose="false" @cancel="onClose">
+<Modal :open="open" :showClose="true" @cancel="onClose">
     <template v-slot:title>
         <!-- HEADER --> 
         <div class="flex items-center space-x-2 sm:space-x-5 ">
@@ -10,7 +10,6 @@
             <h3 class="flex-grow text-lg sm:text-xl font-light sm:leading-6 text-gray-900">
                 Create new trust
             </h3>            
-            <div v-if="panelIndex" class="text-base text-gray-500">Step <span class="font-bold">{{ panelIndex }}</span> of {{ panels.length-1 }}</div>
             <div class="w-2"></div>
         </div>
     </template>
@@ -62,16 +61,23 @@
     <!-- FOOTER --> 
     <template v-slot:buttons>
         <div class="mt-1 flex bg-white space-x-5">
-            <button class="flex-1 btn btn-danger-outline" :onClick="onClose">
+            <button v-if="false" class="flex-shrink btn btn-danger-outline" :onClick="onClose">
                 Cancel
             </button>
-            <button v-if="!isFirstPanel()" class="flex-1 btn btn-primary-outline" :onClick="prev">
+            <button v-if="!isFirstPanel()" class="flex-shrink px-10 btn btn-primary-outline" :onClick="prev">
                 Back
             </button>
-            <button v-if="isLastPanel()" class="flex-1 btn btn-success" :onClick="onCreate">
+            <div class="flex-1 items-center">
+                <div v-if="panelIndex" 
+                     class="m-2 justify-center text-center text-base text-gray-500">
+                    Step <span class="font-bold">{{ panelIndex }}</span> of {{ panels.length-1 }}
+                </div>
+
+            </div>
+            <button v-if="isLastPanel()" class="flex-shrink px- btn btn-success" :onClick="onCreate">
                 Create Now 
             </button>
-            <button v-else-if="!isLastPanel()" class="flex-1" 
+            <button v-else-if="!isLastPanel()" class="flex-shrink px-10" 
                     :class="[enableNextButton ? 'btn btn-primary' : 'btn btn-disabled']" :onClick="next">
                 Next
             </button>
