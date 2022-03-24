@@ -54,13 +54,6 @@ import Test from '../components/Test.vue';
 import PageTitle from '../components/PageTitle.vue';
 import DeveloperList from '../components/DeveloperList.vue';
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxOptions,
-  ComboboxOption,
-} from '@headlessui/vue';
-
 const people = [
     'Rowan',
     'Steph',
