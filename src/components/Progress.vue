@@ -61,7 +61,7 @@ let panel: string;
         @apply px-2 py-2 flex items-center;
     }
     .item-circle {
-        @apply hidden flex-shrink-0 w-6 h-6 items-center justify-center border rounded-full;
+        @apply hidden shrink-0 w-6 h-6 items-center justify-center border rounded-full;
     }
     .item-text {
         @apply xl:text-base whitespace-nowrap lg:text-xs text-xs ;

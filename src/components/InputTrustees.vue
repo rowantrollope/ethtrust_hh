@@ -8,8 +8,10 @@
                 id="trustee" 
                 autocomplete="trustee" 
                 placeholder="Enter a valid address"
-                :class="[!errorText ? 'input-field' : 'input-field-invalid']" />
-        <button class="btn sm:flex-shrink-0 sm:ml-4 sm:mt-0 mt-2 w-full sm:w-auto" 
+                :class="[!errorText ? 'text-base text-black p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300' 
+                                    : 'text-base text-red-500 p-2 block border focus:ring-red-500 focus:border-red-500 w-full min-w-0 rounded-md border-red-500' ]"
+                />
+        <button class="btn sm:shrink-0 sm:ml-4 sm:mt-0 mt-2 w-full sm:w-auto" 
                 :class="[!errorText ? 'btn-success' : 'btn-disabled']" 
                 :disabled="errorText ? true : false"
                 @click="addTrustee()">Add Trustee</button>
@@ -21,7 +23,7 @@
         <div class="overflow-y-auto p-1 bg-white divide-y divide-gray-200">
             <li v-for="trustee in trust.trustees" :key="trustee" class="mx-3 py-2 flex">
                 <div class="flex-grow text-sm font-medium text-gray-900">{{ trustee }}</div>
-                <button @click="deleteTrustee(trustee)"><XIcon class="mr-2 text-gray-700 hover:text-red-500 flex-shrink h-4 w-4" aria-hidden="true"  /></button>                
+                <button @click="deleteTrustee(trustee)"><XIcon class="mr-2 text-gray-700 hover:text-red-500 shrink h-4 w-4" aria-hidden="true"  /></button>                
             </li>
         </div>
     </ul>
@@ -80,12 +82,3 @@ const addTrustee = () => {
 }
 
 </script>
-
-<style scoped>
-.input-field {
-    @apply  text-base text-black p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
-}
-.input-field-invalid {
-    @apply text-base text-red-500 p-2 block border focus:ring-red-500 focus:border-red-500 w-full min-w-0 rounded-md border-red-500;
-}
-</style> 

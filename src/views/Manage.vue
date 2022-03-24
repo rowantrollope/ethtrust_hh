@@ -2,22 +2,27 @@
     The primary list of trusts "Manage Trusts" (this is designed for the creators )
 -->
 <template>
-<div class="bg-gradient-to-b from-gray-100 to-white">
+<div>
     <!-- 
         When empty, display some helpful text
     --> 
-    <PageTitle v-if="bc.connectionState.value === state.Connected">
-        <template v-slot:title>Create & Manage Trusts</template>
-        <template v-slot:buttons>           
-            <button class="btn btn-rounded btn-primary text-sm" :onClick="onCreateNew">
-                Create New
-            </button>            
-        </template>
-    </PageTitle>
-    <div class="px-5 mt-5">
-        <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
+    <ConnectBlock class="pt-10" v-if="bc.connectionState.value !== state.Connected" />
+    
+    <div v-else-if="bc.connectionState.value === state.Connected">
+        <PageTitle >
+            <template v-slot:title>Create & Manage Trusts</template>
+            <template v-slot:buttons>           
+                <button class="btn btn-rounded btn-primary text-sm" :onClick="onCreateNew">
+                    Create New
+                </button>            
+            </template>
+        </PageTitle>
+        <div class="px-5 mt-5">
+            <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
+        </div>
+        <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
     </div>
-    <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
+    
 </div>
 </template>
 

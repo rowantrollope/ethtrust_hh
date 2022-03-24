@@ -12,7 +12,7 @@
             <div v-if="open" class="max-w-sm w-full bg-white shadow-lg border rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
                 <div class="p-4">
                     <div class="flex items-start">
-                        <div class="flex-shrink-0">
+                        <div class="shrink-0">
                             <CheckCircleIcon class="h-8 w-8 text-green-400" aria-hidden="true" />
                         </div>
                         <div class="ml-3 w-0 flex-1 pt-0.5">
@@ -23,7 +23,7 @@
                                 <slot name="message"></slot>
                             </p>
                         </div>
-                        <div class="ml-4 flex-shrink-0 flex">
+                        <div class="ml-4 shrink-0 flex">
                             <button @click="open = false" class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <span class="sr-only">Close</span>
                                 <XIcon class="h-5 w-5" aria-hidden="true" />

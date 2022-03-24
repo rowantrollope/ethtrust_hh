@@ -4,7 +4,7 @@
 <template>
 <span @mouseover="hover=true" @mouseleave="hover=false" class="cursor-pointer">
 
-    <span class="relative underline p-0.5 border-gray-300">
+    <span class="relative underline decoration-blue-500 p-0.5 border-gray-300">
         {{ utils.shortenAddress(address) }}
     </span>
     
@@ -25,7 +25,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>            
         </span>
-        <span v-if="hover && isActiveAccount" class="text-xs ml-1 text-blue-500">(Your Account)</span>
+        <span v-if="hover && isActiveAccount" class="text-xs ml-1 text-blue-500">(You)</span>
         <UserCircleIcon v-else-if="!hover && isActiveAccount" class="h-4 w-4 -mt-1 text-blue-500 inline" />
 </span>
 </template>

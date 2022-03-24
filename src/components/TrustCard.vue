@@ -1,64 +1,63 @@
 
 <template>
-<div class="card" 
+<div class="rounded-lg bg-slate-50 dark:bg-slate-800 dark:border-gray-600 shadow cursor-pointer hover:border-gray-500 hover:text-gray-600 dark:hover:border-gray-400 dark:hover:text-gray-300 border relative" 
     :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4' : 'border-gray-300',
             list.updating(trust.key) ? 'animate-pulse border-blue-300 border-4' : 'border-gray-300',
             list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4' : 'border-gray-300`']" 
         >
-    <h2 class="sr-only" id="profile-overview-title">Profile Overview</h2>
-    <div class="p-4">
-        <div class="sm:flex sm:items-center sm:justify-between">
-            <div class="sm:flex sm:space-x-5">
-                <div class="flex-shrink-0">
-                    <TrustCert class="text-black" :trust="trust"/>
+    <!-- Main Body -->
+    <div class="p-4 sm:flex sm:items-center sm:justify-between">
+        <div class="sm:flex sm:space-x-5">
+            <div class="shrink-0">
+                <TrustCert class="text-black" :trust="trust">
+                </TrustCert>
+            </div>
+            <div class="mt-3 sm:flex-col text-center space-y-1.5 sm:-mt-1 sm:text-left">
+                <div class="text-xl font-bold sm:text-2xl">
+                    {{ trust.name ? trust.name : "(Unnamed)" }}
                 </div>
-                <div class="mt-3 text-center space-y-1 sm:-mt-1 sm:text-left">
-                    <p class="text-xl font-bold text-gray-900 sm:text-2xl">{{ trust.name ? trust.name : "(Unnamed)" }}</p>
-                    <p class="text-sm font-medium text-gray-600">
-                        Beneficiary: <AddressField :address="trust.beneficiary"/> </p>
-                    <p v-if="trust.trustees.length==1" class="text-sm font-medium text-gray-600"> 
-                        Trustee: <AddressField :address="trust.trustees[0]"/>
-                    </p>
-                    <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium text-gray-600">
-                        {{ trust.trustees.length }} Trustees: 
-                        <span v-for="trustee in trust.trustees"><AddressField :address="trustee"/>, </span>
-                    </p>
-                    <p class="text-sm font-medium text-gray-600">
-                        Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}
-                    </p>
-                    <p class="text-sm font-medium text-gray-600">
-                        Trust Type: <span class="p-1.5 text-xs rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600']"> {{ trust.getTypeString() }}</span>
-                    </p>
+                <p class="text-sm font-medium dark:text-gray-300">
+                    Beneficiary: <AddressField :address="trust.beneficiary"/> </p>
+                <p v-if="trust.trustees.length==1" class="text-sm font-medium dark:text-gray-300"> 
+                    Trustee: <AddressField :address="trust.trustees[0]"/>
+                </p>
+                <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium">
+                    {{ trust.trustees.length }} Trustees: 
+                    <span v-for="trustee in trust.trustees"><AddressField :address="trustee"/>, </span>
+                </p>
+                <p class="text-sm font-medium dark:text-gray-300">
+                    Created by: <AddressField :address="trust.grantor"/> on {{ trust.getCreatedDate().toLocaleDateString() }}
+                </p>
+                <div class="text-sm font-medium dark:text-gray-300">
+                    Trust Type: <span class="p-1.5 text-sm rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? '' : '']"> {{ trust.getTypeString() }}</span>
                 </div>
+                This is a revocable trust created for account 0x9840x9388 on 9/20/2021 
             </div>
-            <div v-if="updatingText != ''" class="bg-white border items-center rounded-full p-2 text-sm z-50; mt-2 sm:mt-0 flex space-x-2" 
-                    :class="updatingClass">
-                <div class="rounded animate-spin ease duration-300 w-4 h-4 border-2"
-                    :class="updatingClass"></div>
-                <span>{{ updatingText }}</span>
-            </div>
-            <div v-else class="flex hover:text-blue-500 text-base font-light justify-center items-center sm:mt-0">
-                Edit <ChevronRightIcon class="h-6 w-6" aria-hidden="true" />
-            </div>
+        </div>
+        <div v-if="updatingText != ''" class="bg-white border items-center rounded-full p-2 text-sm z-50; mt-2 sm:mt-0 flex space-x-2" 
+                :class="updatingClass">
+            <div class="rounded animate-spin ease duration-300 w-4 h-4 border-2"
+                :class="updatingClass"></div>
+            <span>{{ updatingText }}</span>
         </div>
     </div>
 
-    <div class="border-t rounded-b-md border-gray-200 items-center bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
-        <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
-            <span class="text-gray-600">Trust ID:</span>
-            <AddressField :etherscan="false" :address="trust.key" class="text-gray-900"/>
+    <div class="border-t text-center text-gray-600 dark:text-gray-200 rounded-b-md border-gray-200 dark:border-gray-500 items-center bg-slate-100 dark:bg-slate-700 divide-y divide-gray-200 dark:divide-gray-400 sm:flex sm:divide-y-0 sm:divide-x">
+        <div class="flex-1 p-3 text-sm font-medium">
+            Trust ID:
+            <AddressField :etherscan="false" :address="trust.key" class="text-gray-900 dark:text-gray-300"/>
         </div>
-        <div class="space-x-1 px-6 py-2 text-sm font-medium text-center">
-            <span class="text-gray-600">Amount:</span>
-            <span class="text-gray-900">{{etherAmount}}</span>
+        <div class="flex-1 shrink-0 p-3 text-sm font-medium">
+            Amount:
+            <span class="text-gray-900 dark:text-gray-300">{{etherAmount}}</span>
         </div>
         
-        <div v-if="!available" class="space-x-1 px-6 py-2 text-sm font-medium text-center">
-            <span class="text-gray-600">Available After:</span>
-            <span class="text-red-500">{{trust.getMaturityDate().toLocaleDateString()}}</span>
+        <div v-if="!available" class="flex-1 p-3 text-gray-900 dark:text-gray-300 text-sm font-medium">
+            Available After:
+            <span>{{trust.getMaturityDate().toLocaleDateString()}}</span>
         </div>
-        <div v-else-if="available" class="space-x-1 px-6 py-2 text-sm font-medium text-center">
-            <span class="text-green-500">Available Now!</span>
+        <div v-else-if="available" class="flex-1 p-3 text-sm font-medium">
+            <span class="rounded-full bg-lime-400 p-2 text-black dark:bg-opacity-0 dark:text-lime-400 dark:border dark:border-lime-400 ">Available Now!</span>
         </div>
     </div>
 </div>
@@ -105,97 +104,11 @@ const stats = [
 ]
 const updatingInfo = [
     { text: "", class: "" },
-    { text: "Updating...", class: "badge-updating" },
-    { text: "Deleting...", class: "badge-deleting" },
-    { text: "Creating...", class: "badge-creating" },
+    { text: "Updating...", class: "border-blue-500 text-blue-500" },
+    { text: "Deleting...", class: "border-red-500 text-red-500" },
+    { text: "Creating...", class: "border-green-500 text-green-500" },
 ];
 const updatingText = computed(() => updatingInfo[list.trustState(props.trust.key)].text);
 const updatingClass = computed(() => updatingInfo[list.trustState(props.trust.key)].class);
 
 </script>
-
-<style scoped>
-    .card {
-        @apply rounded-lg bg-white shadow
-        cursor-pointer
-        hover:border-gray-500
-        hover:text-gray-400
-        text-white
-        border
-        relative
-    }
-    .eth-amount {
-        @apply -ml-2 text-black text-base flex items-center rounded-md whitespace-nowrap;
-    }
-    .cert-name {
-        position: absolute;
-        top: 38%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        @apply text-base font-serif font-thin leading-tight uppercase;
-    }
-    .badge-updating {
-        @apply  border-blue-500 text-blue-500;
-    }
-    .badge-deleting {
-        @apply  border-red-500 text-red-500;
-    }
-    .badge-creating {
-        @apply  border-green-500 text-green-500;
-    }
-    .cert-eth {
-            position: absolute;
-            top: 70%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            @apply text-white font-bold;
-    }
-    .cert-nbr {
-            position: absolute;
-            top: 96%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-    }
-
-    .card-tag-beneficiary {
-        @apply flex-shrink-0 
-            flex 
-            items-center 
-            bg-gradient-to-b
-            from-black
-            via-green-900
-            to-green-900
-            text-white 
-            justify-center 
-            w-20 
-            h-full 
-            rounded-l-2xl;
-    }
-    .card-icon {
-        @apply inline text-gray-400 h-10 w-10;
-    }
-    .card-header {
-        @apply text-lg mb-2 font-light text-black;
-    }
-    .card-body {
-        @apply text-sm text-black sm:text-base flex-1 min-w-0 mt-2 mb-2;
-    }
-    .highlight-enter-from {
-        @apply bg-blue-300 rounded-md;
-        transition: all 5s;
-    }
-    .highlight-enter-to {
-        @apply bg-white;
-        transition: all 5s;
-    }
-    .pop-enter-from {
-        @apply text-yellow-300;
-        transform: scale(2) translate(-50%, -50%);
-        transition: ease-out 0.8s;
-    }
-    .pop-enter-to {
-        @apply text-white;
-        transform: scale(1) translate(-50%, -50%);
-        transition: ease-out 0.8s
-    }
-</style>

@@ -9,7 +9,8 @@
         v-model="beneficiary"
         placeholder="Enter Beneficiary Account #"
         name="beneficiary" id="beneficiary" autocomplete="beneficiary"
-        :class="[beneficiaryError ? 'input-field-invalid' : 'input-field']" />
+        :class="[beneficiaryError ? 'text-base text-red-500 p-2 block border focus:ring-red-500 focus:border-red-500 w-full min-w-0 rounded-md border-red-500' 
+                                    : 'text-base text-black p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300']" />
     </div>
 </div>
 </template>
@@ -57,12 +58,3 @@ const validate = (e: EventTarget | null) => {
 }
 
 </script>
-
-<style scoped>
-.input-field {
-    @apply text-base text-black p-2 block border focus:ring-indigo-500 focus:border-indigo-500 w-full min-w-0 rounded-md border-gray-300;
-}
-.input-field-invalid {
-    @apply  text-base text-red-500 p-2 block border focus:ring-red-500 focus:border-red-500 w-full min-w-0 rounded-md border-red-500;
-}
-</style> 

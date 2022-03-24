@@ -1,15 +1,15 @@
 <template>
-<footer class="bg-white mt-10 pt-10" aria-labelledby="footer-heading">
+<footer class="mt-10 pt-10" aria-labelledby="footer-heading">
     <h2 id="footer-heading" class="sr-only">Footer</h2>
     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:py-8 lg:px-8">
         <div class="xl:grid xl:grid-cols-3 xl:gap-8">
             <div class="space-y-4 xl:col-span-1">
                 <span class="flex items-center space-x-2">
-                <span class="text-gray-900 font-bold text-base uppercase">
+                <span class="text-gray-900 dark:text-gray-200 font-bold text-base uppercase">
                     Safe
                     <span class="-ml-1 font-light">Trust</span>
                 </span>
-                <span class="text-gray-700">
+                <span class="text-gray-700 dark:text-gray-200 ">
                     - Protect your crypto assets.
                 </span>
                 </span>
@@ -17,12 +17,12 @@
         </div>
         <div class="mt-4 grid grid-cols-3 gap-8 xl:mt-0 xl:col-span-2">
             <div class="sm:mt-0">
-                <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
+                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-wider uppercase">
                 Support
                 </h3>
-                <ul role="list" class="mt-4 space-y-1">
+                <ul role="list" class="mt-2 space-y-0">
                 <li v-for="item in navigation.support" :key="item.name">
-                    <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
+                    <a :href="item.href" class="text-xs text-gray-600 dark:text-gray-200 hover:text-blue-500">
                     {{ item.name }}
                     </a>
                 </li>
@@ -30,12 +30,12 @@
             </div>
 
             <div>
-                <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
+                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-wider uppercase">
                     Legal
                 </h3>
-                <ul role="list" class="mt-4 space-y-1 whitespace-nowrap">
+                <ul role="list" class="mt-2 space-y-0 whitespace-nowrap">
                     <li v-for="item in navigation.legal" :key="item.name">
-                        <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
+                        <a :href="item.href" class="text-xs text-gray-600 dark:text-gray-200  hover:text-blue-500">
                             {{ item.name }}
                         </a>
                     </li>
@@ -43,20 +43,21 @@
             </div>
 
             <div>
-                <h3 class="text-sm font-semibold text-gray-700 tracking-wider uppercase">
+                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-wider uppercase">
                     Company
                 </h3>
-                <ul role="list" class="mt-4 space-y-1 whitespace-nowrap">
+                <ul role="list" class="mt-2 space-y-0 whitespace-nowrap">
                     <li v-for="item in navigation.company" :key="item.name">
-                        <a :href="item.href" class="text-xs text-gray-600 hover:text-blue-500">
+                        <a :href="item.href" class="text-xs text-gray-600 dark:text-gray-200  hover:text-blue-500">
                             {{ item.name }}
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="flex mt-6 border-t items-center border-gray-700 pt-4">
+        <div class="flex mt-4 border-t items-center border-gray-400 pt-4">
                 <div class="flex w-full space-x-4">
+                    <div class="grow"></div>
                     <a v-for="item in navigation.social" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-300">
                         <span class="sr-only">{{ item.name }}</span>
                         <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />

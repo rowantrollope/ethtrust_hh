@@ -11,7 +11,7 @@
 
 <TopAlert :show="bc.connectionState.value === state.Connected && stats.isBeneficiary.value"
     @click="$router.push('/Beneficiaries')">
-    We found {{ stats.beneficiaryTrusts.value }} trust funds in your name as Beneficiary. <a @click="$router.push('/Beneficiaries')" class="btn btn-success">Show me!</a>
+    We found {{ stats.beneficiaryTrusts.value }} trust funds in your name as Beneficiary. <a @click="$router.push('/Beneficiaries')" class="btn btn-success ">Show me!</a>
 </TopAlert>
 
 <TopAlert :show="bc.connectionState.value === state.Connected && stats.isTrustee.value"
@@ -19,26 +19,26 @@
     We found {{ stats.trusteeTrusts.value }} trust funds for you as a TRUSTEE.  <a @click="$router.push('/Trustees')" class="btn btn-success">Show me!</a>
 </TopAlert>
 
-<div class="relative bg-white overflow-hidden">
+<div class="relative overflow-hidden">
     <div class=" ">
 
         <main class="mt-5 sm:mt-10 mx-auto px-4 sm:px-6 md:mt-12 lg:mt-16 lg:px-8 xl:mt-24 mb-10">
             <div class="sm:text-center xl:text-center xl:w-1/2 xl:pr-8">
-            <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl xl:pr-5">
-                <span class="block xl:inline">Finally, an easy way to safely hand down crypto assets to</span>
+            <h1 class="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl xl:pr-5">
+                <span class="block xl:inline">Finally, an easy way to safely pass down crypto assets to</span>
                 {{ ' ' }}
-                <span class="block text-indigo-600 xl:inline">your family</span>
+                <span class="block text-indigo-600 xl:inline">your family and loved ones</span>
             </h1>
-            <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">
+            <p class="mt-3 text-base text-gray-500 dark:text-gray-300 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">
                 Safely transfer your crypto assets to your family and loved ones taking advantage of the tax advantages of irrevocable trust funds.
             </p>
-            <p class="hidden mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">                
+            <p class="hidden mt-3 text-base text-gray-500 dark:text-gray-300 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">                
                 All crypto assets placed into trust can be invested in one of three DeFi funds so your assets grow over time. 
             </p>
-            <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">
+            <p class="mt-3 text-base text-gray-500 dark:text-gray-300 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">
                 Trusted.eth uses SmartContracts on the Ethereum blockchain to provide your family a simple and automated way to setup and maintain trust funds for your family.  
             </p>
-            <p class="mt-3 font-black text-base text-gray-500 sm:mt-5 sm:text-lg  md:mt-5 md:text-xl xl:mx-0">
+            <p class="mt-3 font-black text-base text-gray-500 dark:text-gray-300 sm:mt-5 sm:text-lg  md:mt-5 md:text-xl xl:mx-0">
                 Protect your crypto NOW
             </p>
             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center xl:justify-center">

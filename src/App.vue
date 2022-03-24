@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white">
+    <div class="bg-white dark:bg-slate-900 text-gray-800 dark:text-stone-100 ">
         <Nav/>
         <router-view v-slot="{ Component }">
             <transition name="fade" mode="out-in">

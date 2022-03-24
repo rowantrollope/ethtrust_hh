@@ -2,8 +2,7 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
   
 module.exports = {
-    purge: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
-    darkMode: false, // or 'media' or 'class'
+    content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
     theme: {
         extend: {
             fontFamily: {
@@ -12,16 +11,13 @@ module.exports = {
             },
             colors: {
                 grape: colors.purple,
-                gray: colors.warmGray,
+                gray: colors.stone,
                 green: colors.emerald,
                 blue: colors.sky,
                 red: colors.red,
                 pink: colors.fuschia,
             },
         },
-    },
-    variants: {
-        extend: {},
     },
     plugins: [
         require("@tailwindcss/forms"),

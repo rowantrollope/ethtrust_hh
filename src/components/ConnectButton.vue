@@ -13,15 +13,18 @@
         class="text-white p-2 space-x-1 rounded-lg font-thin items-center flex text-xs hover:bg-black hover:text-white focus:outline-none " @click="onClicked()">
 
         <div v-if="bc.connectionState.value === state.Unknown">
-            <button class="flex items-center font-bold space-x-1">
-                <span>Connect Wallet</span>
+            <button class="font-semibold">
+                Connect Wallet
             </button>
         </div>
 
         <div v-else-if="bc.connectionState.value === state.Connected">
             <div class="flex items-center space-x-1">
                 <!-- <Jazzicon class="-ml-1 mt-1" :address="0x012314151351395359153891359818351385893" :diameter="24"/> -->
-                <UserCircleIcon class="text-blue-400 h-5 w-5" aria-hidden="true" />
+                <div  class="p-1 shrink-0 rounded-full bg-stone-200 w-[26px] h-[26px]">
+                    <img class="h-[18px]" :src="bc.walletIcon.value"/>
+                </div>
+                <!-- <UserCircleIcon class="text-blue-400 h-5 w-5" aria-hidden="true" /> -->
                 <span>{{bc.walletName.value + ' @ ' + networkNameShort}}</span>
             </div>
         </div>
@@ -56,53 +59,47 @@
                 </div>
             </div>
             <div v-else-if="bc.connectionState.value === state.Connected">
-                <div class="flex-col text-left vertical space-y-3">
-                    <div class="flex items-center space-y-3 text-sm">
-                        <!-- <UserCircleIcon class="h-6 w-6 text-blue-500"/> &nbsp;--> Connected to {{ networkName }}
+                <div class="flex-col text-left vertical space-y-3 text-gray-500">
+                    <div class="text-sm">
+                        Connected to {{ networkName }}
                     </div>
                     <div class="border border-gray-300 rounded-md p-3">
-                        <div class="items-center flex space-x-2 text-base font-black">
+                        <div class="items-center mb-2 flex space-x-2 text-base font-black">
 
-                            <img style="height: 22px" :src="bc.walletIcon.value"/>
-                            <div>{{bc.walletName.value}}</div>
+                            <img class="h-[24px]" :src="bc.walletIcon.value"/>
+                            <div class="text-black">{{bc.walletName.value}}</div>
                         </div>
-                        <div class="flex mt-2 ml-8">
-                            <span class="text-gray-500">Account #:</span> 
-                            <span class=""> &nbsp;<AddressField :address="bc.account.value"/></span>
-                        </div>
-                        <div class="flex mt-2 ml-8">
-                            <span class="text-gray-500">Balance:</span> 
-                            <span class="ml-1">{{ balance }} ETH </span>
-                            <span class="text-gray-500 ml-2">({{eth2usd}} USD)</span>
+                        <div class="ml-8">
+                            Account #: <AddressField :address="bc.account.value"/>
+                        </div> 
+                        <div class="mt-2 ml-8">
+                            Balance: {{ balance }} ETH &nbsp ({{eth2usd}} USD)
                         </div>
                             <SwitchGroup as="div" class=" cursor-pointer mt-3 text-gray-500 items-center flex ml-2">
-                                <Switch v-model="store.state.autoConnect" class="ml-5 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <Switch v-model="store.state.autoConnect" class="ml-5 shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <span aria-hidden="true" class="pointer-events-none absolute bg-white w-full h-full rounded-md" />
                                 <span aria-hidden="true" :class="[store.state.autoConnect ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
                                 <span aria-hidden="true" :class="[store.state.autoConnect ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />
                             </Switch>  
-                            <SwitchLabel as="span" class="ml-2 text-xs">
+                            <SwitchLabel as="span" class="ml-2">
                                 Remember this wallet
                             </SwitchLabel>                 
                             </SwitchGroup>
                     </div>
                     
                     <div class="border border-gray-300 rounded-md p-3">
-                        <div class="items-center flex space-x-2 text-base font-black">
-                            SafeTrust SmartContract
+                        <div class="text-base text-black font-black">
+                            SmartContract
                         </div>
-                        <p class="flex ml-5 mt-2">
-                            <span class="text-gray-500">Address:</span> 
-                            <AddressField v-if="list" :address="list.address.value"/>
-                        </p>
+                        <div class="ml-8 mt-2">
+                            Address: <AddressField v-if="list" :address="list.address.value"/>
+                        </div>
                     </div>
-                    <p class="flex-grow">
-                    </p>
                 </div>
-                <PopoverButton class="flex w-full mt-4 btn btn-danger" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
+                <PopoverButton class="w-full mt-4 btn btn-danger" @click="onDisconnect">Disconnect {{bc.walletName.value}}</PopoverButton>
                 <!-- <PopoverButton class="mt-2 w-full btn btn-primary" @click="onConnectNewWallet">Connect New Wallet</PopoverButton> -->
-                <div class="mt-5 text-gray-500 justify-center border-t pt-5 items-center flex ml-2">
-                    <Switch v-model="store.state.developerMode" class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <div class="mt-5 text-gray-500 justify-center border-t pt-5 flex ml-2">
+                    <Switch v-model="store.state.developerMode" class="shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <span aria-hidden="true" class="pointer-events-none absolute bg-white w-full h-full rounded-md" />
                         <span aria-hidden="true" :class="[store.state.developerMode ? 'bg-green-500' : 'bg-gray-200', 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200']" />
                         <span aria-hidden="true" :class="[store.state.developerMode ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200']" />

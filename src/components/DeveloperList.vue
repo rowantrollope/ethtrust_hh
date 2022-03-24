@@ -1,8 +1,10 @@
 <template>
 <div v-if="bc.connectionState.value === bcState.Connected" class="text-center ">
-    <div class="flex mt-5 justify-center">
-        <button class="text-base mx-2 font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
+    <div class="flex ml-6 space-x-2 mt-5 items-center">
+        <button class="text-base font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
         <button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</button>        <button class="btn btn-danger" :onClick="testMethod">TEST</button>
+        <div class="grow"></div>
+        <div class=""> Show: </div> 
         <InputTrustType v-model="selectedTrust"></InputTrustType>
     </div>
     <!-- Account list -->

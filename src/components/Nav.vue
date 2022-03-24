@@ -4,11 +4,11 @@
 <template>
 <div class="mx-auto px-2 h-11" style="background-color: rgb(51, 51, 51);">
     <div class="flex h-full justify-between">
-        <div class="flex-grow flex items-center">
+        <div class="grow flex items-center">
             <!--
                 Mobile menu
             -->
-            <div class="flex md:hidden">
+            <div class="md:hidden">
                 <!-- Mobile menu button -->
                 <Menu as="nav" v-slot="{ open }">
                     <MenuButton>
@@ -65,18 +65,14 @@
             </div>
             
             <!-- Brand name --> 
-            <div class="flex mr-3">
-                <div class="sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased uppercase">
-                    Safe<span class="font-thin">Trust</span>
-                </div>
+            <div class="mr-3 sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased whitespace-nowrap uppercase">
+                Safe<span class="font-thin"> Trust</span>
             </div>
             
             <!-- Normal desktop menu items --> 
             <div class="md:flex hidden items-center">
                 <router-link class="router-link" tag="li" to="/">
-                    <div>
-                        Home
-                    </div>
+                    Home
                 </router-link>
                 <router-link class="router-link" tag="li" to="/Manage">
                     <div class="relative">
@@ -142,7 +138,7 @@ const stats = useTrustStats();
         @apply border border-gray-400 px-3 py-2 rounded-md text-base font-normal;
     }
     .router-link {
-        @apply flex-shrink-0 text-white hover:bg-black hover:text-white px-2 ml-2 py-1 rounded-md text-sm font-light;
+        @apply text-white whitespace-nowrap hover:bg-black hover:text-white px-2 ml-2 py-1 rounded-md text-sm font-light;
     }
     .mobile-router-link {
         @apply text-gray-300 hover:bg-gray-700 hover:text-white block px-2 py-2 rounded-md text-base font-thin;

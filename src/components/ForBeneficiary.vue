@@ -1,26 +1,25 @@
 <template>
 <div>
-    <ConnectBlock v-if="bc.connectionState.value !== state.Connected" />
 
-    <div v-else-if="bc.connectionState.value === state.Connected && !trusts">
+    <div v-if="bc.connectionState.value === state.Connected && !trusts">
         <div class="flex h-20 justify-center items-center">
-            <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
+            <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black dark:border-white">
             </div><span class="ml-2">Fetching your Trusts...</span>
         </div>        
     </div>
     <div v-else-if="bc.connectionState.value === state.Connected && trusts" class="text-center ">
         <PageTitle>
                 <template v-slot:title>Trusts Created for You 
-                    <span class="text-gray-500 text-base">(<AddressField v-if="bc.account" :address="bc.account.value"></AddressField>)</span>
+                    <span class="text-gray-500 dark:text-gray-200 text-base">(<AddressField v-if="bc.account" :address="bc.account.value"></AddressField>)</span>
                 </template>
         </PageTitle>  
 
         <div v-if="!trusts.length" class="m-10 mt-10" >
-            <h1 class="text-xl tracking-tight font-thin text-gray-900 sm:text-xl md:text-2xl">
+            <h1 class="text-xl sm:text-xl md:text-2xl">
                 <span class="block xl:inline">
-                    We can't find any trust funds for account: 
+                    We can't find any trust funds where your connected account: 
                     <AddressField class="" v-if="bc.account" :address="bc.account.value"></AddressField>
-                    as a <span class="text-indigo-500">beneficiary. </span>
+                    is listed as a <span class="text-indigo-500">beneficiary. </span>
                 </span>
             </h1>
             <p class="mt-12 text-left">Need help?</p>
@@ -35,7 +34,9 @@
         </div>
 
         <div v-else-if="trusts.length" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-            There are {{ trusts.length }} trust funds for you.
+            <span>There are 
+                <div class="rounded-full inline bg-red-500 p-1">{{ trusts.length }}</div> 
+                trust funds for you.</span>
             <transition-group name="list">
                 <NewTrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
             </transition-group>

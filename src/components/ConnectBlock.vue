@@ -23,7 +23,7 @@
         </div>
     </div>
     <div v-else-if="bc.connectionState.value === state.Unknown" 
-        class="text-2xl mt-10 tracking-tight text-gray-900">
+        class="text-2xl tracking-tight">
         <div class="flex justify-center">Connect your wallet to get started </div>
         <div class="flex justify-center items-center space-x-5 mt-10">
             <button class="btn btn-rounded btn-primary" @click="connectBlockchain">Connect Wallet</button>
