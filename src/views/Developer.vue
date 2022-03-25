@@ -55,10 +55,10 @@ import PageTitle from '../components/PageTitle.vue';
 import DeveloperList from '../components/DeveloperList.vue';
 
 const people = [
-    'Rowan',
-    'Steph',
-    'Paxton',
-    'Pip',
+    'Apple',
+    'Banana',
+    'Carrott',
+    'Durian Fruit',
 ]
 const selectedPerson = ref(people[0]);
 const query = ref('');
