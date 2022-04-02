@@ -1,6 +1,15 @@
 <template>
 <div v-if="bc.connectionState.value === bcState.Connected" class="text-center ">
     <div class="w-full p-2 bg-red-200 text-red-600"><span class="animate-pulse">Warning: Use at your own risk.</span></div>
+
+<div class="snap-x snap-mandatory overflow-x-auto h-full flex space-x-4 p-4">
+
+  <div v-for="trust in filteredTrusts" :key="trust.key" class="snap-center shrink-0">  
+    <TrustCard class="w-[100%]" :trust="trust" @click=" select(trust.key)"/>
+  </div> 
+
+</div>
+
     <div class="flex ml-6 space-x-2 mt-5 items-center">
         <button class="text-base font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
         <button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</button>        <button class="btn btn-danger" :onClick="testMethod">TEST</button>
@@ -88,6 +97,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import AddressField from './AddressField.vue';
 import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
+import TestComponent from './TestComponent.vue'
+import TrustCard from './TrustCard.vue'
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';

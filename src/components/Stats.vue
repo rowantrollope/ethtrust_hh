@@ -1,15 +1,25 @@
 <template>
 <div>
-    <div class="space-y-4 space-x-0 sm:space-y-0 sm:space-x-4 sm:flex">
-        <div class="grow-[1] px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
+    <button class="hidden btn btn-success" @click="showStats = !showStats"/>
+    <TopAlert :show="show" class="block -mt-5 mb-2 -mx-5 sm:hidden">
+        {{ trusts.length }} Trusts, Total Value {{ totalValue }} ETH ({{totalValueUSD}})
+    </TopAlert>
+
+    <div class="mb-5 space-x-4 flex hidden sm:block">
+        <div class="grow-[2] px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
             <div class="text-sm font-medium text-gray-500 dark:text-stone-200 truncate">
-                Total Trusts
+                <span class="block sm:hidden">
+                    Trusts
+                </span>
+                <span class="hidden sm:block">
+                    Total Trusts
+                </span>
             </div>
             <div class="mt-1 text-xl font-semibold">
                 {{ trusts.length }}
             </div>
         </div>
-        <div class="grow-[3] px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
+        <div class="grow-[2] px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
             <div class="text-sm font-medium text-gray-500 dark:text-stone-200 truncate">
                 Total Value
             </div>
@@ -20,7 +30,7 @@
                 <span class="-ml-1 shrink-0">
                     {{ totalValue }} ETH
                 </span>
-                <span class="text-lg ml-2 sm:ml-2 text-gray-500 dark:text-stone-200 ">({{totalValueUSD}})</span>
+                <span class="text-lg ml-2 sm:ml-2 text-gray-500 dark:text-stone-200 truncate">({{totalValueUSD}})</span>
             </div>
         </div>
         <div class="grow-[1] hidden sm:block px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
@@ -36,12 +46,24 @@
 </template>
   
 <script setup="props" lang="ts">
-import { computed, inject } from 'vue'
+import { computed, ref } from 'vue'
 import { ethers } from 'ethers';
 
 // services
 import { useCurrencyExchange } from '../services/CurrencyExchange';
 import Trust from "../services/Trust"
+
+// components
+import TopAlert from './TopAlert.vue';
+
+const showStats = ref(false);
+
+const show = computed(() => {
+    if(showStats.value === false)
+        setTimeout(() => { showStats.value = true; }, 2000);
+    
+    return showStats.value;
+});
 
 const props = defineProps({
     trusts: { type: Array, required: true },

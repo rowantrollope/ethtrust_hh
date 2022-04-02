@@ -4,7 +4,7 @@
 
     <div v-else-if="bc.connectionState.value === state.Connected && !trusts">
         <div class="flex h-20 justify-center items-center">
-            <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black">
+            <div class="rounded animate-spin ease duration-300 w-5 h-5 border-2 border-black dark:border-white">
             </div><span class="ml-2">Fetching your Trusts...</span>
         </div>        
     </div>
@@ -18,22 +18,23 @@
         </PageTitle> 
         
         <div v-if="trusts && !trusts.length" class=" m-10 mt-10 " >
-            <h1 class="text-2xl tracking-tight font-thin text-gray-900 sm:text-3xl md:text-4xl">
+            <h1 class="text-gray-900 sm:text-xl">
                 <span class="block xl:inline">
-                    We can't find any trust funds with your account number: (<AddressField class="text-lg" v-if="bc.account" :address="bc.account.value"></AddressField>) 
+                    We can't find any trust funds with your account number: (<AddressField v-if="bc.account" :address="bc.account.value"></AddressField>) 
                     listed as a <span class="text-indigo-500">trustee.</span> 
                 </span>
             </h1>
-            <p class="mt-12 text-left">Need help?</p>
-            <p class="text-base text-left font-light m-5">If you believe there should a trust for you as a trustee, double check your account information
-                    and check with the trust creator to ensure that you've connected your wallet to the same
-                    address they listed for you as trustee.
+            <div class="bg-green-100 mt-12 rounded-md p-4 text-green-700">
+                <p class="text-left font-bold">Need help?</p>
+                <p class="text-base text-left font-light m-5">If you believe there should a trust for you as a trustee, double check your account information
+                        and check with the trust creator to ensure that you've connected your wallet to the same
+                        address they listed for you as trustee.
 
-            </p>
-            <p class="m-5 text-left">
-                <a class="text-blue-500 underline" @click="$router.push('/About')">Click here for more information.</a>
-            </p>
-
+                </p>
+                <p class="m-5 text-left">
+                    <a class="text-blue-500 underline" @click="$router.push('/About')">Click here for more information.</a>
+                </p>
+            </div>
         </div>
 
 

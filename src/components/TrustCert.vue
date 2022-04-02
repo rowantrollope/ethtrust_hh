@@ -1,17 +1,19 @@
 
 <template>
-<div class="relative flex justify-center text-center">
-    <div class="">
-        <img class="sm:w-44 sm:h-44 w-40" alt="cert" src="../assets/certificate.png">
-    </div>
+<div class="relative w-fit">
+    <img class="h-44" alt="cert" src="../assets/certificate.png">
     <transition name="highlight" mode="out-in">
-        <div class="cert-name" :key="trust.name">
-            {{ trust.name }}
-        </div>            
+        <div class="absolute flex items-center justify-center top-1/3 ml-[38px] mt-[6px] h-[28px] w-[100px] overflow-clip">
+            <div class="text-xs uppercase font-serif font-thin leading-tight text-center text-black ">
+                {{ trust.name }}
+            </div>
+        </div>
     </transition>
     <transition name="pop" mode="out-in">
-        <div class="cert-eth" :key="trust.etherAmount.toString()">
+        <div class="absolute flex items-center justify-center top-1/2 mt-[10px] w-full" :key="trust.etherAmount.toString()">
+            <div class="relative text-sm font-base leading-tight text-white rounded-md bg-green-900">
             {{ utils.formatEtherString(trust.etherAmount) }}
+            </div>
         </div>    
     </transition>
 </div>

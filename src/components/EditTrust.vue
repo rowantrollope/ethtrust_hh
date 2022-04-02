@@ -28,7 +28,7 @@
                 </div>
             </p>
 
-            <p class="mt-1 text-gray-500"> Trustee Account#{{ trust.trustees.length > 1 ? 's:' : ':'}} 
+            <p v-if="trust.trustees.length" class="mt-1 text-gray-500"> Trustee Account#{{ trust.trustees.length > 1 ? 's:' : ':'}} 
                 <div class="inline text-black"><AddressField v-for="trustee in trust.trustees" :address="trustee"/></div> 
             </p>
             

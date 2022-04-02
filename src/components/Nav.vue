@@ -15,8 +15,8 @@
                         <span class="sr-only">Open main menu</span>
                         <Hamburger :open="open"/>
                     </MenuButton>
-                    <transition name="fadeslide">
-                        <MenuItems class="origin-top-left absolute mt-1 -ml-2 px-2 w-full h-full pt-5 pb-5 shadow-lg bg-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                    <transition name="slide">
+                        <MenuItems class="origin-top-left absolute mt-2 -ml-2 px-2 w-full h-full pt-5 pb-5 shadow-lg bg-black ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                                 <MenuItem>
                                     <router-link class="mobile-router-link" tag="li" to="/">
@@ -146,57 +146,11 @@ const stats = useTrustStats();
     .mobile-router-link-active {
         @apply bg-gray-900 text-white block px-2 py-2 rounded-md text-base font-thin;
     }
-
-    .rotating {
-        transition: transform 1s ease-in-out;
-    }
-    .rotating:hover {
-        transform: rotateZ(360deg);
-    }
-
-    @keyframes rotating {
-        from
-            {
-            transform: rotate(0deg);
-            -o-transform: rotate(0deg);
-            -ms-transform: rotate(0deg);
-            -moz-transform: rotate(0deg);
-            -webkit-transform: rotate(0deg);
-            }
-        to
-            {
-            transform: rotate(360deg);
-            -o-transform: rotate(360deg);
-            -ms-transform: rotate(360deg);
-            -moz-transform: rotate(360deg);
-            -webkit-transform: rotate(360deg);
-            }
-    }
-    @-webkit-keyframes rotating {
-        from
-            {
-            transform: rotate(0deg);
-            -webkit-transform: rotate(0deg);
-            }
-        to
-            {
-            transform: rotate(360deg);
-            -webkit-transform: rotate(360deg);
-            }
-    }
-    .rotating-always {
-        -webkit-animation: rotating 30s linear infinite;
-        -moz-animation: rotating 30s linear infinite;
-        -ms-animation: rotating 30s linear infinite;
-        -o-animation: rotating 30s linear infinite;
-        animation: rotating 30s linear infinite;
-    }
-
     .fadeslide-enter-active {
         @apply transition transform ease-in-out duration-500;
     }
     .fadeslide-enter-from {
-        @apply  opacity-100 scale-y-0;
+        @apply transition transform opacity-100 scale-y-0;
     }
     .fadeslide-enter-to {
         @apply  opacity-100 scale-y-100 ;
@@ -209,5 +163,20 @@ const stats = useTrustStats();
     }
     .fadeslide-leave-to {
         @apply transform opacity-100 scale-y-0;
+    }
+
+    .slide-enter-active,
+    .slide-leave-active {
+        transition: max-height 0.5s ease-in-out
+    }
+    .slide-enter-to,
+    .slide-leave-from {
+        overflow: hidden;
+        max-height: 10000px;
+    }
+    .slide-enter-from,
+    .slide-leave-to {
+        overflow: hidden;
+        max-height: 0;
     }
 </style>

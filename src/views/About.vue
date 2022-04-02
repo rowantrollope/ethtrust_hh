@@ -6,11 +6,11 @@
     <PageTitle>
         <template v-slot:title>Frequently Asked Questions</template>
     </PageTitle>
-    <div class="relative bg-white mt-5 sm:mt-10 ml-5 mr-2 sm:ml-10 overflow-hidden">
+    <div class="relative mt-5 sm:mt-10 ml-5 mr-2 sm:ml-10 overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
 
-                <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                <h1 class="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
                 <span class="block xl:inline">Frequently Asked </span>
                 <span class=" text-indigo-600 inline">Questions</span>
                 </h1>
@@ -96,6 +96,6 @@ import PageTitle from '../components/PageTitle.vue';
     @apply font-bold text-2xl;
 }
 .answer {
-    @apply text-xl ml-5;
+    @apply text-xl sm:ml-10 dark:text-gray-400;
 }
 </style>

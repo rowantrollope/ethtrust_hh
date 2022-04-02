@@ -20,11 +20,11 @@ const props = defineProps({
 const emit = defineEmits(['click']);
 
 const bgClass = ref("bg-blue-500");
-const buttonClass = ref("btn-black");
+const buttonClass = ref("btn-slate-900");
 
 const afterEnter = () => {
     setTimeout(() => {
-        bgClass.value = "bg-black fade";
+        bgClass.value = "bg-slate-900 fade";
         buttonClass.value = 'btn-success';
     }, 1000)
 }
@@ -35,7 +35,7 @@ const afterEnter = () => {
 
 @keyframes bgFade {
   from {background-color: rgba(59, 130, 246);}
-  to {background-color: black;}
+  to {background-color: rgba(15, 23, 42);}
 }
 .fade {
     animation-name: bgFade;

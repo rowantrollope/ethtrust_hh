@@ -15,22 +15,24 @@
         </PageTitle>  
 
         <div v-if="!trusts.length" class="m-10 mt-10" >
-            <h1 class="text-xl sm:text-xl md:text-2xl">
+            <h1 class="sm:text-xl">
                 <span class="block xl:inline">
                     We can't find any trust funds where your connected account: 
                     <AddressField class="" v-if="bc.account" :address="bc.account.value"></AddressField>
                     is listed as a <span class="text-indigo-500">beneficiary. </span>
                 </span>
             </h1>
-            <p class="mt-12 text-left">Need help?</p>
-            <p class="text-base text-left font-light m-5">If you believe there should a trust for you, double check your account information
-                    and check with the trust creator to ensure that you've connected your wallet to the same
-                    address they listed for you as beneficiary.
+            <div class="bg-green-100 mt-12 rounded-md p-4 text-green-700">
+                <p class="text-left font-bold">Need help?</p>
+                <p class="text-base text-left font-light m-5">If you believe there should a trust for you, double check your account information
+                        and check with the trust creator to ensure that you've connected your wallet to the same
+                        address they listed for you as beneficiary.
 
-            </p>
-            <p class="m-5 text-left">
-                <a class="text-blue-500 underline" @click="$router.push('/About')">Click here for more information.</a>
-            </p>
+                </p>
+                <p class="m-5 text-left">
+                    <a class="text-blue-500 underline" @click="$router.push('/About')">Click here for more information.</a>
+                </p>
+            </div>
         </div>
 
         <div v-else-if="trusts.length" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">

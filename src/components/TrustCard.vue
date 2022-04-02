@@ -1,6 +1,6 @@
 
 <template>
-<div class="rounded-md dark:bg-slate-800 dark:border-gray-600 shadow-lg cursor-pointer hover:border-gray-500 hover:text-gray-600 dark:hover:border-gray-400 dark:hover:text-gray-300 border relative" 
+<div class="rounded-lg bg-white dark:bg-slate-800 dark:border-gray-600 shadow-lg cursor-pointer hover:border-gray-500 hover:text-gray-600 dark:hover:border-gray-400 dark:hover:text-gray-300 border relative" 
     :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4' : 'border-gray-300',
             list.updating(trust.key) ? 'animate-pulse border-blue-300 border-4' : 'border-gray-300',
             list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4' : 'border-gray-300`']" 
@@ -8,8 +8,8 @@
     <!-- Main Body -->
     <div class="p-4 sm:justify-between">
         <div class="sm:flex sm:items-center sm:space-x-5">
-            <div class="">
-                <TrustCert class="text-black" :trust="trust">
+            <div class="items-center justify-center flex sm:shrink-0">
+                <TrustCert class="" :trust="trust">
                 </TrustCert>
             </div>
             <div class="mt-3 sm:place-self-start sm:flex-col text-center space-y-2.5 sm:space-y-1.5 sm:-mt-1 sm:text-left">
@@ -17,25 +17,29 @@
                     {{ trust.name ? trust.name : "(Unnamed)" }}
                 </div>
                 <p class="text-sm font-medium dark:text-gray-300">
-                    For Beneficiary Account #: <AddressField class="whitespace-nowrap" :address="trust.beneficiary"/> </p>
-                <p v-if="trust.trustees.length==1" class="text-sm font-medium dark:text-gray-300"> 
-                    Trustee Account #: <AddressField :address="trust.trustees[0]"/>
+                    For Beneficiary Account #: <AddressField class="whitespace-nowrap" :address="trust.beneficiary"/> 
                 </p>
-                <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium">
-                    Trustee Account #'s: 
-                    <span v-for="trustee in trust.trustees" v-bind:key="trustee"><AddressField :address="trustee"/>, </span>
-                </p>
+                <div class="text-sm font-medium dark:text-gray-300">
+                    Trust Identification #: <AddressField :etherscan="false" :address="trust.key" class="text-gray-900 dark:text-gray-300"/>
+                </div>
+
                 <p class="text-sm font-medium dark:text-gray-300">
                     Created by Account #: <AddressField :address="trust.grantor"/> 
                 </p>
                 <p class="text-sm font-medium dark:text-gray-300">
                     Created on: {{ trust.getCreatedDate().toLocaleDateString() }}
                 </p>
+                <p v-if="trust.trustees.length==1" class="text-sm font-medium dark:text-gray-300"> 
+                    1 Trustee Assigned
+                </p>
+                <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium">
+                    {{ trust.trustees.length }} Trustee's assigned 
+                </p>
+                <p v-else-if="trust.trustees.length === 0" class="text-sm font-medium text-red-600">
+                    No Trustee's assigned 
+                </p>
                 <div class="text-sm font-medium dark:text-gray-300">
-                    Trust Identification #: <AddressField :etherscan="false" :address="trust.key" class="text-gray-900 dark:text-gray-300"/>
-                </div>
-                <div class="text-sm font-medium dark:text-gray-300">
-                    Trust Type: <span class="p-1.5 text-sm rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? '' : '']"> {{ trust.getTypeString() }}</span>
+                    Trust Type:<span class="p-1.5 text-sm rounded-lg" :class="[trust.getTypeString() === 'Revocable' ? '' : '']"> {{ trust.getTypeString() }}</span>
                 </div>
             </div>
         </div>

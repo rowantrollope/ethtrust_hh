@@ -2,9 +2,9 @@
     Input field which displays a truncated address field and has a popup 
 --> 
 <template>
-<span @mouseover="hover=true" @mouseleave="hover=false" class="cursor-pointer">
+<span @mouseover="hover=true" @mouseleave="hover=false" class="cursor-pointer whitespace-nowrap">
 
-    <span class="relative underline decoration-blue-500 p-0.5 border-gray-300">
+    <span class="relative whitespace-nowrap underline decoration-blue-500 p-0.5 border-gray-300">
         {{ utils.shortenAddress(address) }}
     </span>
     

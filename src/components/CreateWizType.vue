@@ -15,7 +15,7 @@
                     Trust Type
                 </dt>
                 <dd class="input-col flex items-center">
-                    <InputTrustType class="text-base" v-model="trust"></InputTrustType> 
+                    <InputTrustType class="text-base grow" v-model="trust"></InputTrustType> 
                     <a class="text-blue-500 underline ml-5" href="#/About">Learn More</a>
                 </dd>
             </div>

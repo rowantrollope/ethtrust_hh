@@ -60,24 +60,21 @@
     
     <!-- FOOTER --> 
     <template v-slot:buttons>
-        <div class="mt-1 flex bg-white space-x-5">
-            <button v-if="false" class="shrink btn btn-danger-outline" :onClick="onClose">
-                Cancel
-            </button>
-            <button v-if="!isFirstPanel()" class="shrink px-10 btn btn-primary-outline" :onClick="prev">
+        <div class="mt-1 flex bg-white space-x-2">
+            <button v-if="!isFirstPanel()" class="sm:shrink flex-1 btn btn-primary-outline" :onClick="prev">
                 Back
             </button>
-            <div class="flex-1 items-center">
+            <div class="flex-1 items-center hidden sm:block">
                 <div v-if="panelIndex" 
                      class="m-2 justify-center text-center text-base text-gray-500">
                     Step <span class="font-bold">{{ panelIndex }}</span> of {{ panels.length-1 }}
                 </div>
 
             </div>
-            <button v-if="isLastPanel()" class="shrink px- btn btn-success" :onClick="onCreate">
+            <button v-if="isLastPanel()" class="sm:flex-shrink flex-1 btn btn-success" :onClick="onCreate">
                 Create Now 
             </button>
-            <button v-else-if="!isLastPanel()" class="shrink px-10" 
+            <button v-else-if="!isLastPanel()" class="sm:flex-shrink flex-1" 
                     :class="[enableNextButton ? 'btn btn-primary' : 'btn btn-disabled']" :onClick="next">
                 Next
             </button>
