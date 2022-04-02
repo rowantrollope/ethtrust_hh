@@ -22,7 +22,7 @@ export enum ConnectionState {
     Error,
 }
 
-const API_KEY = import.meta.env.VITE_ONBOARD_API_KEY;
+const API_KEY = process.env.VITE_ONBOARD_API_KEY;
 const NETWORK_MAINNET = 1;
 const DEFAULT_NETWORK = NETWORK_MAINNET; // DEFAULT
 

@@ -3,7 +3,7 @@
 
         <img class="sm:w-44 w-40" alt="cert" src="../assets/certificate.png">
 
-        <div class="text-black top-1/3 mt-[7px] w-full text-white rounded-md absolute font-bold">
+        <div class="text-black top-1/3 mt-[7px] w-full rounded-md absolute font-bold">
             Name
         </div> 
         

@@ -97,7 +97,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import AddressField from './AddressField.vue';
 import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
-import TestComponent from './TestComponent.vue'
 import TrustCard from './TrustCard.vue'
 
 // services
