@@ -107,7 +107,7 @@ const query = ref('');
 const filteredTrusts = computed(() => 
   query.value === ''
       ? list.trusts.value
-      : list.trusts.value.filter((trust) => {
+      : list.trusts.value?.filter((trust) => {
           return trust.name.toLowerCase().includes(query.value.toLowerCase())
         })
   )
