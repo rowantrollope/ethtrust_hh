@@ -14,41 +14,41 @@
     </template>
 
     <!-- HEADER : Trust Info Panel -->
-    <div class="grid grid-cols-12 border bg-slate-100 rounded-lg p-4 text-sm">
-        <div class="col-span-6 border-gray-500 rounded-md ">            
+    <div class="sm:grid sm:grid-cols-12 border bg-slate-100 rounded-lg p-4 text-sm">
+        <div class="sm:col-span-6 border-gray-500 rounded-md ">            
 
-            <p class="text-gray-500 mt-2"> Created by: 
-                <div class="inline text-black">
-                    <AddressField :address="trust.grantor"></AddressField>
-                </div>
-            </p>
-            <p class="text-gray-500 mt-2"> Beneficiary:
+            <p class="text-gray-500"> Beneficiary Account #:
                 <div class="inline text-black">
                     <AddressField :address="trust.beneficiary"></AddressField>
                 </div>
             </p>
+            <p class="text-gray-500 mt-1"> Created by Account#: 
+                <div class="inline text-black">
+                    <AddressField :address="trust.grantor"></AddressField>
+                </div>
+            </p>
 
-            <p class="mt-2 text-gray-500"> Trustee{{ trust.trustees.length > 1 ? 's:' : ':'}} 
+            <p class="mt-1 text-gray-500"> Trustee Account#{{ trust.trustees.length > 1 ? 's:' : ':'}} 
                 <div class="inline text-black"><AddressField v-for="trustee in trust.trustees" :address="trustee"/></div> 
             </p>
             
 
         </div>
-        <div class="col-span-6">
-            <p class="text-gray-500"> Balance: 
+        <div class="sm:col-span-6">
+            <p class="text-gray-500 mt-1"> Balance: 
                 <div class="inline items-center text-black">
                     <svg class="inline -mt-1" xmlns="http://www.w3.org/2000/svg" height="24" width="24" preserveAspectRatio="xMidYMid" viewBox="-38.39985 -104.22675 332.7987 625.3605"><path fill="#343434" d="M125.166 285.168l2.795 2.79 127.962-75.638L127.961 0l-2.795 9.5z"/><path fill="#8C8C8C" d="M127.962 287.959V0L0 212.32z"/><path fill="#3C3C3B" d="M126.386 412.306l1.575 4.6L256 236.587l-128.038 75.6-1.575 1.92z"/><path fill="#8C8C8C" d="M0 236.585l127.962 180.32v-104.72z"/><path fill="#141414" d="M127.961 154.159v133.799l127.96-75.637z"/><path fill="#393939" d="M127.96 154.159L0 212.32l127.96 75.637z"/></svg>
                     <div class="inline"> {{ utils.toEtherStringRounded(trust.etherAmount) }} ETH </div>
                 </div>
             </p>
-            <p class="mt-2 text-gray-500"> Trust ID: 
-                <div class="inline text-black"> <AddressField :address="trust.key"/> </div>
-            </p>
-            <p class="text-gray-500 mt-2">
+            <p class="text-gray-500 mt-1">
                 <span class="text-gray-500">Created on: </span>
                 <div class="inline text-black">{{ trust.getCreatedDate().toLocaleDateString() }}</div>
             </p>
-            <p class="mt-2 text-gray-500"> Trust Type: 
+            <p class="mt-1 text-gray-500"> Trust Identification #: 
+                <div class="inline text-black"> <AddressField :address="trust.key"/> </div>
+            </p>
+            <p class="mt-1 text-gray-500"> Trust Type: 
                 <div class="inline text-black"> {{ trust.getTypeString() }} </div> 
             </p>
             
@@ -83,7 +83,7 @@
     </div>
     
     <!-- tab-content> -->
-    <div class="border-gray-300 text-base border rounded-b-md p-2 sm:px-4 sm:pb-5">
+    <div class="border-gray-300 text-base border rounded-b-md px-2 sm:px-4 pb-5">
         <!-- tab-title -->
         <p class="hidden text-lg">{{tabs[activeTab].title}}</p> <br/>
 
@@ -91,7 +91,7 @@
             Tab: Details
         -->
         <div v-show="activeTab===0">
-            <p class="text-sm ml-5">Note: Funds will not be accessible until AFTER the maturity date.</p>
+            <p class="text-sm sm:ml-5">Note: Funds will not be accessible until AFTER the maturity date.</p>
             <div class="mt-5 grid grid-cols-12 gap-2 sm:gap-6">
                 <div class="col-span-12 sm:col-span-4 sm:justify-self-end sm:pt-2">
                     <label for="trust_name" class="label-text">Trust name</label>
@@ -122,13 +122,13 @@
         -->
         <div v-show="activeTab===1">
             <div v-if="revocable">
-            <p class="text-sm mb-5 ml-5">Note: The beneficiary is who will receive this ETH after the maturity date. Trustees can also access funds.</p>
+            <p class="text-sm mb-5 sm:ml-5">Note: The beneficiary is who will receive this ETH after the maturity date. Trustees can also access funds.</p>
             <InputBeneficiary v-model="trust"
                 @valid="validEntry = true" 
                 @invalid="validEntry = false"></InputBeneficiary>
             </div>
             <div v-else>
-                <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOCABLE and you cannot edit or change the BENEFICIARY.  The beneficiary will receive this ETH after the maturity date. Trustees can also access funds.</p>
+                <p class="text-sm mb-5 sm:ml-5">Note: This trust type is IRREVOCABLE and you cannot edit or change the BENEFICIARY.  The beneficiary will receive this ETH after the maturity date. Trustees can also access funds.</p>
                 <p class="text-center">{{ trust.beneficiary }}</p>
             </div>
         </div>      
@@ -137,11 +137,11 @@
         -->
         <div v-show="activeTab===2">                    
             <div v-if="revocable">
-                <p class="text-sm mb-5 ml-5">Note: Each trustee will have full access to transfer or manage the funds in this trust.</p>
+                <p class="text-sm mb-5 sm:ml-5">Note: Each trustee will have full access to transfer or manage the funds in this trust.</p>
                 <InputTrustees v-model="trust"></InputTrustees>
             </div>
             <div v-else>
-                <p class="text-sm mb-5 ml-5">Note: This trust type is IRREVOCABLE and you cannot edit or change the TRUSTEES.</p>
+                <p class="text-sm mb-5 sm:ml-5">Note: This trust type is IRREVOCABLE and you cannot edit or change the TRUSTEES.</p>
                 <div class="text-lg"><u>Trustees</u>
                     <div v-for="trustee in trust.trustees" class="text-center" :key="trustee"><p>{{ trustee }}</p></div>
                 </div>
@@ -163,7 +163,7 @@
                 
                 <div class="sm:flex text-center sm:justify-center items-center">
                     <EthInput v-model="ethWithdraw">Withdraw</EthInput>
-                    <button class="btn sm:flex sm:ml-5 btn-success" :onClick="onWithdraw">Withdraw Now</button>
+                    <button class="btn mt-4 sm:mt-0 w-full sm:w-auto sm:flex sm:ml-5 btn-success" :onClick="onWithdraw">Withdraw Now</button>
                 </div>
             </div>
         </div>
@@ -176,11 +176,11 @@
                 <span class="font-bold text-green-600"> {{ walletBalance }} ETH </span>
             </p><br/>
 
-            <div class="flex justify-center items-center">
+            <div class="sm:flex text-center sm:justify-center items-center">
 
                 <EthInput v-model="ethDeposit">Deposit</EthInput>
 
-                <button class="ml-5 btn btn-success" :onClick="onDeposit">
+                <button class="w-full mt-4 sm:mt-0 sm:w-auto sm:ml-5 btn btn-success" :onClick="onDeposit">
                     Deposit Now
                 </button>
             </div>

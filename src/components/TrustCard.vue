@@ -12,18 +12,18 @@
                 <TrustCert class="text-black" :trust="trust">
                 </TrustCert>
             </div>
-            <div class="mt-3 sm:place-self-start sm:flex-col text-center space-y-1.5 sm:-mt-1 sm:text-left">
+            <div class="mt-3 sm:place-self-start sm:flex-col text-center space-y-2.5 sm:space-y-1.5 sm:-mt-1 sm:text-left">
                 <div class="text-xl underline font-bold sm:text-2xl">
                     {{ trust.name ? trust.name : "(Unnamed)" }}
                 </div>
                 <p class="text-sm font-medium dark:text-gray-300">
-                    For Beneficiary Account #: <AddressField :address="trust.beneficiary"/> </p>
+                    For Beneficiary Account #: <AddressField class="whitespace-nowrap" :address="trust.beneficiary"/> </p>
                 <p v-if="trust.trustees.length==1" class="text-sm font-medium dark:text-gray-300"> 
                     Trustee Account #: <AddressField :address="trust.trustees[0]"/>
                 </p>
                 <p v-else-if="trust.trustees.length > 1" class="text-sm font-medium">
                     Trustee Account #'s: 
-                    <span v-for="trustee in trust.trustees"><AddressField :address="trustee"/>, </span>
+                    <span v-for="trustee in trust.trustees" v-bind:key="trustee"><AddressField :address="trustee"/>, </span>
                 </p>
                 <p class="text-sm font-medium dark:text-gray-300">
                     Created by Account #: <AddressField :address="trust.grantor"/> 
