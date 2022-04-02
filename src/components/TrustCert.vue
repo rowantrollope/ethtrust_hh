@@ -1,7 +1,9 @@
 
 <template>
 <div class="relative flex justify-center text-center">
-    <img class="sm:w-40 w-60" alt="cert" width="" src="../assets/money.png">
+    <div class="">
+        <img class="sm:w-44 sm:h-44 w-40" alt="cert" src="../assets/certificate.png">
+    </div>
     <transition name="highlight" mode="out-in">
         <div class="cert-name" :key="trust.name">
             {{ trust.name }}
@@ -33,21 +35,20 @@ const list = useTrustList();
 <style scoped>
     .cert-name {
         position: absolute;
-        top: 38%;
+        top: 42%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 0.5rem;
-        line-height: 1rem;
-        @apply font-serif font-thin leading-tight uppercase text-base sm:text-xs;
+        font-size: 0.6rem;
+        @apply font-serif font-thin leading-tight uppercase;
     }
     .cert-eth {
             position: absolute;
-            top: 70%;
+            top: 61%;
             left: 50%;
             font-size: 0.7rem;
             line-height: 1rem;
             transform: translate(-50%, -50%);
-            @apply text-white font-bold text-base sm:text-xs;
+            @apply text-white font-bold;
     }
     .cert-nbr {
             position: absolute;

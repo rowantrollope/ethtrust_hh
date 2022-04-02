@@ -1,20 +1,21 @@
 <template>
 <div v-if="bc.connectionState.value === bcState.Connected" class="text-center ">
+    <div class="w-full p-2 bg-red-200 text-red-600"><span class="animate-pulse">Warning: Use at your own risk.</span></div>
     <div class="flex ml-6 space-x-2 mt-5 items-center">
         <button class="text-base font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
         <button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</button>        <button class="btn btn-danger" :onClick="testMethod">TEST</button>
         <div class="grow"></div>
-        <div class=""> Show: </div> 
-        <InputTrustType v-model="selectedTrust"></InputTrustType>
+        Filter: <input class="border p-1 rounded-md dark:text-black" v-model='query' placeholder="Trust Name...">
     </div>
     <!-- Account list -->
-    <div class="text-sm text-black px-7 mt-5">
+    
+    <div class="text-sm px-1 mt-5">
     <div class="mt-5 flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-50 dark:bg-slate-700">
                     <tr class="">
                         <th scope="col" class="col-header"> Key </th>
                         <th scope="col" class="col-header"> Name </th>
@@ -29,9 +30,9 @@
                     </thead>
                     <tbody>
 
-                    <tr v-for="(trust, index) in list.trusts.value" :key="trust.key" 
-                        class=" hover:bg-blue-100"
-                        :class="[selected(trust.key) ? 'bg-blue-100' : '', 
+                    <tr v-for="trust in filteredTrusts" :key="trust.key" 
+                        class=" hover:bg-blue-100 hover:dark:bg-slate-700 hover:dark:text-white hover:cursor-pointer"
+                        :class="[selected(trust.key) ? 'bg-blue-100 dark:bg-slate-700' : '', 
                                 list.creating(trust.key) ? 'animate-pulse text-green-500' : 'text-gray-900',
                                 list.updating(trust.key) ? 'animate-pulse text-blue-500' : 'text-gray-900',
                                 list.deleting(trust.key) ? 'animate-pulse text-red-500' : 'text-gray-900']" 
@@ -39,7 +40,7 @@
                         <td class="row-text text-blue-600">
                             <AddressField :address="trust.key"/>
                         </td>
-                        <td class="row-text"> {{ trust.name }} </td>
+                        <td class="row-text" :class="[trust.name.toLowerCase().includes(query.toLowerCase()) ? 'dark:text-green-500' : '']"> {{ trust.name }} </td>
                         <td class="row-text"> {{ TypeStrings[trust.trustType] }} </td>
                         <td class="row-text"> <AddressField :address="trust.grantor"/> </td>
                         <td class="row-text"> 
@@ -58,8 +59,7 @@
             </div>
         </div>
     </div>
-
-    </div>
+</div>
 
     <!-- 
         Modals
@@ -80,7 +80,7 @@
 </template>
 
 <script setup="props" lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -103,6 +103,14 @@ const bcState = ConnectionState;
 const bc = useBlockchainConnect();
 const list = useTrustList();
 
+const query = ref('');
+const filteredTrusts = computed(() => 
+  query.value === ''
+      ? list.trusts.value
+      : list.trusts.value.filter((trust) => {
+          return trust.name.toLowerCase().includes(query.value.toLowerCase())
+        })
+  )
 /**
  * List select handlers
  */
@@ -218,9 +226,9 @@ const createTrust = async () => {
 
 <style scoped>
     .col-header {
-        @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+        @apply px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider;
     }
     .row-text {
-        @apply font-medium px-1 py-3 whitespace-nowrap md:text-sm text-xs;
+        @apply font-medium px-1 py-3 whitespace-nowrap dark:text-white md:text-sm text-sm;
     }
 </style>

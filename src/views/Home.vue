@@ -38,8 +38,8 @@
             <p class="mt-3 text-base text-gray-500 dark:text-gray-300 sm:mt-5 sm:text-lg md:mt-5 md:text-xl xl:mx-0">
                 Trusted.eth uses SmartContracts on the Ethereum blockchain to provide your family a simple and automated way to setup and maintain trust funds for your family.  
             </p>
-            <p class="mt-3 font-black text-base text-gray-500 dark:text-gray-300 sm:mt-5 sm:text-lg  md:mt-5 md:text-xl xl:mx-0">
-                Protect your crypto NOW
+            <p class="mt-3 font-bold  text-gray-500 dark:text-gray-100 sm:mt-5 sm:text-2xl  md:mt-5 md:text-xl xl:mx-0">
+                Ready to dive in? <span class="">Create your first trust now</span>
             </p>
             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center xl:justify-center">
                 <div class="rounded-md shadow">

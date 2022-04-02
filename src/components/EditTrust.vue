@@ -14,7 +14,7 @@
     </template>
 
     <!-- HEADER : Trust Info Panel -->
-    <div class="grid grid-cols-12 border bg-green-50 rounded-lg p-4 text-sm">
+    <div class="grid grid-cols-12 border bg-slate-100 rounded-lg p-4 text-sm">
         <div class="col-span-6 border-gray-500 rounded-md ">            
 
             <p class="text-gray-500 mt-2"> Created by: 
@@ -162,7 +162,7 @@
                 </p><br/>
                 
                 <div class="sm:flex text-center sm:justify-center items-center">
-                    <EthInput v-model="ethWithdraw">Amount to withdraw</EthInput>
+                    <EthInput v-model="ethWithdraw">Withdraw</EthInput>
                     <button class="btn sm:flex sm:ml-5 btn-success" :onClick="onWithdraw">Withdraw Now</button>
                 </div>
             </div>
@@ -178,7 +178,7 @@
 
             <div class="flex justify-center items-center">
 
-                <EthInput v-model="ethDeposit">Deposit Amount</EthInput>
+                <EthInput v-model="ethDeposit">Deposit</EthInput>
 
                 <button class="ml-5 btn btn-success" :onClick="onDeposit">
                     Deposit Now
@@ -295,8 +295,8 @@ const maturityDate = computed({
     set: (value) => trust.value.setMaturityDate(value),
 })
 
-const ethWithdraw = ref(0);
-const ethDeposit = ref(0);
+const ethWithdraw = ref();
+const ethDeposit = ref();
 const walletBalance = ref("0");
 
 onMounted(() => { 

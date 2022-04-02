@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="space-y-4 space-x-0 sm:space-y-0 sm:space-x-4 sm:flex">
-        <div class="grow-[1] px-4 py-3 bg-stone-50 dark:bg-stone-800 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
+        <div class="grow-[1] px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
             <div class="text-sm font-medium text-gray-500 dark:text-stone-200 truncate">
                 Total Trusts
             </div>
@@ -9,7 +9,7 @@
                 {{ trusts.length }}
             </div>
         </div>
-        <div class="grow-[3] px-4 py-3 bg-stone-50 dark:bg-stone-800 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
+        <div class="grow-[3] px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
             <div class="text-sm font-medium text-gray-500 dark:text-stone-200 truncate">
                 Total Value
             </div>
@@ -23,7 +23,7 @@
                 <span class="text-lg ml-2 sm:ml-2 text-gray-500 dark:text-stone-200 ">({{totalValueUSD}})</span>
             </div>
         </div>
-        <div class="grow-[1] hidden sm:block px-4 py-3 bg-stone-50 dark:bg-stone-800 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
+        <div class="grow-[1] hidden sm:block px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
             <div class="text-sm font-medium text-gray-500 dark:text-stone-200 truncate">
                 Next Available
             </div>

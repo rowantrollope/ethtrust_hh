@@ -25,7 +25,7 @@
                         @delete="onDelete" 
                         @withdraw="onWithdraw" 
                         @deposit="onDeposit">
-                <template v-slot:title>Trust Fund: {{ selectedTrust.name }}</template>
+                <template v-slot:title>{{ selectedTrust.name }}</template>
             </EditTrust>
         </div>
         <div v-else-if="!trusts.length">
