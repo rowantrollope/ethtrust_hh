@@ -19,7 +19,7 @@
     "bnc-onboard": "^1.34.1",
     "chai": "^4.3.4",
     "chai-ethers": "^0.0.1",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.0",
     "hardhat": "2.1",
     "hardhat-deploy": "^0.8.11",
     "hardhat-deploy-ethers": "*",

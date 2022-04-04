@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "es2020",
+        "module": "commonjs",
         "strict": true,
         "esModuleInterop": true,
         "moduleResolution": "node",
@@ -30,4 +30,6 @@
         "./deploy",
         "./test",
         "typechain/**/*",   ],
+    "files": [
+        "./hardhat.config.ts"],
 }

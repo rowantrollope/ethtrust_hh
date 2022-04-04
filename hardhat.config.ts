@@ -2,7 +2,7 @@ import { HardhatUserConfig } from 'hardhat/types';
 import { } from 'hardhat-deploy';
 import { } from 'hardhat-deploy-ethers';
 
-import 'dotenv/config';
+import {} from 'dotenv/config';
 import { node_url, accounts } from './utils/network';
 import { task } from 'hardhat/config';
 
