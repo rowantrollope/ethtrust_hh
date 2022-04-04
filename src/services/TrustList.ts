@@ -15,10 +15,10 @@ enum TrustState {
     Creating,
 }
 
-const API_KEY = process.env.VITE_ONBOARD_API_KEY;
+const API_KEY = import.meta.env.VITE_ONBOARD_API_KEY;
 
-//const NETWORK_RINKEBY = 4;
 const NETWORK_MAINNET = 1;
+//const NETWORK_RINKEBY = 4;
 const USE_BNC_NOTIFY = true;
 
 export const tlSymbol = Symbol('TrustList');

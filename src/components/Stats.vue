@@ -1,11 +1,11 @@
 <template>
 <div>
     <button class="hidden btn btn-success" @click="showStats = !showStats"/>
-    <TopAlert :show="show" class="block -mt-5 mb-2 -mx-5 sm:hidden">
+    <TopAlert :show="show" :toWhite="true" class="block -mt-5 mb-2 -mx-5 sm:hidden">
         {{ trusts.length }} Trusts, Total Value {{ totalValue }} ETH ({{totalValueUSD}})
     </TopAlert>
 
-    <div class="mb-5 space-x-4 flex hidden sm:block">
+    <div class="mb-5 space-x-4 hidden sm:flex">
         <div class="grow-[2] px-4 py-3 bg-stone-50 dark:bg-slate-900 border dark:border-stone-600 shadow rounded-lg overflow-hidden sm:p-3">
             <div class="text-sm font-medium text-gray-500 dark:text-stone-200 truncate">
                 <span class="block sm:hidden">

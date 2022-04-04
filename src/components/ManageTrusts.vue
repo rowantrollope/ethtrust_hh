@@ -9,19 +9,33 @@
     </div>
     <div v-else-if="bc.connectionState.value === state.Connected && trusts">
         <div v-if="trusts.length" class=""> 
-            <Stats class="sm:mb-5" :trusts="trusts"/>
+            <div v-if="trusts.length === 1">
+                <div class=" pb-5 flex dark:bg-slate-900 
+                            sm:mt-5 sm:bg-white sm:dark:bg-slate-900 sm:overflow-auto sm:flex-col sm:space-y-3 sm:h-auto sm:-mr-2 sm:-ml-2
+                            sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-5 sm:space-x-0 lg:space-y-0">
 
-            <div class="-ml-5 -mr-5 pb-5 px-2 snap-x snap-mandatory overflow-x-auto h-full flex space-x-3 dark:bg-slate-900
-                        sm:mt-5 sm:bg-white sm:dark:bg-slate-900 sm:overflow-auto sm:flex-col sm:space-y-3 sm:h-auto sm:-mr-2 sm:-ml-2
-                        sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-5 sm:space-x-0 lg:space-y-0">
+                    <div v-for="trust in trusts" :key="trust.key" class="snap-center px-10 grow">  
+                    <transition-group name="list">
+                        <TrustCard class="" :trust="trust" @click=" select(trust.key)"/>
+                    </transition-group>
+                    </div> 
 
-                <div v-for="trust in trusts" :key="trust.key" class="snap-center shrink-0">  
-                <transition-group name="list">
-                    <TrustCard class="w-[100%]" :trust="trust" @click=" select(trust.key)"/>
-                </transition-group>
-                </div> 
-
+                </div>                
             </div>
+            <div v-else>
+            <Stats class="sm:mb-5" :trusts="trusts"/>
+                <div class="-ml-5 -mr-5 pb-5 px-10 snap-x snap-mandatory overflow-x-auto h-full flex space-x-3 dark:bg-slate-900
+                            sm:mt-5 sm:px-2 sm:bg-white sm:dark:bg-slate-900 sm:overflow-auto sm:flex-col sm:space-y-3 sm:h-auto sm:-mr-2 sm:-ml-2
+                            sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-5 sm:space-x-0 lg:space-y-0">
+
+                    <div v-for="trust in trusts" :key="trust.key" class="snap-center shrink-0">  
+                    <transition-group name="list">
+                        <TrustCard class="w-[100%]" :trust="trust" @click=" select(trust.key)"/>
+                    </transition-group>
+                    </div> 
+                </div>
+            </div>
+
 
             <div v-if="false" class="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
                 <transition-group name="list">

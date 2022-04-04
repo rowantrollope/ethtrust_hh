@@ -16,7 +16,7 @@
 
 <TopAlert :show="bc.connectionState.value === state.Connected && stats.isTrustee.value"
 @click="$router.push('/Trustees')">
-    We found {{ stats.trusteeTrusts.value }} trust funds for you as a TRUSTEE.  <a @click="$router.push('/Trustees')" class="btn btn-success">Show me!</a>
+    We found {{ stats.trusteeTrusts.value }} trust fund(s) for you as a TRUSTEE.  <a @click="$router.push('/Trustees')" class="btn btn-success">Show me!</a>
 </TopAlert>
 
 <div class="relative overflow-hidden">

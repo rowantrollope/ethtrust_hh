@@ -16,6 +16,7 @@ import { ref } from 'vue';
 
 const props = defineProps({
     show: Boolean,
+    toWhite: Boolean,
 });
 const emit = defineEmits(['click']);
 
@@ -24,7 +25,12 @@ const buttonClass = ref("btn-slate-900");
 
 const afterEnter = () => {
     setTimeout(() => {
-        bgClass.value = "bg-slate-900 fade";
+        bgClass.value = "transition-colors duration-1000 "
+        if(props.toWhite)
+            bgClass.value += "bg-white text-black dark:bg-slate-900 dark:text-white";
+        else
+            bgClass.value += "bg-slate-900 text-white"
+
         buttonClass.value = 'btn-success';
     }, 1000)
 }
@@ -32,16 +38,6 @@ const afterEnter = () => {
 </script>
 
 <style scoped>
-
-@keyframes bgFade {
-  from {background-color: rgba(59, 130, 246);}
-  to {background-color: rgba(15, 23, 42);}
-}
-.fade {
-    animation-name: bgFade;
-    animation-duration: 3s;
-    animation-delay: 0s;
-}
 .slide-enter-active, .slide-leave-active {
     @apply transition-all duration-1000 ease-in;
 }
@@ -50,12 +46,10 @@ const afterEnter = () => {
    max-height: 0px;
    opacity: 0%;
 }
-
 .slide-enter-to, .slide-leave-from {
    max-height: 1000px;
    overflow: hidden;
    opacity: 100%;
 }
-
 
 </style>

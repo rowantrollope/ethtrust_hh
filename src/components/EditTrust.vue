@@ -65,7 +65,7 @@
     <!-- TABS -->
     <div class="mt-5 mb-3 md:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
-        <select id="tabs" name="tabs" v-model="activeTab" class="block text-lg w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
+        <select id="tabs" name="tabs" v-model="activeTab" class="block text-black text-lg w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md hover:border-indigo-500">
             <option v-for="(tab, index) in tabs" :hidden="!tab.enabled()" :value="index" :key="index">{{ tab.name }}</option>
         </select>
     </div>
@@ -83,7 +83,7 @@
     </div>
     
     <!-- tab-content> -->
-    <div class="border-gray-300 text-base border rounded-b-md px-2 sm:px-4 pb-5">
+    <div class="border-gray-300 text-base text-black border rounded-b-md px-2 sm:px-4 pb-5">
         <!-- tab-title -->
         <p class="hidden text-lg">{{tabs[activeTab].title}}</p> <br/>
 
