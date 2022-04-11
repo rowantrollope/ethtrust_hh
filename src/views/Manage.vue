@@ -18,7 +18,7 @@
             </template>
         </PageTitle>
         <div class="px-5 mt-5">
-            <ManageTrusts @create-clicked="onCreateNew"></ManageTrusts>
+            <ViewManageTrusts @create-clicked="onCreateNew"/>
         </div>
         <CreateWiz :show="isCreateDialogVisible" @close="onCloseCreate">Create New Trust</CreateWiz>
     </div>
@@ -31,9 +31,9 @@ import { ref } from 'vue';
 
 // components
 import PageTitle from '../components/PageTitle.vue';
-import ManageTrusts from '../components/ManageTrusts.vue';
+import ViewManageTrusts from '../components/ViewManageTrusts.vue';
 import CreateWiz from '../components/CreateWiz.vue';
-import ConnectBlock from '../components/ConnectBlock.vue';
+import ConnectBlock from '../components/BlockchainConnectHelp.vue';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';

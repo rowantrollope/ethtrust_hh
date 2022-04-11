@@ -13,8 +13,8 @@
 <script setup lang="ts">
 
 import { provide, onBeforeMount } from 'vue';
-import Nav from './components/Nav.vue';
-import Footer from './components/Footer.vue';
+import Nav from './components/TheNav.vue';
+import Footer from './components/TheFooter.vue';
 
 import { provideBlockchainConnect } from './services/BlockchainConnect';
 import { provideTrustList } from './services/TrustList';

@@ -9,7 +9,7 @@
             </template>
         </PageTitle> 
         
-        <DeveloperList/>
+        <ViewDeveloperList/>
 
     </div>
 </template>
@@ -20,7 +20,7 @@ import { ref, computed } from 'vue';
 // components
 import Test from '../components/Test.vue';
 import PageTitle from '../components/PageTitle.vue';
-import DeveloperList from '../components/DeveloperList.vue';
+import ViewDeveloperList from '../components/ViewDeveloperList.vue';
 
 </script>
 

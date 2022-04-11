@@ -66,7 +66,7 @@
             
             <!-- Brand name --> 
             <div class="mr-3 sm:ml-1 text-lg text-gray-100 tracking-tight subpixel-antialiased whitespace-nowrap uppercase">
-                Safe<span class="font-thin"> Trust</span>
+                Safe<span class="font-thin text-gray-100"> Trust</span>
             </div>
             
             <!-- Normal desktop menu items --> 
@@ -104,7 +104,7 @@
         
         <!-- Connect button (ON THE RIGHT) --> 
         <div class="flex items-center">
-            <ConnectButton/>
+            <NavConnectButton/>
         </div>
     </div>
 </div>
@@ -116,8 +116,8 @@
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 
 // components
-import Hamburger from './Hamburger.vue'
-import ConnectButton from './ConnectButton.vue'
+import Hamburger from './NavHamburgerMenu.vue'
+import NavConnectButton from './NavConnectButton.vue'
 import NotificationBadge from './NotificationBadge.vue'
 
 // services

@@ -1,24 +1,29 @@
 <template>
 <div v-if="bc.connectionState.value === bcState.Connected" class="text-center ">
-    <div class="w-full p-2 bg-red-200 text-red-600"><span class="animate-pulse">Warning: Use at your own risk.</span></div>
-
-<div class="snap-x snap-mandatory overflow-x-auto h-full flex space-x-4 p-4">
-
-  <div v-for="trust in filteredTrusts" :key="trust.key" class="snap-center shrink-0">  
-    <TrustCard class="w-[100%]" :trust="trust" @click=" select(trust.key)"/>
-  </div> 
-
-</div>
+    <div v-show="false" class="mb-5 w-full p-2 bg-red-200 text-red-600"><span class="animate-pulse">Warning: Don't mess with this stuff bro.</span></div>
 
     <div class="flex ml-6 space-x-2 mt-5 items-center">
         <button class="text-base font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
-        <button v-if="selectedTrust.key" class="btn btn-primary" :onClick="onEdit">EDIT</button>        <button class="btn btn-danger" :onClick="testMethod">TEST</button>
         <div class="grow"></div>
-        Filter: <input class="border p-1 rounded-md dark:text-black" v-model='query' placeholder="Trust Name...">
+        <div><TextToggle v-model="toggleOn" :color-on="'bg-blue-500'" 
+                    :color-off="'bg-blue-500'" 
+                    :text-on="'Flat list'" 
+                    :text-off="'Cards'">View: </TextToggle> </div>
+        <div> Filter: <input class="border p-1 rounded-md dark:text-black" v-model='query' placeholder="Trust Name..."></div>
     </div>
-    <!-- Account list -->
-    
-    <div class="text-sm px-1 mt-5">
+    <div class="slider">
+
+    <Transition :name="slideClass">
+    <div v-show="!toggleOn" class="w-full snap-x snap-mandatory overflow-x-auto h-full flex space-x-4 p-4">
+
+        <div v-for="trust in filteredTrusts" :key="trust.key" class="snap-center shrink-0">  
+            <TrustCard class="w-[100%]" :trust="trust" @click=" select(trust.key)"/>
+        </div> 
+
+    </div>
+    </Transition>
+    <Transition :name="slideClass">
+   <div v-show="toggleOn" class="w-full text-sm px-1 mt-5">
     <div class="mt-5 flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -69,8 +74,8 @@
         </div>
     </div>
 </div>
-
-    <!-- 
+</Transition>
+</div>
         Modals
     --> 
     <EditTrust :show="showEditDialog"
@@ -89,7 +94,7 @@
 </template>
 
 <script setup="props" lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -98,12 +103,20 @@ import AddressField from './AddressField.vue';
 import EditTrust from './EditTrust.vue'
 import InputTrustType from './InputTrustType.vue'
 import TrustCard from './TrustCard.vue'
+import TextToggle from './TextToggle.vue'
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 import { useTrustList } from '../services/TrustList';
 import Trust, { TypeStrings, TrustType } from "../services/Trust";
 import * as utils from '../services/Utils';
+
+const slideClass=ref('slide-left');
+const toggleOn=ref(false);
+
+watch(toggleOn, () => {
+    slideClass.value = toggleOn.value ? 'slide-right' : 'slide-left';
+});
 
 // BLOCKCHAIN connection and prep
 const bcState = ConnectionState;
@@ -235,10 +248,72 @@ const createTrust = async () => {
 </script>
 
 <style scoped>
+    .slider {
+      position: relative;
+      z-index: 1;
+      overflow: scroll;
+      height:90vh;
+    }  
     .col-header {
         @apply px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider;
     }
     .row-text {
         @apply font-medium px-1 py-3 whitespace-nowrap dark:text-white md:text-sm text-sm;
     }
+
+    .fade-enter-active {
+        transition: all 0.3s ease-out;
+    }
+
+    .fade-leave-active {
+        transition: all 0.4s cubic-bezier(1, 0.5, 0.8, 1);
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
+    .fade-enter-active {
+        transition: all 0.3s ease-out;
+    }
+
+    .slide-left-enter-active {
+        @apply transition transform ease-out duration-300;
+    }
+    .slide-left-enter-from {
+        @apply translate-x-full opacity-50;
+    }
+    .slide-left-enter-to {
+        @apply translate-x-0 opacity-100;
+    }
+    .slide-left-leave-active {
+        @apply transition transform ease-in duration-300;
+    }
+    .slide-left-leave-from {
+        @apply translate-x-0 opacity-100;
+    }
+    .slide-left-leave-to {
+        @apply -translate-x-full opacity-50;
+    }
+
+    .slide-right-enter-active {
+        @apply transition transform ease-out duration-300;
+    }
+    .slide-right-enter-from {
+        @apply -translate-x-full opacity-50;
+    }
+    .slide-right-enter-to {
+        @apply translate-x-0 opacity-100;
+    }
+    .slide-right-leave-active {
+        @apply transition transform ease-in duration-300;
+    }
+    .slide-right-leave-from {
+        @apply translate-x-0 opacity-100;
+    }
+    .slide-right-leave-to {
+        @apply translate-x-full opacity-50;
+    }
+
+
 </style>

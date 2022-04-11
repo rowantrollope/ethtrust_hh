@@ -22,10 +22,10 @@
         @apply text-white bg-black hover:bg-gray-500;
     }
     .btn-primary {
-        @apply text-white bg-blue-500 hover:bg-blue-400 focus:ring-blue-400 ;
+        @apply text-white bg-apple-blue hover:bg-apple-blue-light focus:ring-apple-blue-light font-light;
     }
     .btn-primary-outline {
-        @apply text-blue-500 border border-blue-500 hover:bg-blue-400 focus:ring-blue-500 hover:text-white;
+        @apply text-apple-blue border border-apple-blue hover:bg-apple-blue-light focus:ring-apple-blue-light hover:text-white;
     }
     .btn-white {
         @apply text-gray-700 border border-gray-300 hover:bg-gray-100 focus:ring-gray-400 ;
@@ -40,7 +40,7 @@
         @apply text-white bg-purple-600 hover:bg-purple-500 focus:ring-purple-500;
     }
     .btn-success {
-        @apply text-white bg-emerald-400 hover:bg-emerald-300 focus:ring-green-300;
+        @apply text-white bg-emerald-400 hover:bg-emerald-300 focus:ring-green-300 text-black;
     }
     .btn-success-outline {
         @apply text-emerald-400 hover:bg-emerald-400 hover:text-black focus:ring-emerald-400 border border-emerald-400;

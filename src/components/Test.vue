@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 // components
-import HaveAccount from './HaveAccount.vue'
+import HaveAccount from './CreateWizHaveAccountControl.vue'
 </script>
 
 <style scoped>

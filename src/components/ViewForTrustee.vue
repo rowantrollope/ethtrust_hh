@@ -72,7 +72,7 @@ import EditTrust from './EditTrust.vue';
 import NewTrustCard from './TrustCard.vue';
 import PageTitle from './PageTitle.vue';
 import AddressField from './AddressField.vue'
-import ConnectBlock from './ConnectBlock.vue'
+import ConnectBlock from './BlockchainConnectHelp.vue'
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';

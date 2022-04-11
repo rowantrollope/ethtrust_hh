@@ -1,6 +1,6 @@
 
 <template>
-<div class="rounded-lg bg-white dark:bg-slate-800 dark:border-gray-600 shadow-lg cursor-pointer hover:border-gray-500 hover:text-gray-600 dark:hover:border-gray-400 dark:hover:text-gray-300 border relative" 
+<div class="rounded-lg bg-white dark:bg-slate-800 dark:border-gray-600 shadow-md cursor-pointer hover:shadow-lg hover:scale-[1.01] transition-all duration-400 transform ease-in-out relative" 
     :class="[list.creating(trust.key) ? 'animate-pulse border-green-300 border-4' : 'border-gray-300',
             list.updating(trust.key) ? 'animate-pulse border-blue-300 border-4' : 'border-gray-300',
             list.deleting(trust.key) ? 'animate-pulse border-red-300 border-4' : 'border-gray-300`']" 

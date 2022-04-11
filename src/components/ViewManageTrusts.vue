@@ -56,12 +56,30 @@
             </EditTrust>
         </div>
         <div v-else-if="!trusts.length">
-            <h1 class="text-xl mt-10 ml-5 sm:text-2xl md:text-3xl">
-                <div class="inline">Let's make your first trust fund </div>
-                <div class="flex text-center items-center space-x-3 mt-10 ml-5 ">
-                    <span class="block text-xl sm:text-2xl">Click </span>
-                    <button class="btn btn-rounded shrink-0 text-xl sm:text-2xl btn-primary" @click="$emit('create-clicked')">Create New</button>
-                    <span class="block text-xl sm:text-2xl shrink-0">to begin</span>
+            <div class="flex justify-center">
+
+                <div class="flex-col space-y-4 dark:bg-slate-700 bg-white justify-center text-center p-4 rounded-xl w-[60%] max-w-sm shadow-sm
+                            hover:shadow-lg hover:scale-[1.01] transition-all duration-400 transform ease-in-out relative">
+                    <h1 class="font-bold mt-5 text-2xl">
+                        Let's create your first trust fund.
+                    </h1>
+                    <div>
+                        You'll be walked through 5 simple steps to create your first trust fund.
+                    </div>
+                    <button v-if="true" class="btn btn-rounded shrink-0 btn-primary" @click="$emit('create-clicked')">Get Started</button>
+                    <div class="flex-shrink-0 rounded-xl p-10 flex items-center justify-center">
+                        <img class="" alt="cert" src="../assets/certificate.png">
+                    </div>
+                </div>
+
+            </div>
+
+            <h1 v-if="false" class="text-lg mt-10 ml-5 md:text-xl">
+                <div class="text-center items-center mt-5 ml-5 ">
+                    <span class="shrink-0">Creating your first trust fund is simple! </span>
+                    <span> Let's get started: </span> 
+                    <button v-if="true" class="btn animate-pulse btn-rounded shrink-0 btn-primary" @click="$emit('create-clicked')">Create New</button>
+                    <span v-if="false" class="ml-1 whitespace-nowrap">to begin</span>
                 </div>
             </h1>
         </div>
@@ -77,7 +95,7 @@ import { ethers } from 'ethers';
 import Stats from './Stats.vue';
 import EditTrust from './EditTrust.vue';
 import TrustCard from './TrustCard.vue';
-import ConnectBlock from './ConnectBlock.vue';
+import ConnectBlock from './BlockchainConnectHelp.vue';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';

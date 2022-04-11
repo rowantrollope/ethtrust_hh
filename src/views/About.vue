@@ -12,7 +12,7 @@
 
                 <h1 class="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
                 <span class="block xl:inline">Frequently Asked </span>
-                <span class=" text-indigo-600 inline">Questions</span>
+                <span class=" text-teal-400 inline">Questions</span>
                 </h1>
 
                 <div class=" mt-5 sm:ml-10 sm:mt-10 text-left flex flex-col space-y-5">

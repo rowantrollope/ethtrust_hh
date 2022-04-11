@@ -35,13 +35,23 @@
             </div>
         </div>
 
-        <div v-else-if="trusts.length" class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <span>There are 
-                <div class="rounded-full inline bg-red-500 p-1">{{ trusts.length }}</div> 
-                trust funds for you.</span>
-            <transition-group name="list">
-                <NewTrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
-            </transition-group>
+        <div v-else-if="trusts.length" >
+            <div class="flex mt-4 space-x-1 justify-center ">
+                <div>
+                    We located 
+                </div> 
+                <div class="rounded-full mt-[2px] h-5 w-5 bg-red-500 text-white p-1">
+                    <div class="-mt-[6px]">{{ trusts.length }}</div>
+                </div>
+                <div>
+                    trust funds for you.
+                </div> 
+            </div>
+            <div class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <transition-group name="list">
+                    <NewTrustCard v-for="trust in trusts" :key="trust.key" :trust="trust" @click="select(trust.key)"/>
+                </transition-group>
+            </div>
 
             <!-- 
                 Modals
@@ -71,7 +81,7 @@ import PageTitle from './PageTitle.vue';
 import EditTrust from './EditTrust.vue';
 import NewTrustCard from './TrustCard.vue';
 import AddressField from './AddressField.vue';
-import ConnectBlock from './ConnectBlock.vue';
+import ConnectBlock from './BlockchainConnectHelp.vue';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';

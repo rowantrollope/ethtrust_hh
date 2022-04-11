@@ -9,7 +9,7 @@
     <ConnectBlock class="pt-10" v-if="bc.connectionState.value !== state.Connected" />
     
     <div v-else-if="bc.connectionState.value === state.Connected">
-        <ForBeneficiary></ForBeneficiary>
+        <ViewForBeneficiary/>
     </div>
 </div>
 </template>
@@ -19,8 +19,8 @@
 // services
 
 // components
-import ForBeneficiary from '../components/ForBeneficiary.vue';
-import ConnectBlock from '../components/ConnectBlock.vue';
+import ViewForBeneficiary from '../components/ViewForBeneficiary.vue';
+import ConnectBlock from '../components/BlockchainConnectHelp.vue';
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
 
