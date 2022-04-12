@@ -18,7 +18,6 @@
 
 const props = defineProps({
     title: { type: String, required: true },
-    body: { type: String, required: true },
 });
 
 </script>
