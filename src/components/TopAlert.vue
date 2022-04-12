@@ -1,7 +1,7 @@
 <template>
 <transition name="slide" @after-enter="afterEnter">
     <div v-if="show">
-        <div class="w-full h-auto items-center text-white p-3 font-light text-sm text-center"
+        <div class="w-full h-auto items-center p-3 font-light text-sm text-center"
         :class="bgClass">
             <slot></slot>
             <button class="hidden btn no-wrap" @click="$emit('click')"
@@ -20,14 +20,14 @@ const props = defineProps({
 });
 const emit = defineEmits(['click']);
 
-const bgClass = ref("bg-blue-500");
+const bgClass = ref("bg-blue-500 text-white");
 const buttonClass = ref("btn-slate-900");
 
 const afterEnter = () => {
     setTimeout(() => {
         bgClass.value = "transition-colors duration-1000 "
         if(props.toWhite)
-            bgClass.value += "bg-white text-black dark:bg-slate-900 dark:text-white";
+            bgClass.value += "text-black dark:bg-slate-900 dark:text-white";
         else
             bgClass.value += "bg-slate-900 text-white"
 

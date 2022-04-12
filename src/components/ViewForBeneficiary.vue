@@ -15,23 +15,23 @@
         </PageTitle>  
 
         <div v-if="!trusts.length" class="m-10 mt-10" >
-            <h1 class="sm:text-xl">
-                <span class="block xl:inline">
-                    We can't find any trust funds where your connected account: 
-                    <AddressField class="" v-if="bc.account" :address="bc.account.value"></AddressField>
-                    is listed as a <span class="text-indigo-500">beneficiary. </span>
-                </span>
-            </h1>
-            <div class="bg-green-100 mt-12 rounded-md p-4 text-green-700">
-                <p class="text-left font-bold">Need help?</p>
-                <p class="text-base text-left font-light m-5">If you believe there should a trust for you, double check your account information
-                        and check with the trust creator to ensure that you've connected your wallet to the same
-                        address they listed for you as beneficiary.
-
-                </p>
-                <p class="m-5 text-left">
-                    <a class="text-blue-500 underline" @click="$router.push('/About')">Click here for more information.</a>
-                </p>
+            <div class="flex justify-center">
+                <GuidanceCard class="w-[95%] sm:w-full sm:max-w-md"
+                            title="Can't find a trust for you as Beneficiary" >
+                    <template v-slot:body>
+                        <p> 
+                            We searched for a trust fund created for account <span class="font-bold">{{bc.account}}</span> and couldn't find one.
+                        </p>
+                        <p>
+                            If you believe there should a trust for you, double check your account information
+                            and check with the trust creator to ensure that you've connected your wallet to the same
+                            address they listed for you as beneficiary.                   
+                        </p>
+                    </template>
+                    <template v-slot:buttons> 
+                        <button v-if="true" class="btn btn-rounded shrink-0 btn-primary" @click="$router.push('/About')">Learn More</button>
+                    </template>
+                </GuidanceCard>
             </div>
         </div>
 
@@ -82,6 +82,7 @@ import EditTrust from './EditTrust.vue';
 import NewTrustCard from './TrustCard.vue';
 import AddressField from './AddressField.vue';
 import ConnectBlock from './BlockchainConnectHelp.vue';
+import GuidanceCard from './GuidanceCard.vue';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';

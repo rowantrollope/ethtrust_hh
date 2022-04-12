@@ -10,11 +10,13 @@
     <div v-else-if="bc.connectionState.value === state.Connected && trusts">
         <div v-if="trusts.length" class=""> 
             <div v-if="trusts.length === 1">
-                <div class=" pb-5 flex dark:bg-slate-900 
-                            sm:mt-5 sm:bg-white sm:dark:bg-slate-900 sm:overflow-auto sm:flex-col sm:space-y-3 sm:h-auto sm:-mr-2 sm:-ml-2
-                            sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-5 sm:space-x-0 lg:space-y-0">
+                <div class="flex sm:flex-col pb-5 sm:mb-5 sm:mt-5 
+                            sm:overflow-auto sm:space-y-3 sm:h-auto sm:-mr-2 sm:-ml-2
+                            sm:grid sm:grid-cols-1 sm:gap-4 sm:space-x-0
+                            lg:grid-cols-2 lg:space-y-0
+                            dark:bg-slate-900">
 
-                    <div v-for="trust in trusts" :key="trust.key" class="snap-center px-10 grow">  
+                    <div v-for="trust in trusts" :key="trust.key" class="snap-center grow">  
                     <transition-group name="list">
                         <TrustCard class="" :trust="trust" @click=" select(trust.key)"/>
                     </transition-group>
@@ -24,9 +26,11 @@
             </div>
             <div v-else>
             <Stats class="sm:mb-5" :trusts="trusts"/>
-                <div class="-ml-5 -mr-5 pb-5 px-10 snap-x snap-mandatory overflow-x-auto h-full flex space-x-3 dark:bg-slate-900
-                            sm:mt-5 sm:px-2 sm:bg-white sm:dark:bg-slate-900 sm:overflow-auto sm:flex-col sm:space-y-3 sm:h-auto sm:-mr-2 sm:-ml-2
-                            sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-5 sm:space-x-0 lg:space-y-0">
+                <div class="flex sm:flex-col -ml-5 -mr-5 pb-5 px-5 h-full sm:h-auto sm:mt-5 sm:px-2 sm:-mr-2 sm:-ml-2
+                            snap-x snap-mandatory overflow-x-auto space-x-3 sm:overflow-auto 
+                            dark:bg-slate-900  
+                            sm:grid sm:grid-cols-1 sm:gap-4 sm:mb-5 sm:space-x-0 sm:space-y-3 
+                            lg:grid-cols-2 lg:space-y-0">
 
                     <div v-for="trust in trusts" :key="trust.key" class="snap-center shrink-0">  
                     <transition-group name="list">
@@ -57,31 +61,21 @@
         </div>
         <div v-else-if="!trusts.length">
             <div class="flex justify-center">
-
-                <div class="flex-col space-y-4 dark:bg-slate-700 bg-white justify-center text-center p-4 rounded-xl w-[60%] max-w-sm shadow-sm
-                            hover:shadow-lg hover:scale-[1.01] transition-all duration-400 transform ease-in-out relative">
-                    <h1 class="font-bold mt-5 text-2xl">
-                        Let's create your first trust fund.
-                    </h1>
-                    <div>
+                <GuidanceCard class="w-[95%] sm:w-full sm:max-w-md"
+                            title="Let's create your first trust fund.">
+                    <template v-slot:body>
                         You'll be walked through 5 simple steps to create your first trust fund.
-                    </div>
-                    <button v-if="true" class="btn btn-rounded shrink-0 btn-primary" @click="$emit('create-clicked')">Get Started</button>
-                    <div class="flex-shrink-0 rounded-xl p-10 flex items-center justify-center">
-                        <img class="" alt="cert" src="../assets/certificate.png">
-                    </div>
-                </div>
-
+                    </template>
+                    <template v-slot:buttons> 
+                        <button v-if="true" class="btn btn-rounded shrink-0 btn-primary" @click="$emit('create-clicked')">Get Started</button>
+                    </template>
+                    <template v-slot:image>
+                        <div class="flex-shrink-0 rounded-xl p-10 flex items-center justify-center">
+                            <img class="" alt="cert" src="../assets/certificate.png">
+                        </div>
+                    </template>
+                </GuidanceCard>
             </div>
-
-            <h1 v-if="false" class="text-lg mt-10 ml-5 md:text-xl">
-                <div class="text-center items-center mt-5 ml-5 ">
-                    <span class="shrink-0">Creating your first trust fund is simple! </span>
-                    <span> Let's get started: </span> 
-                    <button v-if="true" class="btn animate-pulse btn-rounded shrink-0 btn-primary" @click="$emit('create-clicked')">Create New</button>
-                    <span v-if="false" class="ml-1 whitespace-nowrap">to begin</span>
-                </div>
-            </h1>
         </div>
     </div>    
 </div>
@@ -96,6 +90,7 @@ import Stats from './Stats.vue';
 import EditTrust from './EditTrust.vue';
 import TrustCard from './TrustCard.vue';
 import ConnectBlock from './BlockchainConnectHelp.vue';
+import GuidanceCard from './GuidanceCard.vue';
 
 // services
 import { useBlockchainConnect, ConnectionState } from '../services/BlockchainConnect';
