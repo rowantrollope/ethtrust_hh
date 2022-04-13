@@ -41,6 +41,7 @@ import { computed, ref, onBeforeMount, onUpdated } from 'vue';
 
 // 3rd party Components
 import { DatePicker } from 'v-calendar';
+import 'v-calendar/dist/style.css';
 
 // components
 import Trust from '../services/Trust';

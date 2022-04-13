@@ -1,7 +1,6 @@
 <template>
 <div v-if="bc.connectionState.value === bcState.Connected" class="text-center ">
     <div v-show="false" class="mb-5 w-full p-2 bg-red-200 text-red-600"><span class="animate-pulse">Warning: Don't mess with this stuff bro.</span></div>
-
     <div class="flex ml-6 space-x-2 mt-5 items-center">
         <button class="text-base font-normal bg-green-500 rounded-lg text-white hover:bg-green-300 p-2" :onClick="createTrust">CREATE</button>
         <div class="grow"></div>
@@ -11,6 +10,7 @@
                     :text-off="'Cards'">View: </TextToggle> </div>
         <div> Filter: <input class="border p-1 rounded-md dark:text-black" v-model='query' placeholder="Trust Name..."></div>
     </div>
+    
     <div class="slider">
 
     <Transition :name="slideClass">
@@ -97,6 +97,8 @@
 import { ref, computed, watch } from 'vue';
 import { ethers } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber'
+import { DatePicker } from 'v-calendar'
+import 'v-calendar/dist/style.css';
 
 // components
 import AddressField from './AddressField.vue';
@@ -125,6 +127,9 @@ const bcState = ConnectionState;
  */
 const bc = useBlockchainConnect();
 const list = useTrustList();
+
+const tomorrow = new Date();
+const maturityDate = ref(new Date());
 
 const query = ref('');
 const filteredTrusts = computed(() => 

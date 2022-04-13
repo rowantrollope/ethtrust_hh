@@ -65,6 +65,6 @@ const trust = computed({
     @apply col-span-3 text-right text-gray-700;
 }
 .item-text {
-    @apply col-span-7;
+    @apply col-span-7 text-black;
 }
 </style>

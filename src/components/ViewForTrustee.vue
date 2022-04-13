@@ -22,7 +22,7 @@
                         title="Can't find a trust for you as Trustee" >
                 <template v-slot:body>
                     <p> 
-                        We searched for a trust fund with account <span class="font-bold">{{bc.account}}</span> listed as a trustee and couldn't find one.
+                        We searched for a trust fund with account <AddressField v-if="bc.account" :address="bc.account.value"></AddressField> listed as a trustee and couldn't find one.
                     </p>
                     <p>
                         If you believe there should a trust for you as a trustee, double check your account information

@@ -28,7 +28,7 @@
         </transition>
         <transition :name="panelClass">
             <CreateWizBeneficiaryNew class="window" v-model="trust" v-show="isPanelActive('Beneficiary')" @validEntry="onValidEntry">
-                Who is this trust for? <span class="text-gray-400">(aka The Beneficiary)</span>
+                Who is this trust for? <span class="text-base text-gray-400">(Beneficiary)</span>
             </CreateWizBeneficiaryNew> 
         </transition>
         <transition :name="panelClass">
@@ -38,12 +38,12 @@
         </transition>
         <transition :name="panelClass">
             <CreateWizMaturity class="window" v-model="trust" v-show="isPanelActive('Maturity Date')">
-                When should they get it? <span class="text-gray-400">(aka The Maturity Date)</span>
+                When should they get it? <span class="text-base text-gray-400">(Maturity Date)</span>
             </CreateWizMaturity> 
         </transition>
         <transition :name="panelClass">
             <CreateWizTrustees class="window" v-model="trust" v-show="isPanelActive('Trustees')">
-                Who can manage this trust? <span class="text-gray-400">(aka The Trustees)</span>
+                Who can manage this trust? <span class="text-base text-gray-400">(Trustees)</span>
             </CreateWizTrustees> 
         </transition>
         <transition :name="panelClass">

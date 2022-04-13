@@ -6,9 +6,15 @@
             <h1 class="font-bold mt-5 mb-5 text-2xl">
                 {{title}}
             </h1>
-            <slot name="body"></slot>
-            <slot name="buttons"></slot>
-            <slot name="image"></slot>
+            <div>
+                <slot name="body"></slot>
+            </div>
+            <div>
+                <slot name="buttons"></slot>
+            </div>
+            <div>
+                <slot name="image"></slot>
+            </div>
         </div>
 
     </div>

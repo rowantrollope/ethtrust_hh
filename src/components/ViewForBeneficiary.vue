@@ -20,7 +20,7 @@
                             title="Can't find a trust for you as Beneficiary" >
                     <template v-slot:body>
                         <p> 
-                            We searched for a trust fund created for account <span class="font-bold">{{bc.account}}</span> and couldn't find one.
+                            We searched for a trust fund created for account <AddressField v-if="bc.account" :address="bc.account.value"></AddressField> and couldn't find one.
                         </p>
                         <p>
                             If you believe there should a trust for you, double check your account information
