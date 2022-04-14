@@ -47,7 +47,9 @@
     </PopoverButton>
 
     <transition name="fadeslide">
-        <PopoverPanel class="origin-top-right absolute w-screen bg-white text-black  sm:w-max opacity-100 p-5 text-sm -right-2 sm:-right-1 mt-2 sm:mt-3 h-screen sm:h-auto sm:rounded-md shadow-md z-50">
+        <PopoverPanel class="origin-top-right absolute w-screen 
+                    bg-white text-black dark:bg-slate-900
+                    sm:w-max opacity-100 p-5 text-sm -right-2 sm:-right-1 mt-2 sm:mt-3 h-screen sm:h-auto sm:rounded-md shadow-md z-50">
             <div v-if="bc.connectionState.value === state.Unknown" class="flex items-center space-x-2">
                 <div class="space-y-2 w-full">
                     <div class="text-xl font-thin justify-center flex">
